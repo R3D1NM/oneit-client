@@ -1,7 +1,7 @@
 import { update, ref ,set as write, serverTimestamp} from "firebase/database";
 import { db } from "@/config/firebase";
 import { atom } from "jotai";
-import { gender, loading, occasion, priceRange, recipient, answers, gift, question as nextQuestion, depth } from "@/config/atoms";
+import { gender, loading, occasion, priceRange, recipient, answers, gift, question as nextQuestion } from "@/config/atoms";
 import product from "@/data/product(2).json";
 import question from "@/data/question(2).json";
 import { Answer, Product, Question } from "@/config/types";
@@ -35,7 +35,6 @@ export const startChat = atom(null,async(get,set,chatID)=>{
             createdAt: serverTimestamp(),
         });
 
-        set(nextQuestion, questionList[get(depth)] )
     }catch(error){
         console.log(error);
         throw new Error("Failed to start chat");
@@ -46,34 +45,14 @@ export const startChat = atom(null,async(get,set,chatID)=>{
 })
 startChat.debugLabel = "startChat";
 
-export const next = atom(null, async (get,set, answer : Answer) => {
-    const currentQuestion = get(depth)
-    set(nextQuestion, questionList[currentQuestion+1])
-    set(depth, currentQuestion+1)
-    set(answers, [...get(answers), answer])
+export const next = atom(null, async (get,set, answer : Answer,currentDepth: number) => {
+    set(answers, prev => {prev[currentDepth] = answer; return prev})
     console.log("New Answer:", answer);
     
 })
 
 const recommend = (gender: string, priceRange: number[], answers: Answer[]): Product[] => {
     let pool: { [key: string]: Product } = { ...product };
-    answers.forEach(answer => {
-        const matchingProductsKeys: number[] = questionData[answer.question]?.[answer.answer];
-        if (matchingProductsKeys && matchingProductsKeys.length > 0) {
-            const filteredPool: { [key: string]: Product } = {};
-            matchingProductsKeys.forEach((key: number) => {
-                if (pool[key.toString()]) {
-                    //If the price of the product is within the price range, add it to the filtered pool
-                    if (pool[key.toString()].price >= priceRange[0] && pool[key.toString()].price <= priceRange[1])
-                        filteredPool[key.toString()] = pool[key.toString()];
-                }
-            });
-            // If filtering results in an empty pool but the original pool was not empty, do not apply the filter.
-            if (Object.keys(filteredPool).length > 0 || Object.keys(pool).length === 0) {
-                pool = filteredPool;
-            }
-        }
-    });
 
     // If the product pool has product with different gender, filter out the products
     if (gender == "남성"){
@@ -85,6 +64,30 @@ const recommend = (gender: string, priceRange: number[], answers: Answer[]): Pro
             delete pool[key.toString()];
         })
     }
+    console.log("Initial Pool:", pool);
+    
+    answers.forEach(answer => {
+        const matchingProductsKeys: number[] = questionData[answer.question]?.[answer.answer];
+        if (matchingProductsKeys && matchingProductsKeys.length > 0) {
+            const filteredPool: { [key: string]: Product } = {};
+            matchingProductsKeys.forEach((key: number) => {
+                if (pool[key.toString()]) {
+                    //If the price of the product is within the price range, add it to the filtered pool
+                    if (pool[key.toString()].price >= priceRange[0] && pool[key.toString()].price <= priceRange[1])
+                        filteredPool[key.toString()] = pool[key.toString()];
+                }
+            });
+
+            // If filtering results in an empty pool but the original pool was not empty, do not apply the filter.
+            if (Object.keys(filteredPool).length > 0 || Object.keys(pool).length === 0) {
+                pool = filteredPool;
+            }
+        }
+
+        console.log("Pool:", pool);
+        
+    });
+
 
 
     return Object.values(pool);
@@ -92,9 +95,9 @@ const recommend = (gender: string, priceRange: number[], answers: Answer[]): Pro
 
 
 export const finishChat = atom(null, async (get,set,chatID, answer:Answer) => {
-    set(answers, [...get(answers), answer])
+    set(answers, {...get(answers), answer})
     set(loading, true)
-    const answerList = get(answers)
+    const answerList = Object.values(get(answers))
     console.log(answerList);
     
     try {
@@ -120,8 +123,6 @@ export const finishChat = atom(null, async (get,set,chatID, answer:Answer) => {
             ref(db, `/chats/${chatID}`),
             { result: recommended }
         );
-
-        set(answers, [] as Answer[])
 
     } catch (error) {
         console.log(error);

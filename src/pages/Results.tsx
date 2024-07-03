@@ -1,5 +1,5 @@
 import { useAtomValue, useSetAtom } from 'jotai'
-import {  depth, gift, isValidGift } from '@/config/atoms'
+import { answers, gift, isValidGift } from '@/config/atoms'
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import React, { Suspense, useEffect, useState } from 'react';
@@ -10,6 +10,7 @@ import Instagram from '@/assets/instagram.png'
 import KakaoShare from '@/components/common/KakaoShare';
 import { Spinner } from '@/components/ui/spinner';
 import { getGift } from '@/api/product';
+import { Answer } from '@/config/types';
 
 
 const GiftCard = React.lazy(() => import('@/components/GiftCard'))
@@ -20,16 +21,15 @@ const Results = () => {
     const navigate = useNavigate();
     const { chatID } = useParams()
 
-    const setCurrentQuestion = useSetAtom(depth)
     const getResult = useSetAtom(getGift)
     const product = useAtomValue(gift)
     const isValid = useAtomValue(isValidGift)
+    const removeAnswers = useSetAtom(answers)
 
 
     const handleRetry = () => {
+        removeAnswers({} as {[key: string]: Answer})
         navigate('/');
-        
-        setCurrentQuestion(1)
     }
 
     useEffect(() => {
@@ -37,6 +37,7 @@ const Results = () => {
             navigate('/')
         }
         getResult(chatID)
+
     }, [])
     
 
@@ -47,7 +48,7 @@ const Results = () => {
             <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100 flex justify-between px-4">
                 {/* <strong className='font-Bayon text-3xl'>One!t</strong>  */}
                 추천 선물
-                <KakaoShare chatID = {chatID} product={product}/>
+                {isValid&&<KakaoShare chatID = {chatID} product={product}/>}
                 {/* <Share2Icon/> */}
             </h2>
             <div className=''>
@@ -55,14 +56,14 @@ const Results = () => {
                     {isValid?<GiftCard product={product}/>:<NotFound/>}
                 </Suspense>
             </div>
-            <div className='flex flex-col justify-evenly px-2'>
+            {isValid&&<div className='flex flex-col justify-evenly px-2'>
                 <a href={product.url || '/'} target='_blank' rel="noreferrer">
                     <Button size="sm" className='py-0 px-2 text-black w-full'>구매하러 가기</Button>
                 </a>
                 <Button size="sm" onClick={()=>setShowModal(true)} className="bg-oneit-blue hover:bg-oneit-blue/90 text-black w-full mt-2">
                     더 찾아보기
                 </Button>
-            </div>
+            </div>}
             
         </div>
         {showModal && (

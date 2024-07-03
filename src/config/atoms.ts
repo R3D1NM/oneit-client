@@ -9,9 +9,7 @@ const MockQuestions = {
 //Quiz
 export const question = atom(MockQuestions);
 question.debugLabel = "question";
-export const depth = atom(1);
-depth.debugLabel = "depth";
-export const answers = atom([] as Answer[]);
+export const answers = atom({} as {[key: string]: Answer});
 answers.debugLabel = "answers";
 
 //Main
@@ -24,7 +22,7 @@ priceRange.debugLabel = "priceRange";
 export const gender = atom("남성");
 gender.debugLabel = "gender";
 
-export const loading = atom(true);
+export const loading = atom(false);
 loading.debugLabel = "loading";
 
 //Result
