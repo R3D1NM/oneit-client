@@ -57,23 +57,6 @@ export const next = atom(null, async (get,set, answer : Answer) => {
 
 const recommend = (gender: string, priceRange: number[], answers: Answer[]): Product[] => {
     let pool: { [key: string]: Product } = { ...product };
-    answers.forEach(answer => {
-        const matchingProductsKeys: number[] = questionData[answer.question]?.[answer.answer];
-        if (matchingProductsKeys && matchingProductsKeys.length > 0) {
-            const filteredPool: { [key: string]: Product } = {};
-            matchingProductsKeys.forEach((key: number) => {
-                if (pool[key.toString()]) {
-                    //If the price of the product is within the price range, add it to the filtered pool
-                    if (pool[key.toString()].price >= priceRange[0] && pool[key.toString()].price <= priceRange[1])
-                        filteredPool[key.toString()] = pool[key.toString()];
-                }
-            });
-            // If filtering results in an empty pool but the original pool was not empty, do not apply the filter.
-            if (Object.keys(filteredPool).length > 0 || Object.keys(pool).length === 0) {
-                pool = filteredPool;
-            }
-        }
-    });
 
     // If the product pool has product with different gender, filter out the products
     if (gender == "남성"){
@@ -85,6 +68,30 @@ const recommend = (gender: string, priceRange: number[], answers: Answer[]): Pro
             delete pool[key.toString()];
         })
     }
+    console.log("Initial Pool:", pool);
+    
+    answers.forEach(answer => {
+        const matchingProductsKeys: number[] = questionData[answer.question]?.[answer.answer];
+        if (matchingProductsKeys && matchingProductsKeys.length > 0) {
+            const filteredPool: { [key: string]: Product } = {};
+            matchingProductsKeys.forEach((key: number) => {
+                if (pool[key.toString()]) {
+                    //If the price of the product is within the price range, add it to the filtered pool
+                    if (pool[key.toString()].price >= priceRange[0] && pool[key.toString()].price <= priceRange[1])
+                        filteredPool[key.toString()] = pool[key.toString()];
+                }
+            });
+
+            // If filtering results in an empty pool but the original pool was not empty, do not apply the filter.
+            if (Object.keys(filteredPool).length > 0 || Object.keys(pool).length === 0) {
+                pool = filteredPool;
+            }
+        }
+
+        console.log("Pool:", pool);
+        
+    });
+
 
 
     return Object.values(pool);
