@@ -1,8 +1,8 @@
-import { useAtomValue, useSetAtom } from 'jotai'
+import { useAtom, useAtomValue, useSetAtom } from 'jotai'
 import { depth, loading, question, recipient } from '@/config/atoms'
 import { useNavigate, useParams } from 'react-router-dom';
 import { Spinner } from '@/components/ui/spinner';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogHeader } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { finishChat, next } from '@/api/chat';
@@ -13,7 +13,7 @@ const MAXDEPTH = 4
 const Quiz = () => {
     const questions = useAtomValue(question)
     const isloading = useAtomValue(loading)
-    const currentQuestion = useAtomValue(depth)
+    const [currentQuestion,setCurrentQuestion] = useAtom(depth)
     const getNextQuestion = useSetAtom(next)
     const endChat = useSetAtom(finishChat)
     const userRecipient = useAtomValue(recipient)
@@ -27,6 +27,14 @@ const Quiz = () => {
 
     // Debugging logs
     console.log('Questions:', questions, 'Loading:', isloading);
+
+    useEffect(() => {
+        //handle browser back button
+        window.onpopstate = () => {
+            setCurrentQuestion(1)
+        }
+    }, [])
+    
     
 
     const handleAnswerClick = async (index:number) => {
@@ -83,10 +91,10 @@ const Quiz = () => {
                 </DialogHeader>
                 <DialogDescription>문제가 발생했습니다. 다시 시도해주세요.</DialogDescription>
                 <div className="flex justify-end gap-2">
-                    <Button variant="outline" onClick={() => {setError(false); navigate('/'); } }>
+                    <Button variant="outline" onClick={() => {setError(false); setCurrentQuestion(1); navigate('/'); } }>
                     메인으로
                     </Button>
-                    <Button type="submit" onClick={() => {setError(false); handleAnswerClick(selected);} }>
+                    <Button type="submit" onClick={() => {setError(false); setCurrentQuestion((prev)=>prev-1); handleAnswerClick(selected);} }>
                     다시시도
                     </Button>
                 </div>

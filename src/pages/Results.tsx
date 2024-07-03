@@ -47,7 +47,7 @@ const Results = () => {
             <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100 flex justify-between px-4">
                 {/* <strong className='font-Bayon text-3xl'>One!t</strong>  */}
                 추천 선물
-                <KakaoShare chatID = {chatID} product={product}/>
+                {isValid&&<KakaoShare chatID = {chatID} product={product}/>}
                 {/* <Share2Icon/> */}
             </h2>
             <div className=''>
@@ -55,14 +55,14 @@ const Results = () => {
                     {isValid?<GiftCard product={product}/>:<NotFound/>}
                 </Suspense>
             </div>
-            <div className='flex flex-col justify-evenly px-2'>
+            {isValid&&<div className='flex flex-col justify-evenly px-2'>
                 <a href={product.url || '/'} target='_blank' rel="noreferrer">
                     <Button size="sm" className='py-0 px-2 text-black w-full'>구매하러 가기</Button>
                 </a>
                 <Button size="sm" onClick={()=>setShowModal(true)} className="bg-oneit-blue hover:bg-oneit-blue/90 text-black w-full mt-2">
                     더 찾아보기
                 </Button>
-            </div>
+            </div>}
             
         </div>
         {showModal && (

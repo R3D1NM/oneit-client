@@ -18,7 +18,7 @@ const KakaoShare = (props:{chatID:string|undefined, product: Product|undefined})
     const prodUrl = `https://www.oneit.gift/result/${chatID}`
     useEffect(() => {
         // console.log(Kakao);  
-        console.log(product);
+        // console.log(product);
         
         if(!Kakao.isInitialized()){
             Kakao.init(import.meta.env.VITE_KAKAO_API_KEY);
