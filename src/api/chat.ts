@@ -1,7 +1,7 @@
 import { update, ref ,set as write, serverTimestamp} from "firebase/database";
 import { db } from "@/config/firebase";
 import { atom } from "jotai";
-import { gender, loading, occasion, priceRange, recipient, answers, gift, question as nextQuestion, depth } from "@/config/atoms";
+import { gender, loading, occasion, priceRange, recipient, answers, gift, question as nextQuestion } from "@/config/atoms";
 import product from "@/data/product(2).json";
 import question from "@/data/question(2).json";
 import { Answer, Product, Question } from "@/config/types";
@@ -35,7 +35,6 @@ export const startChat = atom(null,async(get,set,chatID)=>{
             createdAt: serverTimestamp(),
         });
 
-        set(nextQuestion, questionList[get(depth)] )
     }catch(error){
         console.log(error);
         throw new Error("Failed to start chat");
@@ -46,11 +45,8 @@ export const startChat = atom(null,async(get,set,chatID)=>{
 })
 startChat.debugLabel = "startChat";
 
-export const next = atom(null, async (get,set, answer : Answer) => {
-    const currentQuestion = get(depth)
-    set(nextQuestion, questionList[currentQuestion+1])
-    set(depth, currentQuestion+1)
-    set(answers, [...get(answers), answer])
+export const next = atom(null, async (get,set, answer : Answer,currentDepth: number) => {
+    set(answers, prev => {prev[currentDepth] = answer; return prev})
     console.log("New Answer:", answer);
     
 })
@@ -99,9 +95,9 @@ const recommend = (gender: string, priceRange: number[], answers: Answer[]): Pro
 
 
 export const finishChat = atom(null, async (get,set,chatID, answer:Answer) => {
-    set(answers, [...get(answers), answer])
+    set(answers, {...get(answers), answer})
     set(loading, true)
-    const answerList = get(answers)
+    const answerList = Object.values(get(answers))
     console.log(answerList);
     
     try {
@@ -127,8 +123,6 @@ export const finishChat = atom(null, async (get,set,chatID, answer:Answer) => {
             ref(db, `/chats/${chatID}`),
             { result: recommended }
         );
-
-        set(answers, [] as Answer[])
 
     } catch (error) {
         console.log(error);

@@ -24,7 +24,7 @@ const GiftCard = (props:GiftCardProps) => {
           <h3 className="text-lg font-semibold md:text-xl">{product.title}</h3>
 
           <div className="flex items-center justify-end mt-2">
-            <h4 className="text-base font-semibold md:text-lg text-onei">{product.price}원</h4>
+            <h4 className="text-base font-semibold md:text-lg text-onei">{product.price.toLocaleString()}원</h4>
             {/* <Button size="sm" className='py-0 px-2 text-black'>구매하러 가기</Button> */}
           </div>
         </div>

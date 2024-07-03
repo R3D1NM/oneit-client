@@ -1,5 +1,5 @@
 import { useAtomValue, useSetAtom } from 'jotai'
-import {  depth, gift, isValidGift } from '@/config/atoms'
+import { answers, gift, isValidGift } from '@/config/atoms'
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import React, { Suspense, useEffect, useState } from 'react';
@@ -10,6 +10,7 @@ import Instagram from '@/assets/instagram.png'
 import KakaoShare from '@/components/common/KakaoShare';
 import { Spinner } from '@/components/ui/spinner';
 import { getGift } from '@/api/product';
+import { Answer } from '@/config/types';
 
 
 const GiftCard = React.lazy(() => import('@/components/GiftCard'))
@@ -20,16 +21,15 @@ const Results = () => {
     const navigate = useNavigate();
     const { chatID } = useParams()
 
-    const setCurrentQuestion = useSetAtom(depth)
     const getResult = useSetAtom(getGift)
     const product = useAtomValue(gift)
     const isValid = useAtomValue(isValidGift)
+    const removeAnswers = useSetAtom(answers)
 
 
     const handleRetry = () => {
+        removeAnswers({} as {[key: string]: Answer})
         navigate('/');
-        
-        setCurrentQuestion(1)
     }
 
     useEffect(() => {
@@ -37,6 +37,7 @@ const Results = () => {
             navigate('/')
         }
         getResult(chatID)
+
     }, [])
     
 

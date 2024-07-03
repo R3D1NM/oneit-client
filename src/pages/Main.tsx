@@ -30,7 +30,7 @@ const Main = () => {
         const chatID = nanoid(10);
         try { 
             await start(chatID);
-            navigate(`/quiz/${chatID}`);
+            navigate(`/quiz/${chatID}/1`);
         } catch (error) {
             console.log(error);
             setError(true)

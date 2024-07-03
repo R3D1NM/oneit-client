@@ -19,7 +19,7 @@ function App() {
           {/* <Provider> */}
             <Router>
                 <Routes>
-                    <Route path="/quiz/:chatID" element={<Quiz/>} />
+                    <Route path="/quiz/:chatID/:currentDepth" element={<Quiz/>} />
                     <Route path="/result/:chatID" element={<Results/>} />
                     <Route path="/" element={<Main/>}/>
                     <Route path="*" element={<NotFound />} />
