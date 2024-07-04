@@ -3,12 +3,22 @@ import { BrowserRouter as Router, Route , Routes} from 'react-router-dom';
 import { Spinner } from '@/components/ui/spinner';
 import Header from './components/common/Header';
 import NotFound from './pages/NotFound';
+import { useQuery } from '@tanstack/react-query';
+import axios from '@/lib/axios';
 
 const Main = React.lazy(() => import('./pages/Main'));
 const Quiz = React.lazy(()=> import('./pages/Quiz'))
 const Results = React.lazy(()=> import('./pages/Results'))
 
 function App() {
+
+  // const fetchTodo = async () => {
+  //   return (await axios.get('/todos/1')).data
+  // }
+  // const {data} = useQuery({queryKey:['todo'],queryFn:fetchTodo})
+  // console.log(data)
+
+
   return (
     <div className="App h-svh flex flex-col justify-between">
       <Header/>

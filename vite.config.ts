@@ -12,9 +12,9 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     }
   },
-  esbuild:{
-    drop: ['console']
-  },
+  // esbuild:{
+  //   drop: ['console']
+  // },
   server: {
     port: 3000,
   }
