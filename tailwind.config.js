@@ -1,5 +1,6 @@
 import tailwindcssAnimate from "tailwindcss-animate";
 import  {fontFamily} from "tailwindcss/defaultTheme"
+import tailwindScrollbarHide from "tailwind-scrollbar-hide";
 /** @type {import('tailwindcss').Config} */
 
 export default{
@@ -67,6 +68,7 @@ export default{
       fontFamily: {
         Bayon:["Bayon"],
         Yangjin:["Yangjin"],
+        Godo : ["Godo"],
         sans: ["var(--font-sans)", ...fontFamily.sans],
       },
       keyframes: {
@@ -85,5 +87,5 @@ export default{
       },
     },
   },
-  plugins: [tailwindcssAnimate],
+  plugins: [tailwindcssAnimate,tailwindScrollbarHide],
 }

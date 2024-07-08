@@ -13,7 +13,7 @@ import { getGift } from '@/api/product';
 import { Answer } from '@/config/types';
 
 
-const GiftCard = React.lazy(() => import('@/components/GiftCard'))
+const GiftCard = React.lazy(() => import('@/components/Cards/GiftCard'))
 const NotFound = React.lazy(() => import('./NotFound'))
 
 const Results = () => {
@@ -48,7 +48,7 @@ const Results = () => {
             <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100 flex justify-between px-4">
                 {/* <strong className='font-Bayon text-3xl'>One!t</strong>  */}
                 추천 선물
-                {isValid&&<KakaoShare chatID = {chatID} product={product}/>}
+                {isValid&&<KakaoShare url = {`https://www.oneit.gift/result/${chatID}`} product={product}/>}
                 {/* <Share2Icon/> */}
             </h2>
             <div className=''>

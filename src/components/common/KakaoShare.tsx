@@ -13,9 +13,9 @@ declare global {
 }
 const {Kakao} = window;
 
-const KakaoShare = (props:{chatID:string|undefined, product: Product|undefined}) => {
-    const {chatID, product} = props
-    const prodUrl = `https://www.oneit.gift/result/${chatID}`
+const KakaoShare = (props:{url:string|undefined, product: Product|undefined}) => {
+    const {url, product} = props
+    // const prodUrl = `https://www.oneit.gift/result/${chatID}`
     useEffect(() => {
         // console.log(Kakao);  
         // console.log(product);
@@ -34,16 +34,16 @@ const KakaoShare = (props:{chatID:string|undefined, product: Product|undefined})
                 description: product?.title||"선물 추천 결과",
                 imageUrl: product?.image||Logo,
                 link: {
-                    mobileWebUrl: prodUrl,
-                    webUrl: prodUrl,
+                    mobileWebUrl: url,
+                    webUrl: url,
                 },
             },
             buttons: [
                 {
                     title: '결과 확인하기',
                     link: {
-                        mobileWebUrl: prodUrl,
-                        webUrl: prodUrl,
+                        mobileWebUrl: url,
+                        webUrl: url,
                     },
                 },
             ],
@@ -51,7 +51,7 @@ const KakaoShare = (props:{chatID:string|undefined, product: Product|undefined})
     }
 
     return (
-    <Button variant="outline" onClick={handleShare} className="border-0" disabled={product?.title===undefined}>
+    <Button variant="ghost" size="icon" onClick={handleShare} disabled={product?.title===undefined}>
         <Share2Icon/>
     </Button>
   )
