@@ -1,5 +1,5 @@
-import { gift, isValidGift } from "@/config/atoms";
-import { db } from "@/config/firebase";
+import { gift, isValidGift } from "@/lib/atoms";
+import { db } from "@/lib/firebase";
 import { ref , get as read, child} from "firebase/database";
 import { atom } from "jotai";
 
