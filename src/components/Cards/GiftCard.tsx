@@ -1,4 +1,4 @@
-import { Product } from '@/config/types'
+import { Product } from '@/lib/types'
 import Gift from '@/assets/giftbox.png'
 
 interface GiftCardProps {

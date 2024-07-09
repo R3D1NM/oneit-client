@@ -1,5 +1,5 @@
 import { useAtomValue, useSetAtom } from 'jotai'
-import { loading, recipient } from '@/config/atoms'
+import { loading, recipient } from '@/lib/atoms'
 import { useNavigate, useParams } from 'react-router-dom';
 import { Spinner } from '@/components/ui/spinner';
 import { useState } from 'react';
@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle, DialogHeader } f
 import { Button } from '@/components/ui/button';
 import { finishChat, next } from '@/api/chat';
 import question from "@/data/question(2).json";
-import { Question } from "@/config/types";
+import { Question } from "@/lib/types";
 
 // MAX DEPTH of the chat
 const MAXDEPTH = 4

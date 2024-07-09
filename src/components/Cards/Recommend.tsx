@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useAtom, useSetAtom } from 'jotai';
-import { gender, occasion, priceRange, recipient } from '@/config/atoms';
+import { gender, occasion, priceRange, recipient } from '@/lib/atoms';
 import { Spinner } from '@/components/ui/spinner';
 import { startChat } from '@/api/chat';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';

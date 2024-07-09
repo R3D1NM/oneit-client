@@ -1,4 +1,4 @@
-import { Product } from "@/config/types"
+import { Product } from "@/lib/types"
 import { useEffect } from "react"
 import Logo from '@/assets/oneit.png'
 // import KakaoLogo from '@/assets/kakao.png'

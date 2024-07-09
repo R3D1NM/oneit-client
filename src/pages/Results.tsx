@@ -1,5 +1,5 @@
 import { useAtomValue, useSetAtom } from 'jotai'
-import { answers, gift, isValidGift } from '@/config/atoms'
+import { answers, gift, isValidGift } from '@/lib/atoms'
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import React, { Suspense, useEffect, useState } from 'react';
@@ -10,7 +10,7 @@ import Instagram from '@/assets/instagram.png'
 import KakaoShare from '@/components/common/KakaoShare';
 import { Spinner } from '@/components/ui/spinner';
 import { getGift } from '@/api/product';
-import { Answer } from '@/config/types';
+import { Answer } from '@/lib/types';
 
 
 const GiftCard = React.lazy(() => import('@/components/Cards/GiftCard'))

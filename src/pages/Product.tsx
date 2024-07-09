@@ -1,26 +1,28 @@
 import { Link, useParams } from "react-router-dom"
 import { useQuery } from '@tanstack/react-query';
 import axios from '@/lib/axios';
-import { Product as P } from "@/config/types";
+import { Product as P } from "@/lib/types";
 import Gift from '@/assets/giftbox.png'
 import { Button } from "@/components/ui/button";
 import KakaoShare from "@/components/common/KakaoShare";
 import { ChevronLeft, Heart, Star } from "lucide-react";
+import Share from "@/components/common/Share";
 
 const Product = () => {
     const {id} = useParams()
     
-    const fetchProduct = async () :Promise<P> => {
-        return (await axios.get(`/product/${id}`)).data
-    }
-    const {data, isError, isLoading} = useQuery({queryKey:['product'],queryFn:fetchProduct})
-    console.log(data)
+    // const fetchProduct = async () :Promise<P> => {
+    //     return (await axios.get(`/product/${id}`)).data
+    // }
+    // const {data, isError, isLoading} = useQuery({queryKey:['product'],queryFn:fetchProduct})
+    // console.log(data)
 
     const product : P = {
         "title": " \"당+ 체력 보충\" 꿀빠는시간 스틱꿀 버라이어티팩 21개입(3종 x 7스틱)  ",
         "url": "https://gift.kakao.com/product/2915615",
         "price": 25400,
-        "image": "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20230906115514_7c56265604bd4a45bd6f90c06a0fdd11.png"
+        "image": "https://img1.kakaocdn.net/thumb/C320x320@2x.fwebp.q82/?fname=https%3A%2F%2Fst.kakaocdn.net%2Fproduct%2Fgift%2Fproduct%2F20230906115514_7c56265604bd4a45bd6f90c06a0fdd11.png",
+        "id": 1
     }
 
     return (
@@ -34,7 +36,7 @@ const Product = () => {
                     <Button variant="ghost" size="icon">
                         <Heart/>
                     </Button>
-                    <KakaoShare url={`https://www.oneit.gift/product/${id}`} product={product}/>
+                    <Share title="One!t" text={product.title} url={`https://oneit.gift/${product.id}`} />
                 </div>
             </div>
             
