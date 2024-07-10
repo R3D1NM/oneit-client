@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import { useQuery } from '@tanstack/react-query';
 import axios from '@/lib/axios';
 import { Product as P } from "@/lib/types";
@@ -9,7 +9,11 @@ import { ChevronLeft, Heart, Star } from "lucide-react";
 import Share from "@/components/common/Share";
 
 const Product = () => {
-    const {id} = useParams()
+    const {productID} = useParams()
+    // console.log(productID);
+    
+    const navigate = useNavigate()
+    
     
     // const fetchProduct = async () :Promise<P> => {
     //     return (await axios.get(`/product/${id}`)).data
@@ -25,11 +29,15 @@ const Product = () => {
         "id": 1
     }
 
+    const handleGoBack = () => {
+        navigate(-1)
+    }
+
     return (
         <div className='w-full pb-5'>
             <div className="flex py-3 flex-wrap items-center justify-between">
 
-                <Button variant="ghost" size="icon" className="">
+                <Button variant="ghost" size="icon" className="" onClick={handleGoBack}>
                     <ChevronLeft className=""/>
                 </Button>
                 <div className="flex">

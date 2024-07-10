@@ -11,6 +11,7 @@ const Main = React.lazy(() => import('./pages/Main'));
 const Quiz = React.lazy(()=> import('./pages/Quiz'))
 const Results = React.lazy(()=> import('./pages/Results'))
 const Product = React.lazy(()=> import('./pages/Product'))
+const Curation = React.lazy(()=> import('./pages/Curation'))
 
 function App() {
 
@@ -32,7 +33,8 @@ function App() {
                   <Routes>
                       <Route path="/quiz/:chatID/:currentDepth" element={<Quiz/>} />
                       <Route path="/result/:chatID" element={<Results/>} />
-                      <Route path='/product' element={<Product/>}/>
+                      <Route path='/product/:productID' element={<Product/>}/>
+                      <Route path='/curation' element={<Curation/>}/>
                       <Route path="/" element={<Main/>}/>
                       <Route path="*" element={<NotFound />} />
                   </Routes>
