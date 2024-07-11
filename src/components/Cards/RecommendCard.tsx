@@ -10,9 +10,10 @@ import { useAtom, useSetAtom } from 'jotai';
 import { gender, occasion, priceRange, recipient } from '@/lib/atoms';
 import { Spinner } from '@/components/ui/spinner';
 import { startChat } from '@/api/chat';
-import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import LottieContainer from '../common/LottieContainer';
 
-const Recommend = () => {
+const RecommendCard = () => {
     const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false)
     const [error, setError] = useState(false)
@@ -44,12 +45,15 @@ const Recommend = () => {
 
     return(
         <>
-        <Card className="w-full bg-gradient-to-br from-[#d1d1d1] to-[#f0f0f0] hover:from-[#c8c8c8] hover:to-[#e7e7e7] transition-colors duration-300 rounded-lg h-[30%] flex flex-col justify-between shadow-md border-0 max-w-md">
+        <Card className="w-full bg-gradient-to-br from-[#ffa0a0] to-[#ff9595] hover:from-[#FF9595] hover:to-[#FF9090] transition-colors duration-300 rounded-lg h-[60%] flex flex-col justify-between shadow-md border-0 max-w-md">
             <Link to="#" className="w-full h-full flex flex-col justify-between" onClick={()=>setShowModal(true)}>
             <CardHeader className='p-3'>
                 <CardTitle>선물 추천</CardTitle>
-                <CardDescription>질문에 답하고 선물을 추천 받아 보세요!</CardDescription>
+                <CardDescription className='text-oneit-gray'>질문에 답하고 선물을 추천 받아 보세요!</CardDescription>
             </CardHeader>
+            <CardContent className='p-0'>
+                <LottieContainer path='/src/assets/surpriseGift_animate.json' className='mt-[-80px]'/>
+            </CardContent>
             </Link>
         </Card> 
         {showModal && (
@@ -160,4 +164,4 @@ const Recommend = () => {
     )
 }
 
-export default Recommend
+export default RecommendCard

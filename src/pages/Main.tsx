@@ -1,5 +1,5 @@
-import Basket from "@/components/Cards/Basket"
-import Recommend from "@/components/Cards/Recommend"
+import Basket from "@/components/Cards/BasketCard"
+import Recommend from "@/components/Cards/RecommendCard"
 
 const Main = () => {
 

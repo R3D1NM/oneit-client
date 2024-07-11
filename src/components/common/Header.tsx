@@ -4,7 +4,7 @@ import { MenuIcon } from "lucide-react"
 
 const Header = () => {
   return (
-    <header className="fixed top-0 bg-white flex min-h-[5svh] items-center w-full justify-between px-4 md:px-6 shadow-md py-1">
+    <header className="fixed top-0 bg-white flex min-h-[5svh] items-center w-full justify-between px-4 md:px-6 shadow-md py-1 relative">
       <div className="flex">
         <a href="/" className="flex items-center justify-center">
           <span className="text-black text-3xl font-Bayon">One!t</span>
@@ -21,16 +21,16 @@ const Header = () => {
           {/* todo: connect pages */}
           <div className="grid gap-4 p-6">
             <a href="/" >
-              Home
+              메인 페이지
             </a>
-            <a href="#">
-              About
+            <a href="/about">
+              서비스 소개
             </a>
-            <a href="#" >
-              Products
+            <a href="/" >
+              선물 추천 받기
             </a>
-            <a href="#" >
-              Contact
+            <a href="/basket" >
+              선물 바구니
             </a>
           </div>
         </SheetContent>

@@ -1,8 +1,8 @@
 
 const Footer = () => {
     return (
-    <div className='bg-slate-100 text-xs justify-evenly flex flex-col font-light items-center min-h-[5svh] w-full relative z-[-100]'>
-        <p>Created by Team.CLOV3R</p>
+    <div className='border-t-[0.5px] bg-stone-50 text-xs justify-evenly flex flex-col items-center pr-2 min-h-[4svh] w-full relative z-[-100]'>
+        <span className="font-light font-Bayon">Team.CLOV3R</span>
     </div>
     )
 }

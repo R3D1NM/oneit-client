@@ -12,6 +12,8 @@ const Quiz = React.lazy(()=> import('./pages/Quiz'))
 const Results = React.lazy(()=> import('./pages/Results'))
 const Product = React.lazy(()=> import('./pages/Product'))
 const Curation = React.lazy(()=> import('./pages/Curation'))
+const Basket = React.lazy(()=> import('./pages/Basket'))
+const About = React.lazy(()=> import('./pages/About'))
 
 function App() {
 
@@ -26,7 +28,7 @@ function App() {
     <div className='App flex flex-col justify-center overflow-x-hidden scrollbar-hide min-h-screen items-center'>
       <div className="h-svh flex flex-col justify-between max-w-sm items-center w-full">
         <Header/>
-        <main className='flex w-full justify-center mb-3 mt-[7vh] max-w-sm  flex-grow'>
+        <main className='flex w-full justify-center mb-3 mt-2 max-w-sm  flex-grow'>
           <div className='flex justify-center w-[90%]'>
             <Suspense fallback={<Spinner size="large" />}>
               <Router>
@@ -35,6 +37,8 @@ function App() {
                       <Route path="/result/:chatID" element={<Results/>} />
                       <Route path='/product/:productID' element={<Product/>}/>
                       <Route path='/curation' element={<Curation/>}/>
+                      <Route path='/basket' element={<Basket/>}/>
+                      <Route path='/about' element={<About/>}/>
                       <Route path="/" element={<Main/>}/>
                       <Route path="*" element={<NotFound />} />
                   </Routes>
