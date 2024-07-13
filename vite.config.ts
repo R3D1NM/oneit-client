@@ -6,7 +6,11 @@ import mkcert from 'vite-plugin-mkcert'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    react(),
+    react({
+      babel:{
+        presets:['jotai/babel/preset']
+      }
+    }),
     mkcert({certFileName: path.resolve(__dirname,"./cert/localhost.pem"), keyFileName: path.resolve(__dirname,"./cert/localhost-key.pem")}),
   ],
   resolve: {

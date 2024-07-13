@@ -14,6 +14,7 @@ const Product = React.lazy(()=> import('./pages/Product'))
 const Curation = React.lazy(()=> import('./pages/Curation'))
 const Basket = React.lazy(()=> import('./pages/Basket'))
 const About = React.lazy(()=> import('./pages/About'))
+const Recommend = React.lazy(()=> import('./pages/Recommend'))
 
 function App() {
 
@@ -33,6 +34,7 @@ function App() {
             <Suspense fallback={<Spinner size="large" />}>
               <Router>
                   <Routes>
+                      <Route path="/recommend" element={<Recommend/>} />
                       <Route path="/quiz/:chatID/:currentDepth" element={<Quiz/>} />
                       <Route path="/result/:chatID" element={<Results/>} />
                       <Route path='/product/:productID' element={<Product/>}/>

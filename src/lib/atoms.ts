@@ -12,14 +12,16 @@ question.debugLabel = "question";
 export const answers = atom({} as {[key: string]: Answer});
 answers.debugLabel = "answers";
 
-//Main
+//Recommend
+export const name = atom("이름");
+name.debugLabel = "name";
 export const recipient = atom("친구");
 recipient.debugLabel = "recipient";
 export const occasion = atom("생일");
 occasion.debugLabel = "occasion";
 export const priceRange = atom([30000, 100000]);
 priceRange.debugLabel = "priceRange";
-export const gender = atom("남성");
+export const gender = atom("MALE");
 gender.debugLabel = "gender";
 
 export const loading = atom(false);
