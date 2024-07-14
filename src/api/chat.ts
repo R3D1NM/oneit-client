@@ -1,25 +1,9 @@
 import { update, ref ,set as write, serverTimestamp} from "firebase/database";
 import { db } from "@/lib/firebase";
 import { atom } from "jotai";
-import { gender, loading, occasion, priceRange, recipient, answers, gift, question as nextQuestion } from "@/lib/atoms";
-import product from "@/data/product(2).json";
-import question from "@/data/question(2).json";
+import { gender, loading, occasion, priceRange, recipient, answers, gift, question as nextQuestion, name, question } from "@/lib/atoms";
 import { Answer, Product, Question } from "@/lib/types";
 
-type AnswerOptions = {
-    [key: string]: number[];
-};
-
-type Questions = {
-    [question: string]: AnswerOptions;
-};
-const questionData: Questions = question;
-const questionList: Question[] = Object.keys(questionData).map((question: string, idx: number) => {
-    return {
-        question,
-        options: Object.keys(questionData[question])
-    };
-})
 
 
 export const startChat = atom(null,async(get,set,chatID)=>{
@@ -28,6 +12,7 @@ export const startChat = atom(null,async(get,set,chatID)=>{
         
         await write(ref(db, `chats/${chatID}`), {
             chatID,
+            name: get(name),
             gender: get(gender),
             recipient: get(recipient),
             occasion: get(occasion),
@@ -45,9 +30,10 @@ export const startChat = atom(null,async(get,set,chatID)=>{
 })
 startChat.debugLabel = "startChat";
 
-export const next = atom(null, async (get,set, answer : Answer,currentDepth: number) => {
-    set(answers, prev => {prev[currentDepth] = answer; return prev})
-    console.log("New Answer:", answer);
+export const next = atom(null, async (get,set, option: number,currentDepth: number) => {
+    const newTag: string = get(question)[currentDepth].tags[option]
+    set(answers, prev => {prev[currentDepth] = newTag; return prev})
+    console.log("New keyword", newTag);
     
 })
 
@@ -94,95 +80,39 @@ const recommend = (gender: string, priceRange: number[], answers: Answer[]) => {
 };
 
 
-export const finishChat = atom(null, async (get,set,chatID, answer:Answer) => {
-    // set(answers, {...get(answers), answer})
-    // set(loading, true)
-    // const answerList = Object.values(get(answers))
-    // console.log(answerList);
+export const finishChat = atom(null, async (get,set,chatID, option: number, currentDepth: number) => {
+    const newTag = get(question)[currentDepth].tags[option]
+    set(answers, prev => {prev[currentDepth] = newTag; return prev})
+    set(loading, true)
     
-    // try {
-    //     await update(
-    //         ref(db, `/chats/${chatID}`),
-    //         { 
-    //             answers: answerList,
-    //             modifiedAt: serverTimestamp()
-    //         }
-    //     );
+    try {
+        await update(
+            ref(db, `/chats/${chatID}`),
+            { 
+                answers: get(answers),
+                modifiedAt: serverTimestamp()
+            }
+        );
 
-    //     //get recommendation proudcts
-    //     const recommendList = recommend(get(gender),get(priceRange),answerList)
-    //     console.log(recommendList);
+        // //get recommendation proudcts
+        // const recommendList = recommend(get(gender),get(priceRange),answerList)
+        // console.log(recommendList);
         
 
-    //     //select random product
-    //     const recommended = recommendList[Math.floor(Math.random() * recommendList.length)]
+        // //select random product
+        // const recommended = recommendList[Math.floor(Math.random() * recommendList.length)]
 
-    //     set(gift, recommended)
+        // set(gift, recommended)
 
-    //     await update(
-    //         ref(db, `/chats/${chatID}`),
-    //         { result: recommended }
-    //     );
+        // await update(
+        //     ref(db, `/chats/${chatID}`),
+        //     { result: recommended }
+        // );
 
-    // } catch (error) {
-    //     console.log(error);
-    //     throw new Error("Failed to finish chat");
-    // } finally{
-    //     set(loading, false)
-    // }
+    } catch (error) {
+        console.log(error);
+        throw new Error("Failed to finish chat");
+    } finally{
+        set(loading, false)
+    }
 });
-
-// export const updateQuestion = atom(null, async (get,set,answer:Answer) => {
-    
-//     // API call to get next question
-//     try {
-//         set(loading, true)
-//         const message = await openai.beta.threads.messages.create(
-//             get(thread).id,
-//             {
-//                 role: "user",
-//                 content: answer.answer
-//             }
-//         );
-//         // console.log(message);
-        
-//         const newQuestion = await runGPT(get(thread), get(assistant))
-//         set(question, newQuestion)
-//         set(answers, [...get(answers), answer])
-//     } catch (error) {
-//         console.log(error);
-//         throw new Error("Failed to update question");
-//     } finally{
-//         set(loading, false)
-//     }
-// })
-// updateQuestion.debugLabel = "updateQuestion";
-
-// export const finishChat = atom(null, async (get,set,answer:Answer, chatID) => {
-//     set(answers, [...get(answers), answer])
-//     try {
-//         set(loading, true)
-//         update(
-//             ref(db, `/chats/${chatID}`),
-//             { answers: get(answers) }
-//         );
-
-//         const recommended = await getRecommendation(get(thread), get(assistant))
-
-//         set(gift, recommended)
-//         update(
-//             ref(db, `/chats/${chatID}`),
-//             { result: recommended }
-//         );
-
-//     } catch (error) {
-//         console.log(error);
-//         throw new Error("Failed to finish chat");
-//     } finally{
-//         set(loading, false)
-//         set(depth, 0)
-//         set(answers, [])
-//         set(question, MockQuestions)
-//     }
-// })
-// finishChat.debugLabel = "finishChat";

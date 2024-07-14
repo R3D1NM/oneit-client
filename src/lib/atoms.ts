@@ -1,19 +1,15 @@
 import { atom } from "jotai";
 import { Answer, Product } from "./types";
-
-const MockQuestions = {
-    question: "Loading...",
-    options: ["One", "Two", "Three"],
-}
+import questionList from "@/data/question.json";
 
 //Quiz
-export const question = atom(MockQuestions);
+export const question = atom(questionList);
 question.debugLabel = "question";
-export const answers = atom({} as {[key: string]: Answer});
+export const answers = atom({} as {[key: string]: string});
 answers.debugLabel = "answers";
 
 //Recommend
-export const name = atom("이름");
+export const name = atom("");
 name.debugLabel = "name";
 export const recipient = atom("친구");
 recipient.debugLabel = "recipient";

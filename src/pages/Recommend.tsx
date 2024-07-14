@@ -1,17 +1,15 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Separator } from "@/components/ui/separator"
 import { Slider } from "@/components/ui/slider"
 import { Spinner } from "@/components/ui/spinner"
 import { gender, name, priceRange, recipient } from "@/lib/atoms"
-import { useAtom } from "jotai"
+import { useAtom, useSetAtom } from "jotai"
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { nanoid } from 'nanoid';
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Select, SelectGroup, SelectItem, SelectTrigger, SelectValue, SelectContent } from "@/components/ui/select"
+import { startChat } from "@/api/chat"
 
 const Recommend = () => {
     const navigate = useNavigate();
@@ -22,20 +20,19 @@ const Recommend = () => {
     const [userRecipient, setUserRecipient] = useAtom(recipient)
     const [userGender, setUserGender] = useAtom(gender)
 
-    // const start = useSetAtom(startChat)
+    const start = useSetAtom(startChat)
 
     const handleStart = async () => {
         const chatID = nanoid(10);
-        navigate(`/quiz/${chatID}/1`);
-        // setLoading(true);
-        // try { 
-        //     await start(chatID);
-        // } catch (error) {
-        //     console.log(error);
-        //     setError(true)
-        // }finally {
-        //     setLoading(false); // End loading
-        // }
+        navigate(`/quiz/${chatID}/0`);
+        setLoading(true);
+        try { 
+            await start(chatID);
+        } catch (error) {
+            console.log(error);
+        }finally {
+            setLoading(false); // End loading
+        }
     }
 
     if (loading) return <Spinner />

@@ -15,4 +15,5 @@ export type Product = {
 export type Question = {
     question: string;
     options: string[];
+    tags: string[];
 } 
