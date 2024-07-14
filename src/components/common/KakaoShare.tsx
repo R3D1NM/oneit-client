@@ -31,8 +31,8 @@ const KakaoShare = (props:{url:string|undefined, product: Product|undefined}) =>
             objectType: 'feed',
             content: {
                 title: 'One!t 선물 추천 결과',
-                description: product?.title||"선물 추천 결과",
-                imageUrl: product?.image||Logo,
+                description: product?.name||"선물 추천 결과",
+                imageUrl: product?.thumbnailUrl||Logo,
                 link: {
                     mobileWebUrl: url,
                     webUrl: url,
@@ -51,7 +51,7 @@ const KakaoShare = (props:{url:string|undefined, product: Product|undefined}) =>
     }
 
     return (
-    <Button variant="ghost" size="icon" onClick={handleShare} disabled={product?.title===undefined}>
+    <Button variant="ghost" size="icon" onClick={handleShare} disabled={product?.name===undefined}>
         <Share2Icon/>
     </Button>
   )

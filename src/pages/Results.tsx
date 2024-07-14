@@ -1,5 +1,5 @@
 import { useAtomValue, useSetAtom } from 'jotai'
-import { answers, gift, isValidGift } from '@/lib/atoms'
+import { answers, gift, isValidGift, name, recipient } from '@/lib/atoms'
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import React, { Suspense, useEffect, useState } from 'react';
@@ -7,10 +7,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import Kakao from '@/assets/kakao.png'
 import Naver from '@/assets/naver_blog.png'
 import Instagram from '@/assets/instagram.png'
-import KakaoShare from '@/components/common/KakaoShare';
 import { Spinner } from '@/components/ui/spinner';
 import { getGift } from '@/api/product';
-import { Answer } from '@/lib/types';
+import { Card } from '@/components/ui/card';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import Share from '@/components/common/Share';
 
 
 const GiftCard = React.lazy(() => import('@/components/Cards/GiftCard'))
@@ -26,15 +27,18 @@ const Results = () => {
     const isValid = useAtomValue(isValidGift)
     const removeAnswers = useSetAtom(answers)
 
+    const userName = useAtomValue(name)
+    const userRecipient = useAtomValue(recipient)
+
 
     const handleRetry = () => {
-        removeAnswers({} as {[key: string]: Answer})
-        navigate('/');
+        removeAnswers({} as {[key: string]: string})
+        navigate('/recommend');
     }
 
     useEffect(() => {
         if (!chatID || chatID === "") {
-            navigate('/')
+            navigate('/recommend')
         }
         getResult(chatID)
 
@@ -44,27 +48,38 @@ const Results = () => {
 
     return (
         <>
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md pb-3 max-w-md w-full">
+        <div className="flex flex-col content-center w-full gap-2 justify-center">
+        <Card className="flex rounded-lg shadow-md max-w-md w-full flex-col justify-center h-fit py-5">
             <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100 flex justify-between px-4">
                 {/* <strong className='font-Bayon text-3xl'>One!t</strong>  */}
                 추천 선물
-                {isValid&&<KakaoShare url = {`https://www.oneit.gift/result/${chatID}`} product={product}/>}
+                <Share  url={`https://oneit.gift/result/${chatID}`} title={`ONE!T - ${userName===""?"":userName+"위한 "}선물 추천`} text={product.map(item => item.name).join('\n')}/>
                 {/* <Share2Icon/> */}
             </h2>
-            <div className=''>
+            <div className='w-full'>
                 <Suspense fallback={<Spinner/>}>
-                    {isValid?<GiftCard product={product}/>:<NotFound/>}
+                    {isValid?(
+                    <Carousel>
+                        <CarouselContent>
+                            {product.map((item, index) => (
+                                <CarouselItem key={index}>
+                                    <GiftCard product={item}/>
+                                </CarouselItem>
+                            ))}
+                        </CarouselContent>
+                        <CarouselPrevious />
+                        <CarouselNext />
+                    </Carousel>
+                ): <NotFound/>}
                 </Suspense>
             </div>
             {isValid&&<div className='flex flex-col justify-evenly px-2'>
-                <a href={product.url || '/'} target='_blank' rel="noreferrer">
-                    <Button size="sm" className='py-0 px-2 text-black w-full'>구매하러 가기</Button>
-                </a>
                 <Button size="sm" onClick={()=>setShowModal(true)} className="bg-oneit-blue hover:bg-oneit-blue/90 text-black w-full mt-2">
                     더 찾아보기
                 </Button>
             </div>}
             
+        </Card>
         </div>
         {showModal && (
         <Dialog open={showModal} onOpenChange={setShowModal}>
@@ -94,7 +109,7 @@ const Results = () => {
                     뒤로가기
                     </Button>
                     <Button type="submit" onClick={() => {setShowModal(false); handleRetry()}}>
-                    메인으로
+                    추천받기
                     </Button>
                 </div>
             </DialogContent>

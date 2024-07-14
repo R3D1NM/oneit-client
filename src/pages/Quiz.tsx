@@ -22,7 +22,7 @@ const Quiz = () => {
     
     const navigate = useNavigate();
     const params = useParams()
-    const chatID = params.chatID
+    const chatID = params.chatID || ""
     const currentDepth = Number(params.currentDepth)
 
     const [error, setError] = useState(false)

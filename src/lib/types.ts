@@ -3,13 +3,22 @@ export type Answer = {
     answer: string;
 }
 
-export type Product = {
-    id: number;
-    title: string;
-    // description: string;
-    image: string;
-    price: number;
-    url: string;
+export type Keyword = {
+    idx: number;
+    keyword: string;
+    description: string;
+}
+
+export type Product =     {
+    productIdx: number;
+    name: string;
+    originalPrice: number;
+    shoppingmall: string;
+    productUrl: string;
+    thumbnailUrl: string;
+    categoryIdx : number;
+    keywords: Keyword[];
+    gender: string;
 }
 
 export type Question = {

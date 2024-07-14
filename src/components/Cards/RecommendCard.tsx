@@ -16,7 +16,7 @@ const RecommendCard = () => {
                 <CardDescription className='text-oneit-gray'>질문에 답하고 선물을 추천 받아 보세요!</CardDescription>
             </CardHeader>
             <CardContent className='p-0'>
-                <LottieContainer path='/src/assets/surpriseGift_animate.json' className='mt-[-80px]'/>
+                <LottieContainer fileName='surpriseGift_animate.json' className='mt-[-80px]'/>
             </CardContent>
             </Link>
         </Card> 

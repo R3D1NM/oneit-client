@@ -24,7 +24,7 @@ export const loading = atom(false);
 loading.debugLabel = "loading";
 
 //Result
-export const gift = atom({} as Product);
+export const gift = atom([] as Product[]);
 gift.debugLabel = "gift";
 export const isValidGift = atom(false);
 isValidGift.debugLabel = "isValidGift";

@@ -22,7 +22,7 @@ const Basket = () => {
             </Card>
 
             <div className='relative flex flex-col text-center'>
-                <LottieContainer path={"/src/assets/construction_animate.json"} />
+                <LottieContainer fileName={"construction_animate.json"} />
                 <p className=''>
                     Team CLOV3R가 열심히 개발 중이에요 <br/>
                     

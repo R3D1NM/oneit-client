@@ -3,7 +3,7 @@ import { db } from "@/lib/firebase";
 import { atom } from "jotai";
 import { gender, loading, occasion, priceRange, recipient, answers, gift, question as nextQuestion, name, question } from "@/lib/atoms";
 import { Answer, Product, Question } from "@/lib/types";
-
+import axios from '@/lib/axios';
 
 
 export const startChat = atom(null,async(get,set,chatID)=>{
@@ -37,53 +37,39 @@ export const next = atom(null, async (get,set, option: number,currentDepth: numb
     
 })
 
-const recommend = (gender: string, priceRange: number[], answers: Answer[]) => {
-    // let pool: { [key: string]: Product } = { ...product };
+interface Payload {
+    gender: string;
+    age: number;
+    minPrice: number;
+    maxPrice: number;
+    keywords: { [key: string]: string };
+}
 
-    // // If the product pool has product with different gender, filter out the products
-    // if (gender == "남성"){
-    //     questionData["성별"]?.["여성"].forEach((key: number) => {
-    //         delete pool[key.toString()];
-    //     })
-    // } else {
-    //     questionData["성별"]?.["남성"].forEach((key: number) => {
-    //         delete pool[key.toString()];
-    //     })
-    // }
-    // console.log("Initial Pool:", pool);
-    
-    // answers.forEach(answer => {
-    //     const matchingProductsKeys: number[] = questionData[answer.question]?.[answer.answer];
-    //     if (matchingProductsKeys && matchingProductsKeys.length > 0) {
-    //         const filteredPool: { [key: string]: Product } = {};
-    //         matchingProductsKeys.forEach((key: number) => {
-    //             if (pool[key.toString()]) {
-    //                 //If the price of the product is within the price range, add it to the filtered pool
-    //                 if (pool[key.toString()].price >= priceRange[0] && pool[key.toString()].price <= priceRange[1])
-    //                     filteredPool[key.toString()] = pool[key.toString()];
-    //             }
-    //         });
+const recommend = async (payload : Payload) => {
+    return new Promise<Product[]>((resolve, reject) => {
+        axios.post('/v1/product/result',payload)
+        .then((res)=>{
+            console.log(res.data);
+            
+            if(!res.data.isSuccess) throw new Error("Failed to get recommend list")
+            console.log(res.data);
+            
+            resolve(res.data.result)
+        })
+        .catch((err)=>{
+            console.log(err);
+            reject(err)
+        })
+    });
 
-    //         // If filtering results in an empty pool but the original pool was not empty, do not apply the filter.
-    //         if (Object.keys(filteredPool).length > 0 || Object.keys(pool).length === 0) {
-    //             pool = filteredPool;
-    //         }
-    //     }
-
-    //     console.log("Pool:", pool);
-        
-    // });
-
-
-
-    // return Object.values(pool);
 };
 
 
-export const finishChat = atom(null, async (get,set,chatID, option: number, currentDepth: number) => {
+export const finishChat = atom(null, async (get,set,chatID: string,option: number, currentDepth: number) => {
     const newTag = get(question)[currentDepth].tags[option]
     set(answers, prev => {prev[currentDepth] = newTag; return prev})
     set(loading, true)
+    
     
     try {
         await update(
@@ -94,20 +80,25 @@ export const finishChat = atom(null, async (get,set,chatID, option: number, curr
             }
         );
 
-        // //get recommendation proudcts
-        // const recommendList = recommend(get(gender),get(priceRange),answerList)
-        // console.log(recommendList);
+        const payload = {
+            gender: get(gender),
+            age: 10,
+            minPrice: get(priceRange)[0]>get(priceRange)[1]?get(priceRange)[1]:get(priceRange)[0],
+            maxPrice: get(priceRange)[1]>get(priceRange)[0]?get(priceRange)[1]:get(priceRange)[0],
+            keywords: get(answers)
+        }
+
+        console.log("Payload", payload);
         
 
-        // //select random product
-        // const recommended = recommendList[Math.floor(Math.random() * recommendList.length)]
+        const recommendList = await recommend(payload)
 
-        // set(gift, recommended)
+        set(gift, recommendList)
 
-        // await update(
-        //     ref(db, `/chats/${chatID}`),
-        //     { result: recommended }
-        // );
+        await update(
+            ref(db, `/chats/${chatID}`),
+            { result: recommendList }
+        );
 
     } catch (error) {
         console.log(error);

@@ -4,7 +4,7 @@ import { MenuIcon } from "lucide-react"
 
 const Header = () => {
   return (
-    <header className="fixed top-0 bg-white flex min-h-[5svh] items-center w-full justify-between px-4 md:px-6 shadow-md py-1 relative">
+    <header className=" top-0 bg-white flex min-h-[5svh] items-center w-full justify-between px-4 md:px-6 shadow-md py-1 relative">
       <div className="flex">
         <a href="/" className="flex items-center justify-center">
           <span className="text-black text-3xl font-Bayon">One!t</span>
@@ -26,7 +26,7 @@ const Header = () => {
             <a href="/about">
               서비스 소개
             </a>
-            <a href="/" >
+            <a href="/recommend" >
               선물 추천 받기
             </a>
             <a href="/basket" >

@@ -19,9 +19,9 @@ const Share = (props: ShareProps) => {
                     text,
                     url
                 })
-                toast('공유 성공')
+                // toast('공유 성공')
             } catch (error) {
-                toast('공유 실패')
+                // toast('공유 실패')
             }
 
         }else{

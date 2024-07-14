@@ -37,8 +37,8 @@ function App() {
                       <Route path="/recommend" element={<Recommend/>} />
                       <Route path="/quiz/:chatID/:currentDepth" element={<Quiz/>} />
                       <Route path="/result/:chatID" element={<Results/>} />
-                      <Route path='/product/:productID' element={<Product/>}/>
-                      <Route path='/curation' element={<Curation/>}/>
+                      {/* <Route path='/product/:productID' element={<Product/>}/>
+                      <Route path='/curation' element={<Curation/>}/> */}
                       <Route path='/basket' element={<Basket/>}/>
                       <Route path='/about' element={<About/>}/>
                       <Route path="/" element={<Main/>}/>
