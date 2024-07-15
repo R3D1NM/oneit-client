@@ -12,6 +12,7 @@ import { getGift } from '@/api/product';
 import { Card } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Share from '@/components/common/Share';
+import KakaoShare from '@/components/common/KakaoShare';
 
 
 const GiftCard = React.lazy(() => import('@/components/Cards/GiftCard'))
@@ -53,13 +54,14 @@ const Results = () => {
             <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100 flex justify-between px-4">
                 {/* <strong className='font-Bayon text-3xl'>One!t</strong>  */}
                 추천 선물
-                <Share  url={`https://oneit.gift/result/${chatID}`} title={`ONE!T - ${userName===""?"":userName+"위한 "}선물 추천`} text={product.map(item => item.name).join('\n')}/>
+                {isValid&&<KakaoShare title={`ONE!T - ${userName===""?"":userName+"을 위한 "}선물 추천`} description='WANNA GIFT IT, ONE!T' url={`https://oneit.gift/result/${chatID}`} image={product[0].thumbnailUrl} />}
+                {/* <Share  url={`https://oneit.gift/result/${chatID}`} title={`ONE!T - ${userName===""?"":userName+"위한 "}선물 추천`} text={product.map(item => item.name).join('\n')}/> */}
                 {/* <Share2Icon/> */}
             </h2>
             <div className='w-full'>
                 <Suspense fallback={<Spinner/>}>
                     {isValid?(
-                    <Carousel>
+                    <Carousel className='w-full' opts={{loop:true}} autoplay={true} autoplayInterval={2500}>
                         <CarouselContent>
                             {product.map((item, index) => (
                                 <CarouselItem key={index}>

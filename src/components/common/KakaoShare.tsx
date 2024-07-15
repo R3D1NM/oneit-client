@@ -13,8 +13,15 @@ declare global {
 }
 const {Kakao} = window;
 
-const KakaoShare = (props:{url:string|undefined, product: Product|undefined}) => {
-    const {url, product} = props
+interface KakaoShareProps {
+    url: string;
+    title: string;
+    description: string;
+    image: string;
+}
+
+const KakaoShare = (props:KakaoShareProps) => {
+    const {url, title, description, image} = props
     // const prodUrl = `https://www.oneit.gift/result/${chatID}`
     useEffect(() => {
         // console.log(Kakao);  
@@ -30,9 +37,9 @@ const KakaoShare = (props:{url:string|undefined, product: Product|undefined}) =>
         Kakao.Share.sendDefault({
             objectType: 'feed',
             content: {
-                title: 'One!t 선물 추천 결과',
-                description: product?.name||"선물 추천 결과",
-                imageUrl: product?.thumbnailUrl||Logo,
+                title: title||"ONE!T 선물 추천",
+                description: description||"선물 추천 결과",
+                imageUrl: image||Logo,
                 link: {
                     mobileWebUrl: url,
                     webUrl: url,
@@ -51,7 +58,7 @@ const KakaoShare = (props:{url:string|undefined, product: Product|undefined}) =>
     }
 
     return (
-    <Button variant="ghost" size="icon" onClick={handleShare} disabled={product?.name===undefined}>
+    <Button variant="ghost" size="icon" onClick={handleShare} disabled={title===undefined}>
         <Share2Icon/>
     </Button>
   )
