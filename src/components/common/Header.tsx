@@ -27,10 +27,10 @@ const Header = () => {
               서비스 소개
             </a>
             <a href="/recommend" >
-              선물 추천 받기
+              선물 뭐 주지?
             </a>
             <a href="/basket" >
-              선물 바구니
+              이 중에 뭐 주지?
             </a>
           </div>
         </SheetContent>

@@ -40,7 +40,7 @@ const Recommend = () => {
     return (
         <div className='flex flex-col content-center w-full gap-2 justify-center'>
             <div className='flex flex-col gap-2'>
-                <h1 className='text-2xl rounded-lg px-3 py-1 w-fit bg-oneit-pink'>선물 추천</h1>
+                <h1 className='text-2xl rounded-lg px-3 py-1 w-fit bg-oneit-pink'>선물 뭐 주지?</h1>
                 <span className="px-1 text-oneit-gray">내 소중한 사람은 어떤 선물을 받고 싶어할까요? <br/> ONE!T와 함께 어울리는 선물을 찾아봐요!</span>
             </div>
             <Card className='py-4 px-2'>

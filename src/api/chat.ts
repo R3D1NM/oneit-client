@@ -47,7 +47,7 @@ interface Payload {
 
 const recommend = async (payload : Payload) => {
     return new Promise<Product[]>((resolve, reject) => {
-        axios.post('/v1/product/result',payload)
+        axios.post('/v1/product/result/category',payload)
         .then((res)=>{
             console.log(res.data);
             

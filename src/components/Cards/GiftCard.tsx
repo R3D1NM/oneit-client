@@ -1,5 +1,6 @@
 import { Product } from '@/lib/types'
 import Gift from '@/assets/giftbox.png'
+import { Button } from '@/components/ui/button'
 
 interface GiftCardProps {
   product: Product
@@ -27,9 +28,9 @@ const GiftCard = (props:GiftCardProps) => {
         <div className="py-2 bg-white dark:bg-gray-950">
           <h3 className="text-lg font-semibold md:text-xl">{product.name}</h3>
 
-          <div className="flex items-center justify-end mt-2">
-            <h4 className="text-base font-semibold md:text-lg text-onei">{product.originalPrice.toLocaleString()}원</h4>
-            {/* <Button size="sm" className='py-0 px-2 text-black'>구매하러 가기</Button> */}
+          <div className="flex items-center justify-between  mt-2">
+            <h4 className="text-base font-semibold md:text-lg">{product.originalPrice.toLocaleString()}원</h4>
+            <Button size="sm" className='py-0 px-2 text-black'>구매하러 가기</Button>
           </div>
         </div>
       </a>
