@@ -1,4 +1,4 @@
-import { Product } from "@/config/types"
+import { Product } from "@/lib/types"
 import { useEffect } from "react"
 import Logo from '@/assets/oneit.png'
 // import KakaoLogo from '@/assets/kakao.png'
@@ -13,9 +13,16 @@ declare global {
 }
 const {Kakao} = window;
 
-const KakaoShare = (props:{chatID:string|undefined, product: Product|undefined}) => {
-    const {chatID, product} = props
-    const prodUrl = `https://www.oneit.gift/result/${chatID}`
+interface KakaoShareProps {
+    url: string;
+    title: string;
+    description: string;
+    image: string;
+}
+
+const KakaoShare = (props:KakaoShareProps) => {
+    const {url, title, description, image} = props
+    // const prodUrl = `https://www.oneit.gift/result/${chatID}`
     useEffect(() => {
         // console.log(Kakao);  
         // console.log(product);
@@ -30,20 +37,20 @@ const KakaoShare = (props:{chatID:string|undefined, product: Product|undefined})
         Kakao.Share.sendDefault({
             objectType: 'feed',
             content: {
-                title: 'One!t 선물 추천 결과',
-                description: product?.title||"선물 추천 결과",
-                imageUrl: product?.image||Logo,
+                title: title||"ONE!T 선물 추천",
+                description: description||"선물 추천 결과",
+                imageUrl: image||Logo,
                 link: {
-                    mobileWebUrl: prodUrl,
-                    webUrl: prodUrl,
+                    mobileWebUrl: url,
+                    webUrl: url,
                 },
             },
             buttons: [
                 {
                     title: '결과 확인하기',
                     link: {
-                        mobileWebUrl: prodUrl,
-                        webUrl: prodUrl,
+                        mobileWebUrl: url,
+                        webUrl: url,
                     },
                 },
             ],
@@ -51,7 +58,7 @@ const KakaoShare = (props:{chatID:string|undefined, product: Product|undefined})
     }
 
     return (
-    <Button variant="outline" onClick={handleShare} className="border-0" disabled={product?.title===undefined}>
+    <Button variant="ghost" size="icon" onClick={handleShare} disabled={title===undefined}>
         <Share2Icon/>
     </Button>
   )

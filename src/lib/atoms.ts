@@ -1,32 +1,31 @@
 import { atom } from "jotai";
 import { Answer, Product } from "./types";
-
-const MockQuestions = {
-    question: "Loading...",
-    options: ["One", "Two", "Three"],
-}
+import questionList from "@/data/question.json";
 
 //Quiz
-export const question = atom(MockQuestions);
+export const question = atom(questionList);
 question.debugLabel = "question";
-export const answers = atom({} as {[key: string]: Answer});
+export const answers = atom({} as {[key: string]: string});
 answers.debugLabel = "answers";
 
-//Main
+//Recommend
+export const name = atom("");
+name.debugLabel = "name";
 export const recipient = atom("친구");
 recipient.debugLabel = "recipient";
 export const occasion = atom("생일");
 occasion.debugLabel = "occasion";
 export const priceRange = atom([30000, 100000]);
 priceRange.debugLabel = "priceRange";
-export const gender = atom("남성");
+export const gender = atom("MALE");
 gender.debugLabel = "gender";
 
+export const loading = atom(false);
 export const loading = atom(false);
 loading.debugLabel = "loading";
 
 //Result
-export const gift = atom({} as Product);
+export const gift = atom([] as Product[]);
 gift.debugLabel = "gift";
 export const isValidGift = atom(false);
 isValidGift.debugLabel = "isValidGift";

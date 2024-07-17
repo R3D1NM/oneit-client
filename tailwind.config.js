@@ -1,5 +1,6 @@
 import tailwindcssAnimate from "tailwindcss-animate";
 import  {fontFamily} from "tailwindcss/defaultTheme"
+import tailwindScrollbarHide from "tailwind-scrollbar-hide";
 /** @type {import('tailwindcss').Config} */
 
 export default{
@@ -24,7 +25,9 @@ export default{
         'oneit-pink': '#ffa0a0',
         'oneit-navy': '#1B3F87',
         'oneit-blue': '#A1DBFF',
-        'oneit-orange': '#F2B263',
+        'oneit-orange': '#FCB968',
+        'oneit-gray': '#4A4A4A',
+        'kakao-yellow': '#FEE500',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -67,6 +70,7 @@ export default{
       fontFamily: {
         Bayon:["Bayon"],
         Yangjin:["Yangjin"],
+        Godo : ["Godo"],
         sans: ["var(--font-sans)", ...fontFamily.sans],
       },
       keyframes: {
@@ -85,5 +89,5 @@ export default{
       },
     },
   },
-  plugins: [tailwindcssAnimate],
+  plugins: [tailwindcssAnimate,tailwindScrollbarHide],
 }
