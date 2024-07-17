@@ -107,7 +107,6 @@ const Quiz = () => {
                 <DialogDescription>문제가 발생했습니다. 다시 시도해주세요.</DialogDescription>
                 <div className="flex justify-end gap-2">
                     <Button variant="outline" onClick={() => {setError(false);  navigate('/'); } }>
-                    <Button variant="outline" onClick={() => {setError(false);  navigate('/'); } }>
                     메인으로
                     </Button>
                     <Button type="submit" onClick={() => {setError(false); handleAnswerClick(selected);} }>
