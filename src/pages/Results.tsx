@@ -43,6 +43,7 @@ const Results = () => {
         }
         getResult(chatID)
 
+
     }, [])
     
 

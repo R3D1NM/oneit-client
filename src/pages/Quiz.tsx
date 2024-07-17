@@ -33,10 +33,14 @@ const Quiz = () => {
     // Debugging logs
     // console.log('Questions:', questionList[currentDepth], 'Loading:', isloading);
 
+    // console.log('Questions:', questionList[currentDepth], 'Loading:', isloading);
+
+    
     
     
     const handleAnswerClick = async (index:number) => {
         setSelected(index)
+        console.log('Depth:', currentDepth, 'Selected:', index);
         console.log('Depth:', currentDepth, 'Selected:', index);
         
         if (currentDepth < MAXDEPTH -1) {
@@ -102,6 +106,7 @@ const Quiz = () => {
                 </DialogHeader>
                 <DialogDescription>문제가 발생했습니다. 다시 시도해주세요.</DialogDescription>
                 <div className="flex justify-end gap-2">
+                    <Button variant="outline" onClick={() => {setError(false);  navigate('/'); } }>
                     <Button variant="outline" onClick={() => {setError(false);  navigate('/'); } }>
                     메인으로
                     </Button>

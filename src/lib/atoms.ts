@@ -21,6 +21,7 @@ export const gender = atom("MALE");
 gender.debugLabel = "gender";
 
 export const loading = atom(false);
+export const loading = atom(false);
 loading.debugLabel = "loading";
 
 //Result
