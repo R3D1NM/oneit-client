@@ -28,3 +28,8 @@ export const gift = atom([] as Product[]);
 gift.debugLabel = "gift";
 export const isValidGift = atom(false);
 isValidGift.debugLabel = "isValidGift";
+export const title = atom("네가 주면 난 다 좋아! 🎁");
+title.debugLabel = "title";
+export const comment = atom("#까다롭지_않아요 #취향_안_타요");
+comment.debugLabel = "comment";
+

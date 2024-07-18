@@ -1,4 +1,4 @@
-import { gift, isValidGift, name, recipient } from "@/lib/atoms";
+import { comment, gift, isValidGift, name, recipient, title } from "@/lib/atoms";
 import { db } from "@/lib/firebase";
 import { ref , get as read, child} from "firebase/database";
 import { atom } from "jotai";
@@ -13,6 +13,8 @@ export const getGift = atom(null, async (get,set,chatID) => {
         set(recipient, data.recipient)
         set(name, data.name)
         set(isValidGift, true)
+        set(title, data.resultType.title || "네가 주면 난 다 좋아! 🎁")
+        set(comment, data.resultType.comment || "#까다롭지_않아요 #취향_안_타요")
     } else {
         console.log("No data available");
         set(isValidGift, false)
