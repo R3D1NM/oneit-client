@@ -60,7 +60,8 @@ const Results = () => {
                     <h3 className='text-lg'>{userType}</h3>
                     <span className='text-oneit-gray text-sm'>{userComment}</span>
                 </div>
-                {isValid&&<KakaoShare title={`ONE!T - ${userName===""?"":userName+"을 위한 "}선물 추천`} description='WANNA GIFT IT, ONE!T' url={`https://oneit.gift/result/${chatID}`} image={product[0].thumbnailUrl} />}
+                {isValid&&<KakaoShare title={`ONE!T - ${userName===""?"":userName+"을 위한 "}선물 추천`} description='WANNA GIFT IT, ONE!T' url={`https://www.oneit.gift/result/${chatID}`} image={product[0].thumbnailUrl} />}
+
                 {/* <Share  url={`https://oneit.gift/result/${chatID}`} title={`ONE!T - ${userName===""?"":userName+"위한 "}선물 추천`} text={product.map(item => item.name).join('\n')}/> */}
                 {/* <Share2Icon/> */}
             </CardTitle>
