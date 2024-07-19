@@ -11,6 +11,9 @@ export default ({ mode }: { mode: string }) => {
   const env = loadEnv(mode, process.cwd());
 
   return defineConfig({
+    esbuild:{
+      drop: ['console','debugger']
+    },
     plugins: [
       react({
         babel:{

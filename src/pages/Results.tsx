@@ -1,5 +1,5 @@
 import { useAtomValue, useSetAtom } from 'jotai'
-import { answers, gift, isValidGift, name, recipient } from '@/lib/atoms'
+import { answers, comment, gift, isValidGift, name, recipient, title } from '@/lib/atoms'
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import React, { Suspense, useEffect, useState } from 'react';
@@ -9,7 +9,7 @@ import Naver from '@/assets/naver_blog.png'
 import Instagram from '@/assets/instagram.png'
 import { Spinner } from '@/components/ui/spinner';
 import { getGift } from '@/api/product';
-import { Card } from '@/components/ui/card';
+import { Card, CardTitle } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Share from '@/components/common/Share';
 import KakaoShare from '@/components/common/KakaoShare';
@@ -31,6 +31,9 @@ const Results = () => {
     const userName = useAtomValue(name)
     const userRecipient = useAtomValue(recipient)
 
+    const userType = useAtomValue(title)
+    const userComment = useAtomValue(comment)
+
 
     const handleRetry = () => {
         removeAnswers({} as {[key: string]: string})
@@ -43,7 +46,6 @@ const Results = () => {
         }
         getResult(chatID)
 
-
     }, [])
     
 
@@ -52,13 +54,17 @@ const Results = () => {
         <>
         <div className="flex flex-col content-center w-full gap-2 justify-center">
         <Card className="flex rounded-lg shadow-md max-w-md w-full flex-col justify-center h-fit py-5">
-            <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100 flex justify-between px-4">
+            <CardTitle className=" mb-4 flex justify-between px-4">
                 {/* <strong className='font-Bayon text-3xl'>One!t</strong>  */}
-                추천 선물
-                {isValid&&<KakaoShare title={`ONE!T - ${userName===""?"":userName+"을 위한 "}선물 추천`} description='WANNA GIFT IT, ONE!T' url={`https://oneit.gift/result/${chatID}`} image={product[0].thumbnailUrl} />}
+                <div className='flex flex-col'>
+                    <h3 className='text-lg'>{userType}</h3>
+                    <span className='text-oneit-gray text-sm'>{userComment}</span>
+                </div>
+                {isValid&&<KakaoShare title={`ONE!T - ${userName===""?"":userName+"을 위한 "}선물 추천`} description='WANNA GIFT IT, ONE!T' url={`https://www.oneit.gift/result/${chatID}`} image={product[0].thumbnailUrl} />}
+
                 {/* <Share  url={`https://oneit.gift/result/${chatID}`} title={`ONE!T - ${userName===""?"":userName+"위한 "}선물 추천`} text={product.map(item => item.name).join('\n')}/> */}
                 {/* <Share2Icon/> */}
-            </h2>
+            </CardTitle>
             <div className='w-full'>
                 <Suspense fallback={<Spinner/>}>
                     {isValid?(

@@ -34,6 +34,8 @@ const KakaoShare = (props:KakaoShareProps) => {
     }, [])
     
     const handleShare = () =>{
+        console.log(props);
+        
         Kakao.Share.sendDefault({
             objectType: 'feed',
             content: {
