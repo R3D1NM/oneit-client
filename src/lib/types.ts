@@ -26,3 +26,10 @@ export type Question = {
     options: string[];
     tags: string[];
 } 
+
+//todo: match with server
+export type User = {
+    user_id: number;
+    name: string;
+    email: string;
+}

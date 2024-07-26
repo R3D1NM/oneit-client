@@ -12,7 +12,7 @@ export default ({ mode }: { mode: string }) => {
 
   return defineConfig({
     esbuild:{
-      drop: ['console','debugger']
+      drop: env.PROD? ['console','debugger'] : []
     },
     plugins: [
       react({

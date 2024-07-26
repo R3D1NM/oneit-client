@@ -3,9 +3,8 @@ import { BrowserRouter as Router, Route , Routes} from 'react-router-dom';
 import { Spinner } from '@/components/ui/spinner';
 import Header from './components/common/Header';
 import NotFound from './pages/NotFound';
-import { useQuery } from '@tanstack/react-query';
-import axios from '@/lib/axios';
 import Footer from './components/common/Footer';
+import AuthRouter from './components/common/AuthRouter';
 
 const Main = React.lazy(() => import('./pages/Main'));
 const Quiz = React.lazy(()=> import('./pages/Quiz'))
@@ -15,14 +14,10 @@ const Curation = React.lazy(()=> import('./pages/Curation'))
 const Basket = React.lazy(()=> import('./pages/Basket'))
 const About = React.lazy(()=> import('./pages/About'))
 const Recommend = React.lazy(()=> import('./pages/Recommend'))
+const Login = React.lazy(()=> import('./pages/Login'))
+const Auth = React.lazy(()=> import('./pages/Auth'))
 
 function App() {
-
-  // const fetchTodo = async () => {
-  //   return (await axios.get('/todos/1')).data
-  // }
-  // const {data} = useQuery({queryKey:['todo'],queryFn:fetchTodo})
-  // console.log(data)
 
 
   return (
@@ -41,6 +36,8 @@ function App() {
                       <Route path='/curation' element={<Curation/>}/> */}
                       <Route path='/basket' element={<Basket/>}/>
                       <Route path='/about' element={<About/>}/>
+                      <Route path='/login' element={<AuthRouter option={false} redirectTo='/' ><Login/></AuthRouter>}/>
+                      <Route path='/oauth' element={<AuthRouter option={false} redirectTo='/' ><Auth/></AuthRouter>}/>
                       <Route path="/" element={<Main/>}/>
                       <Route path="*" element={<NotFound />} />
                   </Routes>
