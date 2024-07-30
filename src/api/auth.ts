@@ -14,23 +14,40 @@ const cookies = new Cookies();
 const getMe = async () => {
     //get user info
     //todo: get user info from server
-    return {
-        user_id : 123,
-        name : "test",
-        email : "test@mail.com"
-    }
+    return axios.get("/v1/kakao/user")
+    .then((res)=>{
+        console.log(res);
+        
+        if(res.status == 200 && res.data.isSuccess){
+            return Promise.resolve(res.data.result)
+        }
+        else{
+            throw new Error("Failed to get user info")
+        }
+    }).catch((err)=>{
+        console.log(err);
+        return Promise.reject(err)
+    })
 }
 
 //Auth
-const getAuth = async (): Promise<User | null> => {
+const getAuth =  async (): Promise<User | null> => {
     const token = {
         access: localStorage.getItem('token'),
         // refresh: cookies.get('refreshToken'),
     };
+    console.log(token);
+    
 
     if (token.access) {
-        const userInfo = await getMe();
-        if (userInfo) return userInfo;
+        try {
+            const userInfo = await getMe();
+            return userInfo;
+        }
+        catch (err) {
+            console.log(err);
+            return null;
+        }
     }
 
     // if (token.refresh) {
@@ -47,9 +64,7 @@ const getAuth = async (): Promise<User | null> => {
     return null;
 };
 
-export const authAtom = atomWithDefault(async () => {
-    return await getAuth();
-});
+export const authAtom = atomWithDefault(getAuth);
 authAtom.debugLabel = "authAtom";
 
 export const updateAuthAtom = atom(null, async (get, set) => {
