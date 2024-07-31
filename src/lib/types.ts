@@ -13,12 +13,16 @@ export type Product =     {
     productIdx: number;
     name: string;
     originalPrice: number;
-    shoppingmall: string;
+    currentPrice: number;
+    discountRate: number;
+    brandName: string;
+    mallName: string;
     productUrl: string;
     thumbnailUrl: string;
-    categoryIdx : number;
-    keywords: Keyword[];
-    gender: string;
+    categoryName: string;
+    categoryDisplayName: string;
+    keywords: string[];
+    status: string
 }
 
 export type Question = {
