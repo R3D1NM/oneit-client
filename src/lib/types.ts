@@ -10,7 +10,7 @@ export type Keyword = {
 }
 
 export type Product =     {
-    productIdx: number;
+    idx: number;
     name: string;
     originalPrice: number;
     currentPrice: number;

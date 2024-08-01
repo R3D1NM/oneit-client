@@ -54,7 +54,7 @@ const Product = () => {
                     <Button variant="ghost" size="icon">
                         <Heart />
                     </Button>
-                    <Share title="ONE!T" text={data?.name || "ONE!T"} url={`https://oneit.gift/${data?.productIdx}`} />
+                    <Share title="ONE!T" text={data?.name || "ONE!T"} url={`https://oneit.gift/${data?.idx}`} />
                 </div>
             </div>
 
