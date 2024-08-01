@@ -20,7 +20,7 @@ const ProductCard = (props: ProductCardProps) => {
             <div className="p-4">
                 <h3 className="max-w-full  text-sm font-semibold mb-2 overflow-hidden whitespace-nowrap  overflow-ellipsis">{product.name}</h3>
                 <div className="flex items-center justify-end">
-                    <span className="font-bold text-lg">{product.currentPrice.toLocaleString()}원</span>
+                    <span className="font-bold text-lg">{product.originalPrice.toLocaleString()}원</span>
                 </div>
             </div>
         </Link>

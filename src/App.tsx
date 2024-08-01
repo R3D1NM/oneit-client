@@ -21,8 +21,8 @@ function App() {
 
 
   return (
-    <div className='App flex flex-col justify-center overflow-x-hidden scrollbar-hide min-h-screen items-center'>
-      <div className="h-svh flex flex-col justify-between max-w-sm items-center w-full">
+    <div className='App flex flex-col justify-center overflow-hidden scrollbar-hide min-h-screen items-center'>
+      <div className="min-h-svh flex flex-col justify-between max-w-sm items-center w-full scrollbar-hide">
         <Header/>
         <main className='flex w-full justify-center mb-3 mt-2 max-w-sm  flex-grow'>
           <div className='flex justify-center w-[90%]'>
