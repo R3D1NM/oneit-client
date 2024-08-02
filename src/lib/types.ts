@@ -1,51 +1,50 @@
 export type Answer = {
-    question: string;
-    answer: string;
-}
+	question: string;
+	answer: string;
+};
 
 export type Keyword = {
-    idx: number;
-    keyword: string;
-    description: string;
-}
+	idx: number;
+	keyword: string;
+	description: string;
+};
 
-export type Product =     {
-    idx: number;
-    name: string;
-    originalPrice: number;
-    currentPrice: number;
-    discountRate: number;
-    brandName: string;
-    mallName: string;
-    productUrl: string;
-    thumbnailUrl: string;
-    categoryName: string;
-    categoryDisplayName: string;
-    keywords: string[];
-    status: string
-}
+export type Product = {
+	idx: number;
+	name: string;
+	originalPrice: number;
+	currentPrice: number;
+	discountRate: number;
+	brandName: string;
+	mallName: string;
+	productUrl: string;
+	thumbnailUrl: string;
+	categoryName: string;
+	categoryDisplayName: string;
+	keywords: string[];
+	status: string;
+};
 
 export type Question = {
-    question: string;
-    options: string[];
-    tags: string[];
-} 
-
+	question: string;
+	options: string[];
+	tags: string[];
+};
 
 export type User = {
-    createdAt: string;
-    updatedAt: string;
-    deletedAt: string;
-    status: string;
-    idx: number;
-    name: string;
-    nickname: string;
-    email: string;
-    phoneNumber: string;
-    nicknameFromKakao: string;
-    profileImgFromKakao: string;
-    gender: "FEMALE" | "MALE";
-    age: string;
-    birthDate: Date;
-    refreshToken: string
-}
+	createdAt: string;
+	updatedAt: string;
+	deletedAt: string;
+	status: string;
+	idx: number;
+	name: string;
+	nickname: string;
+	email: string;
+	phoneNumber: string;
+	nicknameFromKakao: string;
+	profileImgFromKakao: string;
+	gender: 'FEMALE' | 'MALE';
+	age: string;
+	birthDate: Date;
+	refreshToken: string;
+};

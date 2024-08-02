@@ -1,33 +1,36 @@
-import { useRef, useEffect } from "react";
-import Lottie from "lottie-web";
+import {useRef, useEffect} from 'react';
+import Lottie from 'lottie-web';
 
 type LottieContainerProps = {
-    fileName: string;
-}
-export const LottieContainer = ({ fileName, ...rest }: LottieContainerProps & React.HTMLAttributes<HTMLSpanElement>) => {
-    const lottieContainer = useRef<HTMLDivElement>(null);
+	fileName: string;
+};
 
-    const getAnimationPath = () => {
-        const basePath = import.meta.env.MODE === 'development' 
-            ? '/src/assets/' 
-            : `/`;
-        return `${basePath}${fileName}`;
-    };
+export const LottieContainer = ({
+	fileName,
+	...rest
+}: LottieContainerProps & React.HTMLAttributes<HTMLSpanElement>) => {
+	const lottieContainer = useRef<HTMLDivElement>(null);
 
-    // Lottie 애니메이션 로드 및 초기화
-    useEffect(() => {
-        Lottie.loadAnimation({
-            container: lottieContainer.current!,
-            renderer: "svg",
-            loop: true,
-            autoplay: true,
-            path: getAnimationPath(),
-        });
+	const getAnimationPath = () => {
+		const basePath =
+			import.meta.env.MODE === 'development' ? '/src/assets/' : `/`;
+		return `${basePath}${fileName}`;
+	};
 
-        return () => Lottie.destroy();
-    },[fileName])
+	// Lottie 애니메이션 로드 및 초기화
+	useEffect(() => {
+		Lottie.loadAnimation({
+			container: lottieContainer.current!,
+			renderer: 'svg',
+			loop: true,
+			autoplay: true,
+			path: getAnimationPath(),
+		});
 
-    return <div className="w-full h-full" ref={lottieContainer} {...rest} />;
+		return () => Lottie.destroy();
+	}, [fileName]);
+
+	return <div className="w-full h-full" ref={lottieContainer} {...rest} />;
 };
 
 export default LottieContainer;
