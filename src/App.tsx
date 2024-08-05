@@ -18,6 +18,7 @@ const Recommend = React.lazy(() => import('./pages/Recommend/Recommend'));
 const Login = React.lazy(() => import('./pages/Login'));
 const Auth = React.lazy(() => import('./pages/Auth'));
 const Mypage = React.lazy(() => import('./pages/Mypage'));
+const CreateBasket = React.lazy(() => import('./pages/Basket/CreateBasket'));
 
 function App() {
     return (
@@ -52,6 +53,10 @@ function App() {
                                     <Route
                                         path="/basket"
                                         element={<Basket />}
+                                    />
+                                    <Route
+                                        path="/basket/create"
+                                        element={<CreateBasket />}
                                     />
                                     <Route path="/about" element={<About />} />
                                     <Route

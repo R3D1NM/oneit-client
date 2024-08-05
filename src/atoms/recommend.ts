@@ -1,5 +1,5 @@
 import {atom} from 'jotai';
-import {Answer, Product} from './types';
+import {Answer, Product} from '../lib/types';
 import questionList from '@/data/question.json';
 
 //Quiz
