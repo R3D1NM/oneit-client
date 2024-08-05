@@ -23,9 +23,9 @@ const CreateBasket = React.lazy(() => import('./pages/Basket/CreateBasket'));
 function App() {
     return (
         <div className="App flex flex-col justify-center overflow-hidden scrollbar-hide min-h-screen items-center">
-            <div className="min-h-svh flex flex-col justify-between max-w-sm items-center w-full scrollbar-hide">
-                <Header />
-                <main className="flex w-full justify-center mb-3 mt-2 max-w-sm  flex-grow">
+            <Header />
+            <div className="min-h-svh flex flex-col justify-between max-w-sm items-center w-full scrollbar-hide pt-[5svh] pb-[5svh]">
+                <main className="flex w-full justify-center mb-3 mt-2 max-w-sm flex-grow">
                     <div className="flex justify-center w-[90%]">
                         <Suspense fallback={<Spinner size="large" />}>
                             <Router>
@@ -57,6 +57,10 @@ function App() {
                                     <Route
                                         path="/basket/create"
                                         element={<CreateBasket />}
+                                    />
+                                    <Route
+                                        path="/basket/:basketID"
+                                        element={<Basket />}
                                     />
                                     <Route path="/about" element={<About />} />
                                     <Route
