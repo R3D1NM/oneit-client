@@ -54,7 +54,7 @@ export type Basket = {
     name: string;
     description: string;
     deadline: Date;
-    createdUserIdx: number;
+    createdUserIdx?: number;
     accessStatus: string;
-    imageUrl: string;
+    imageUrl?: string;
 };

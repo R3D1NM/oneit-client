@@ -12,3 +12,4 @@ thumbnail.debugLabel = 'thumbnail';
 export const imageUrl = atom('');
 imageUrl.debugLabel = 'imageUrl';
 export const accessStatus = atom<'PUBLIC' | 'PRIVATE'>('PUBLIC');
+accessStatus.debugLabel = 'accessStatus';

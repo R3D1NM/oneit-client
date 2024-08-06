@@ -6,7 +6,6 @@ import NotFound from './pages/NotFound';
 import Footer from './components/common/Footer';
 import AuthRouter from './components/common/AuthRouter';
 import Navbar from '@/components/common/Navbar';
-import BasketCard from './pages/Basket/components/BasketCard';
 
 const Main = React.lazy(() => import('./pages/Main/Main'));
 const Quiz = React.lazy(() => import('./pages/Recommend/Quiz'));
@@ -20,6 +19,7 @@ const Login = React.lazy(() => import('./pages/Login'));
 const Auth = React.lazy(() => import('./pages/Auth'));
 const Mypage = React.lazy(() => import('./pages/Mypage'));
 const CreateBasket = React.lazy(() => import('./pages/Basket/CreateBasket'));
+const EditBasket = React.lazy(() => import('./pages/Basket/EditBasket'));
 
 function App() {
     return (
@@ -65,6 +65,10 @@ function App() {
                                     <Route
                                         path="/basket/:basketID"
                                         element={<Basket />}
+                                    />
+                                    <Route
+                                        path="/basket/edit/:basketID"
+                                        element={<EditBasket />}
                                     />
                                     <Route path="/about" element={<About />} />
                                     <Route

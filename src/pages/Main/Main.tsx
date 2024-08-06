@@ -1,4 +1,5 @@
 import BasketCard from '@/pages/Basket/components/BasketCard';
+import BasketIntroCard from './components/BasketCard';
 import Recommend from './components/RecommendCard';
 import {useQuery} from '@tanstack/react-query';
 import {fetchBasketList} from '@/api/basket';
@@ -29,7 +30,12 @@ const Main = () => {
             return <div>생성한 바구니가 없습니다.</div>;
         }
         if (data.length === 0) {
-            return <div>생성한 바구니가 없습니다.</div>;
+            return (
+                <BasketIntroCard
+                    text="새로운 바구니를 만들어보세요"
+                    login={true}
+                />
+            );
         }
         return (
             <Carousel
@@ -55,9 +61,13 @@ const Main = () => {
 
     return (
         <div className="flex flex-col overflow-hidden justify-center gap-5 p-1 w-full items-center">
-            {user === null && <p>로그인 필요</p>}
+            {user === null && (
+                <BasketIntroCard
+                    text="카카오 로그인하고 바구니를 만들어보세요"
+                    login={false}
+                />
+            )}
             {user && <CurationList />}
-            {/* <BasketCard /> */}
             <Recommend />
         </div>
     );

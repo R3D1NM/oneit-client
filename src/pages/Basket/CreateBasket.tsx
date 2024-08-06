@@ -25,7 +25,7 @@ import {useForm} from 'react-hook-form';
 import {z} from 'zod';
 import {Textarea} from '@/components/ui/textarea';
 import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar';
-import {User2Icon} from 'lucide-react';
+import {LockKeyhole, LockKeyholeOpen, User2Icon} from 'lucide-react';
 import {createBasket} from '@/api/basket';
 import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group';
 import {useNavigate} from 'react-router-dom';
@@ -36,6 +36,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
+import {ToggleGroup, ToggleGroupItem} from '@/components/ui/toggle-group';
 
 const CreateBasket = () => {
     const [currentStep, setCurrentStep] = useState('title');
@@ -50,9 +51,14 @@ const CreateBasket = () => {
     const navigate = useNavigate();
 
     const formSchema = z.object({
-        title: z.string().min(2, {
-            message: '바구니 이름은 2자 이상이어야합니다.',
-        }),
+        title: z
+            .string()
+            .min(2, {
+                message: '바구니 이름은 2자 이상이어야합니다.',
+            })
+            .max(10, {
+                message: '바구니 이름은 10자 이하여야합니다.',
+            }),
         description: z.string().optional(),
         image: z.instanceof(File).optional(),
         access: z.enum(['PUBLIC', 'PRIVATE']),
@@ -151,34 +157,26 @@ const CreateBasket = () => {
                                         name="access"
                                         render={({field}) => (
                                             <FormItem>
-                                                <FormLabel>
-                                                    바구니 공개 여부
-                                                </FormLabel>
                                                 <FormMessage />
-                                                <RadioGroup
+                                                <ToggleGroup
+                                                    type="single"
                                                     className="flex gap-2"
                                                     onChange={field.onChange}
                                                     defaultValue={field.value}
                                                 >
-                                                    <div>
-                                                        <Label htmlFor="public">
-                                                            공개
-                                                        </Label>
-                                                        <RadioGroupItem
-                                                            id="public"
-                                                            value="PUBLIC"
-                                                        />
-                                                    </div>
-                                                    <div>
-                                                        <Label htmlFor="private">
-                                                            비공개
-                                                        </Label>
-                                                        <RadioGroupItem
-                                                            id="private"
-                                                            value="PRIVATE"
-                                                        />
-                                                    </div>
-                                                </RadioGroup>
+                                                    <ToggleGroupItem
+                                                        value="PUBLIC"
+                                                        size="sm"
+                                                    >
+                                                        <LockKeyholeOpen />
+                                                    </ToggleGroupItem>
+                                                    <ToggleGroupItem
+                                                        value="PRIVATE"
+                                                        size="sm"
+                                                    >
+                                                        <LockKeyhole />
+                                                    </ToggleGroupItem>
+                                                </ToggleGroup>
                                             </FormItem>
                                         )}
                                     />
@@ -262,6 +260,7 @@ const CreateBasket = () => {
                                             <FormLabel>
                                                 언제까지 선물을 골라야 하나요?
                                             </FormLabel>
+                                            <FormMessage />
                                             <FormControl>
                                                 <Calendar
                                                     mode="single"
@@ -269,7 +268,6 @@ const CreateBasket = () => {
                                                     onSelect={field.onChange}
                                                 />
                                             </FormControl>
-                                            <FormMessage />
                                         </FormItem>
                                     )}
                                 ></FormField>
