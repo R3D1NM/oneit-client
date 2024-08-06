@@ -13,41 +13,50 @@ import {
 } from '@/components/ui/carousel';
 import {Basket} from '@/lib/types';
 import {Key} from 'react';
+import {useAtomValue} from 'jotai';
+import {authAtom} from '@/api/auth';
 
 const Main = () => {
-    const {data, isLoading, isError} = useQuery({
-        queryKey: ['basket'],
-        queryFn: () => fetchBasketList(),
-    });
+    const user = useAtomValue(authAtom);
 
-    if (isError) {
-        return <NotFound />;
-    }
+    const CurationList = () => {
+        const {data, isLoading, isError} = useQuery({
+            queryKey: ['basket'],
+            queryFn: () => fetchBasketList(),
+        });
+        if (isLoading) return <Spinner />;
+        if (isError) {
+            return <div>생성한 바구니가 없습니다.</div>;
+        }
+        if (data.length === 0) {
+            return <div>생성한 바구니가 없습니다.</div>;
+        }
+        return (
+            <Carousel
+                className="w-full"
+                opts={{loop: true}}
+                autoplay={true}
+                autoplayInterval={2500}
+            >
+                <CarouselContent>
+                    {data?.map(
+                        (basket: Basket, index: Key | null | undefined) => (
+                            <CarouselItem key={index}>
+                                <BasketCard basket={basket} />
+                            </CarouselItem>
+                        ),
+                    )}
+                </CarouselContent>
+                <CarouselPrevious />
+                <CarouselNext />
+            </Carousel>
+        );
+    };
 
     return (
         <div className="flex flex-col overflow-hidden justify-center gap-5 p-1 w-full items-center">
-            {isLoading ? (
-                <Spinner />
-            ) : (
-                <Carousel
-                    className="w-full"
-                    opts={{loop: true}}
-                    autoplay={true}
-                    autoplayInterval={2500}
-                >
-                    <CarouselContent>
-                        {data.map(
-                            (basket: Basket, index: Key | null | undefined) => (
-                                <CarouselItem key={index}>
-                                    <BasketCard basket={basket} />
-                                </CarouselItem>
-                            ),
-                        )}
-                    </CarouselContent>
-                    <CarouselPrevious />
-                    <CarouselNext />
-                </Carousel>
-            )}
+            {user === null && <p>로그인 필요</p>}
+            {user && <CurationList />}
             {/* <BasketCard /> */}
             <Recommend />
         </div>

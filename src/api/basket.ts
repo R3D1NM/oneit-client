@@ -12,7 +12,7 @@ export const createBasket = atom(null, async (get, set) => {
         name: get(basketName),
         description: get(basketDescription),
         deadline: get(basketDeadline),
-        createdUserIdx: 1,
+        createdUserIdx: 108,
         accessStatus: 'PUBLIC',
     };
 
@@ -49,7 +49,17 @@ export const fetchBasketInfo = async (basketID: string) => {
 };
 
 export const fetchBasketList = async () => {
-    return axios.get('/v1/giftbox').then((res) => {
+    return axios.get('/v1/giftbox?userIdx=108').then((res) => {
+        if (res.status === 200 && res.data.isSuccess) {
+            return Promise.resolve(res.data.result);
+        } else {
+            throw new Error(res.data.message);
+        }
+    });
+};
+
+export const deleteBasket = async (basketID: string) => {
+    return axios.delete(`/v1/giftbox/${basketID}`).then((res) => {
         if (res.status === 200 && res.data.isSuccess) {
             return Promise.resolve(res.data.result);
         } else {

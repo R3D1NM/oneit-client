@@ -53,7 +53,14 @@ function App() {
                                     />
                                     <Route
                                         path="/basket/create"
-                                        element={<CreateBasket />}
+                                        element={
+                                            <AuthRouter
+                                                option={true}
+                                                redirectTo="/login"
+                                            >
+                                                <CreateBasket />
+                                            </AuthRouter>
+                                        }
                                     />
                                     <Route
                                         path="/basket/:basketID"
