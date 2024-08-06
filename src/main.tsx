@@ -11,13 +11,13 @@ import {CookiesProvider} from 'react-cookie';
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-	<React.StrictMode>
-		<CookiesProvider>
-			<DevTools />
-			<QueryClientProvider client={queryClient}>
-				<App />
-				{/* <ReactQueryDevtools initialIsOpen={false} /> */}
-			</QueryClientProvider>
-		</CookiesProvider>
-	</React.StrictMode>,
+    <React.StrictMode>
+        <CookiesProvider>
+            <DevTools />
+            <QueryClientProvider client={queryClient}>
+                <App />
+                <ReactQueryDevtools initialIsOpen={false} />
+            </QueryClientProvider>
+        </CookiesProvider>
+    </React.StrictMode>,
 );

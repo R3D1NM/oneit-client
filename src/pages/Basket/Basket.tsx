@@ -1,25 +1,88 @@
+import {fetchBasketInfo} from '@/api/basket';
+import {Spinner} from '@/components/ui/spinner';
+import {useQuery} from '@tanstack/react-query';
+import {useNavigate, useParams} from 'react-router-dom';
+import NotFound from '../NotFound';
+import {Button} from '@/components/ui/button';
 import {
-    Card,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
-import {Link} from 'react-router-dom';
+    CalendarCheck,
+    ChevronLeft,
+    Heart,
+    LockKeyhole,
+    Settings,
+} from 'lucide-react';
+import Share from '@/components/common/Share';
 
 const Basket = () => {
+    const {basketID} = useParams();
+    const navigate = useNavigate();
+    const {data, isLoading, isError} = useQuery({
+        queryKey: ['basket', basketID],
+        queryFn: () => fetchBasketInfo(basketID || ''),
+    });
+    console.log(data);
+
+    const handleGoBack = () => {
+        navigate(-1);
+    };
+
+    if (isLoading) return <Spinner />;
+    if (isError) return <NotFound />;
+
     return (
-        <div className="flex flex-col content-center mt-3 w-full justify-center gap-2">
-            <Card className="w-full bg-gradient-to-br from-oneit-blue to-[#a3dbff] hover:from-[#a3dbff] hover:to-[#98d5fb] transition-colors duration-300 rounded-lg h-fit flex flex-col justify-between shadow-md border-0 max-w-md">
-                <Link
-                    to="/basket/create"
-                    className="w-full h-full flex flex-col justify-between"
+        <div className="w-full pb-5">
+            <div className="flex py-3 flex-wrap items-center justify-between">
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    className=""
+                    onClick={handleGoBack}
                 >
-                    <CardHeader className="p-3">
-                        <CardTitle>새 선물 바구니 만들기</CardTitle>
-                    </CardHeader>
-                </Link>
-            </Card>
-            <div> Basket List</div>
+                    <ChevronLeft className="" />
+                </Button>
+                {/* <p>{data?.brandName}</p> */}
+                <div className="flex">
+                    <Button variant="ghost" size="icon">
+                        <Heart />
+                    </Button>
+                    {data?.accessStatus === 'PUBLIC' ? (
+                        <Share
+                            title="ONE!T"
+                            text={data?.name || 'ONE!T'}
+                            url={`https://oneit.gift/basket/${data?.idx}`}
+                        />
+                    ) : (
+                        <Button variant="ghost" size="icon">
+                            <LockKeyhole />
+                        </Button>
+                    )}
+                    <Button variant="ghost" size="icon">
+                        <Settings />
+                    </Button>
+                </div>
+            </div>
+
+            <div className="flex justify-center w-full">
+                <img
+                    src={data?.imageUrl || 'https://via.placeholder.com/200'}
+                    alt="recommended product"
+                    // width={200}
+                    // height={200}
+                    className="object-cover group-hover:opacity-50 transition-opacity"
+                />
+            </div>
+            <div className="py-2 bg-white dark:bg-gray-950">
+                <h3 className="text-xl font-bold md:text-xl">{data?.name}</h3>
+                <p className="text-oneit-gray text-sm mb-2 overflow-hidden whitespace-nowrap  overflow-ellipsis">
+                    {data?.description}
+                </p>
+                <div className="flex items-center justify-end">
+                    <span className="text-sm text-gray-500">
+                        <CalendarCheck className="inline-block mr-1" />
+                        {data?.deadline.toString().split('T')[0]}
+                    </span>
+                </div>
+            </div>
         </div>
     );
 };

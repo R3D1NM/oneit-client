@@ -9,6 +9,8 @@ import {
 import {db} from '@/lib/firebase';
 import {ref, get as read, child} from 'firebase/database';
 import {atom} from 'jotai';
+import axios from '@/lib/axios';
+import {Product} from '@/lib/types';
 
 export const getGift = atom(null, async (get, set, chatID) => {
     const dbRef = ref(db);
@@ -36,3 +38,20 @@ export const getGift = atom(null, async (get, set, chatID) => {
         });
 });
 getGift.debugLabel = 'getGift';
+
+export const fetchProduct = async (productID: string): Promise<Product> => {
+    return axios
+        .get(`/v1/products/${productID}`)
+        .then((res) => {
+            if (res.status === 200 && res.data.isSuccess) {
+                console.log(res.data.result);
+                return Promise.resolve(res.data.result);
+            } else {
+                throw new Error(res.data.message);
+            }
+        })
+        .catch((err) => {
+            console.error(err);
+            return Promise.reject(err);
+        });
+};

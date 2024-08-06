@@ -37,3 +37,23 @@ export const createBasket = atom(null, async (get, set) => {
             return Promise.reject(err);
         });
 });
+
+export const fetchBasketInfo = async (basketID: string) => {
+    return axios.get(`/v1/giftbox/${basketID}`).then((res) => {
+        if (res.status === 200 && res.data.isSuccess) {
+            return Promise.resolve(res.data.result);
+        } else {
+            throw new Error(res.data.message);
+        }
+    });
+};
+
+export const fetchBasketList = async () => {
+    return axios.get('/v1/giftbox').then((res) => {
+        if (res.status === 200 && res.data.isSuccess) {
+            return Promise.resolve(res.data.result);
+        } else {
+            throw new Error(res.data.message);
+        }
+    });
+};

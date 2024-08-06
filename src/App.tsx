@@ -6,6 +6,7 @@ import NotFound from './pages/NotFound';
 import Footer from './components/common/Footer';
 import AuthRouter from './components/common/AuthRouter';
 import Navbar from '@/components/common/Navbar';
+import BasketCard from './pages/Basket/components/BasketCard';
 
 const Main = React.lazy(() => import('./pages/Main/Main'));
 const Quiz = React.lazy(() => import('./pages/Recommend/Quiz'));
@@ -49,10 +50,6 @@ function App() {
                                     <Route
                                         path="/curation"
                                         element={<Curation />}
-                                    />
-                                    <Route
-                                        path="/basket"
-                                        element={<Basket />}
                                     />
                                     <Route
                                         path="/basket/create"
