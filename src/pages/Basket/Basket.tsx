@@ -30,6 +30,7 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import {useState} from 'react';
+import {Separator} from '@/components/ui/separator';
 
 const Basket = () => {
     const {basketID} = useParams();
@@ -142,6 +143,18 @@ const Basket = () => {
                             {data?.deadline.toString().split('T')[0]}
                         </span>
                     </div>
+                </div>
+
+                <Separator my-2 />
+
+                <div className="flex justify-center mt-2">
+                    <Button
+                        onClick={(e) => {
+                            navigate(`/basket/add/${basketID}`);
+                        }}
+                    >
+                        상품 추가
+                    </Button>
                 </div>
             </div>
             {error && (

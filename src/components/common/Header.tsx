@@ -22,7 +22,7 @@ const Header = () => {
                     </span>
                 </a>
             </div>
-            <Button variant="ghost" onClick={toMypage}>
+            <Button variant="ghost" onClick={toMypage} size="icon">
                 <User2 className="h-6 w-6" />
             </Button>
         </header>

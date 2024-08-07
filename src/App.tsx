@@ -6,6 +6,7 @@ import NotFound from './pages/NotFound';
 import Footer from './components/common/Footer';
 import AuthRouter from './components/common/AuthRouter';
 import Navbar from '@/components/common/Navbar';
+import AddToBasket from './pages/Basket/AddToBasket';
 
 const Main = React.lazy(() => import('./pages/Main/Main'));
 const Quiz = React.lazy(() => import('./pages/Recommend/Quiz'));
@@ -69,6 +70,10 @@ function App() {
                                     <Route
                                         path="/basket/edit/:basketID"
                                         element={<EditBasket />}
+                                    />
+                                    <Route
+                                        path="/basket/add/:basketID"
+                                        element={<AddToBasket />}
                                     />
                                     <Route path="/about" element={<About />} />
                                     <Route
