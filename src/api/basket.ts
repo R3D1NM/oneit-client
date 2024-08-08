@@ -3,6 +3,7 @@ import {
     basketDeadline,
     basketDescription,
     basketName,
+    selectedProduct,
     thumbnail,
 } from '@/atoms/basket';
 import axios from '@/lib/axios';
@@ -106,3 +107,19 @@ export const editBasket = async (
             }
         });
 };
+
+export const addToBasket = atom(null, async (get, set, basketIdx: string) => {
+    const selected = get(selectedProduct);
+    const products = selected.map((p) => Number(p.idx));
+    return axios
+        .post(`v1/giftbox/${basketIdx}/products`, products)
+        .then((res) => {
+            if (res.status === 200 && res.data.isSuccess) {
+                set(selectedProduct, []);
+                return Promise.resolve(res.data.result);
+            }
+        })
+        .catch((err) => {
+            return Promise.reject(err);
+        });
+});

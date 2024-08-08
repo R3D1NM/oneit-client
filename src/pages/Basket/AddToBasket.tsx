@@ -10,25 +10,27 @@ import {emptySelected, selctedProductCount} from '@/atoms/basket';
 import {useAtomValue, useSetAtom} from 'jotai';
 import {
     Drawer,
+    DrawerClose,
     DrawerContent,
+    DrawerFooter,
     DrawerHeader,
     DrawerTrigger,
 } from '@/components/ui/drawer';
 import {useNavigate, useParams} from 'react-router-dom';
+import {addToBasket} from '@/api/basket';
+import {toast} from 'sonner';
 
 const AddToBasket = () => {
     const {data, isLoading, isError, fetchNextPage, hasNextPage} =
         useProductListInfinite();
     const nextFetchTargetRef = useRef<HTMLDivElement | null>(null); // ref 객체 생성
-    // console.log(fetchNextPage,hasNextPage);
     const selectedCount = useAtomValue(selctedProductCount);
     const emptyAll = useSetAtom(emptySelected);
+    const putIntoBasket = useSetAtom(addToBasket);
     const {basketID} = useParams();
     const navigate = useNavigate();
 
     useEffect(() => {
-        // console.log('useEffect');
-
         const options = {
             root: null,
             rootMargin: '30px',
@@ -72,6 +74,11 @@ const AddToBasket = () => {
         navigate('/basket/' + basketID);
     };
 
+    const handleAdd = () => {
+        putIntoBasket(basketID || '');
+        toast.success('상품이 추가되었습니다.');
+    };
+
     if (isLoading) return <Spinner />;
     if (isError) return <NotFound />;
 
@@ -112,6 +119,7 @@ const AddToBasket = () => {
                     <Button
                         variant="ghost"
                         className="w-full flex flex-col items-center gap-1 text-muted-foreground hover:text-foreground"
+                        onClick={handleAdd}
                     >
                         <span className="text-xs">추가하기</span>
                     </Button>

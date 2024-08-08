@@ -145,7 +145,7 @@ const Basket = () => {
                     </div>
                 </div>
 
-                <Separator my-2 />
+                <Separator className="my-2" />
 
                 <div className="flex justify-center mt-2">
                     <Button

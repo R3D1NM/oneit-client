@@ -7,6 +7,7 @@ import Footer from './components/common/Footer';
 import AuthRouter from './components/common/AuthRouter';
 import Navbar from '@/components/common/Navbar';
 import AddToBasket from './pages/Basket/AddToBasket';
+import {Toaster} from './components/ui/sonner';
 
 const Main = React.lazy(() => import('./pages/Main/Main'));
 const Quiz = React.lazy(() => import('./pages/Recommend/Quiz'));
@@ -117,6 +118,7 @@ function App() {
                     </div>
                 </main>
                 <Navbar />
+                <Toaster position="bottom-center" />
             </div>
         </div>
     );
