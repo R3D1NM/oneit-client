@@ -1,15 +1,17 @@
-import {deleteBasket, fetchBasketInfo} from '@/api/basket';
+import {deleteBasket, fetchBasketInfo, fetchBasketProducts} from '@/api/basket';
 import {Spinner} from '@/components/ui/spinner';
 import {useQuery} from '@tanstack/react-query';
 import {useNavigate, useParams} from 'react-router-dom';
 import NotFound from '../NotFound';
 import {Button} from '@/components/ui/button';
 import {
+    ArrowUp,
     CalendarCheck,
     ChevronLeft,
     Edit,
     Heart,
     LockKeyhole,
+    PlusSquare,
     Settings,
     Trash,
 } from 'lucide-react';
@@ -31,14 +33,22 @@ import {
 } from '@/components/ui/dialog';
 import {useState} from 'react';
 import {Separator} from '@/components/ui/separator';
+import {ScrollArea} from '@/components/ui/scroll-area';
+import {Product} from '@/lib/types';
+import BasketProductCard from './components/BasketProductCard';
 
 const Basket = () => {
     const {basketID} = useParams();
     const navigate = useNavigate();
     const [error, setError] = useState(false);
-    const {data, isLoading, isError} = useQuery({
+    const basketInfoAPI = useQuery({
         queryKey: ['basket', basketID],
         queryFn: () => fetchBasketInfo(basketID || ''),
+    });
+
+    const basketProductAPI = useQuery({
+        queryKey: ['basket', basketID, 'products'],
+        queryFn: () => fetchBasketProducts(basketID || ''),
     });
     // console.log(data);
 
@@ -59,8 +69,12 @@ const Basket = () => {
         navigate(`/basket/edit/${basketID}`);
     };
 
-    if (isLoading) return <Spinner />;
-    if (isError) return <NotFound />;
+    const scrollToTop = () => {
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    };
+
+    if (basketInfoAPI.isLoading) return <Spinner />;
+    if (basketInfoAPI.isError) return <NotFound />;
 
     return (
         <>
@@ -79,11 +93,11 @@ const Basket = () => {
                         <Button variant="ghost" size="icon">
                             <Heart />
                         </Button>
-                        {data?.accessStatus === 'PUBLIC' ? (
+                        {basketInfoAPI.data?.accessStatus === 'PUBLIC' ? (
                             <Share
                                 title="ONE!T"
-                                text={data?.name || 'ONE!T'}
-                                url={`https://oneit.gift/basket/${data?.idx}`}
+                                text={basketInfoAPI.data?.name || 'ONE!T'}
+                                url={`https://oneit.gift/basket/${basketInfoAPI.data?.idx}`}
                             />
                         ) : (
                             <Button variant="ghost" size="icon" disabled>
@@ -109,6 +123,14 @@ const Basket = () => {
                                         <Edit />
                                         <span>수정하기</span>
                                     </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                        onSelect={(e) => {
+                                            navigate(`/basket/add/${basketID}`);
+                                        }}
+                                    >
+                                        <PlusSquare />
+                                        <span>상품추가</span>
+                                    </DropdownMenuItem>
                                     <DropdownMenuItem onSelect={handleDelete}>
                                         <Trash />
                                         <span>삭제하기</span>
@@ -122,7 +144,8 @@ const Basket = () => {
                 <div className="flex justify-center w-full">
                     <img
                         src={
-                            data?.imageUrl || 'https://via.placeholder.com/200'
+                            basketInfoAPI.data?.imageUrl ||
+                            'https://via.placeholder.com/200'
                         }
                         alt="recommended product"
                         // width={200}
@@ -132,29 +155,41 @@ const Basket = () => {
                 </div>
                 <div className="py-2 bg-white dark:bg-gray-950">
                     <h3 className="text-xl font-bold md:text-xl">
-                        {data?.name}
+                        {basketInfoAPI.data?.name}
                     </h3>
                     <p className="text-oneit-gray text-sm mb-2 overflow-hidden whitespace-nowrap  overflow-ellipsis">
-                        {data?.description}
+                        {basketInfoAPI.data?.description}
                     </p>
                     <div className="flex items-center justify-end">
                         <span className="text-sm text-gray-500">
                             <CalendarCheck className="inline-block mr-1" />
-                            {data?.deadline.toString().split('T')[0]}
+                            {
+                                basketInfoAPI.data?.deadline
+                                    .toString()
+                                    .split('T')[0]
+                            }
                         </span>
                     </div>
                 </div>
-
-                <Separator className="my-2" />
-
-                <div className="flex justify-center mt-2">
-                    <Button
-                        onClick={(e) => {
-                            navigate(`/basket/add/${basketID}`);
-                        }}
+                <div className="p-1 w-full text-center justify-center bg-oneit-blue flex items-center rounded-md mb-3">
+                    <h3 className="text-lg font-bold align-middle">
+                        상품 목록
+                    </h3>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                    {basketProductAPI.data?.map((product: Product) => (
+                        <BasketProductCard
+                            key={product.idx}
+                            product={product}
+                            basketID={basketID || ''}
+                        />
+                    ))}
+                    <div
+                        className="rounded-lg overflow-hidden shadow-sm flex items-center justify-center hover:bg-primary-foreground"
+                        onClick={(e) => navigate(`/basket/add/${basketID}`)}
                     >
                         상품 추가
-                    </Button>
+                    </div>
                 </div>
             </div>
             {error && (
@@ -195,6 +230,12 @@ const Basket = () => {
                     </DialogContent>
                 </Dialog>
             )}
+            <Button
+                className="fixed bottom-16 right-0 px-3 py-6 rounded-full shadow-lg m-1"
+                onClick={scrollToTop}
+            >
+                <ArrowUp />
+            </Button>
         </>
     );
 };

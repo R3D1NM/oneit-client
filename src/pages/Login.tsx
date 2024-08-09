@@ -2,22 +2,19 @@ import kakaoLoginImage from '@/assets/kakao_login_medium_wide.png';
 import {useEffect, useState} from 'react';
 import {toast, Toaster} from 'sonner';
 
-const kakaoURL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${import.meta.env.VITE_KAKAO_REST_API_KEY}&redirect_uri=${import.meta.env.VITE_KAKAO_LOGIN_REDIRECT_URI}`;
+const kakaoURL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${import.meta.env.VITE_KAKAO_REST_API_KEY}&redirect_uri=${import.meta.env.VITE_KAKAO_LOGIN_REDIRECT_URI}&scope=friends`;
 
 const Login = () => {
     const [showToast, setShowToast] = useState(false);
     useEffect(() => {
-        if (!showToast) {
-            const success = new URL(window.location.href).searchParams.get(
-                'success',
-            );
-            // console.log(showToast,success);
+        const success = new URL(window.location.href).searchParams.get(
+            'success',
+        );
+        // console.log(showToast,success);
 
-            if (success === 'false') {
-                setShowToast(true);
-            }
-        } else {
-            toast('로그인 실패');
+        if (success === 'false') {
+            // setShowToast(true);
+            toast.error('로그인 실패');
         }
     }, [showToast]);
 
@@ -31,7 +28,7 @@ const Login = () => {
                     </a>
                 </div>
             </div>
-            {showToast && <Toaster />}
+            {/* {showToast && <Toaster />} */}
         </>
     );
 };
