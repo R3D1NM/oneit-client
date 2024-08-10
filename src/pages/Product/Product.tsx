@@ -45,6 +45,7 @@ const Product = () => {
     const basketAPI = useQuery({
         queryKey: ['basket'],
         queryFn: () => fetchBasketList(),
+        enabled: loggedIn,
     });
 
     const navigate = useNavigate();
@@ -55,7 +56,7 @@ const Product = () => {
     });
 
     const handleGoBack = () => {
-        navigate(-1);
+        navigate('/curation');
     };
 
     const handleAddToBasket = (basketID: string) => {
@@ -126,9 +127,12 @@ const Product = () => {
             <Separator className="mb-2" />
             <div className="flex flex-col">
                 <div className="flex w-full p-1 overflow-hidden whitespace-nowrap  overflow-ellipsis">
-                    {productAPI.data?.keywords.map((keyword) => {
+                    {productAPI.data?.keywords.map((keyword, idx) => {
                         return (
-                            <p className="text-oneit-pink text-sm inline-block mr-1">{`#${keyword}`}</p>
+                            <p
+                                key={idx}
+                                className="text-oneit-pink text-sm inline-block mr-1"
+                            >{`#${keyword}`}</p>
                         );
                     })}
                     {/* <p className="text-oneit-pink">#실용적인 #태그 #태그</p> */}
@@ -184,9 +188,15 @@ const Product = () => {
                                             )}
                                         >
                                             {basketAPI.data?.map(
-                                                (basket: Basket) => {
+                                                (
+                                                    basket: Basket,
+                                                    idx: number,
+                                                ) => {
                                                     return (
-                                                        <DrawerClose asChild>
+                                                        <DrawerClose
+                                                            asChild
+                                                            key={idx}
+                                                        >
                                                             <Button
                                                                 variant="ghost"
                                                                 className="flex w-full items-center justify-between rounded-lg border-oneit-blue border-2 p-1 mt-1"

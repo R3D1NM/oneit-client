@@ -15,7 +15,6 @@ export const createBasket = atom(null, async (get, set) => {
         name: get(basketName),
         description: get(basketDescription),
         deadline: get(basketDeadline),
-        createdUserIdx: 108,
         accessStatus: get(accessStatus),
     };
 
@@ -47,19 +46,30 @@ export const createBasket = atom(null, async (get, set) => {
 });
 
 export const fetchBasketInfo = async (basketID: string) => {
-    return axios.get(`/v1/giftbox/${basketID}`).then((res) => {
-        if (res.status === 200 && res.data.isSuccess) {
-            return Promise.resolve(res.data.result);
-        } else {
-            throw new Error(res.data.message);
-        }
-    });
+    return axios
+        .get(`/v1/giftbox/${basketID}`)
+        .then((res) => {
+            if (res.status === 200 && res.data.isSuccess) {
+                return Promise.resolve(res.data.result);
+            } else if (res.status === 401) {
+                return Promise.reject(res.data.message);
+            } else if (res.status === 200 && !res.data.isSuccess) {
+                return Promise.reject(res.data.code);
+            } else {
+                throw new Error(res.data.message);
+            }
+        })
+        .catch((err) => {
+            return Promise.reject(err);
+        });
 };
 
 export const fetchBasketList = async () => {
-    return axios.get('/v1/giftbox?userIdx=108').then((res) => {
+    return axios.get('/v1/giftbox').then((res) => {
         if (res.status === 200 && res.data.isSuccess) {
             return Promise.resolve(res.data.result);
+        } else if (res.status === 200 && !res.data.isSuccess) {
+            return Promise.reject(res.data.code);
         } else {
             throw new Error(res.data.message);
         }
@@ -70,6 +80,8 @@ export const deleteBasket = async (basketID: string) => {
     return axios.delete(`/v1/giftbox/${basketID}`).then((res) => {
         if (res.status === 200 && res.data.isSuccess) {
             return Promise.resolve(res.data.result);
+        } else if (res.status === 200 && !res.data.isSuccess) {
+            return Promise.reject(res.data.code);
         } else {
             throw new Error(res.data.message);
         }
@@ -85,7 +97,6 @@ export const editBasket = async (
         name: basket.name,
         description: basket.description,
         deadline: basket.deadline,
-        createdUserIdx: 108,
         accessStatus: basket.accessStatus,
     };
 
@@ -102,6 +113,8 @@ export const editBasket = async (
         .then((res) => {
             if (res.status === 200 && res.data.isSuccess) {
                 return Promise.resolve(res.data.result);
+            } else if (res.status === 200 && !res.data.isSuccess) {
+                return Promise.reject(res.data.code);
             } else {
                 throw new Error(res.data.message);
             }
@@ -117,6 +130,10 @@ export const addToBasket = atom(null, async (get, set, basketIdx: string) => {
             if (res.status === 200 && res.data.isSuccess) {
                 set(selectedProduct, []);
                 return Promise.resolve(res.data.result);
+            } else if (res.status === 200 && !res.data.isSuccess) {
+                return Promise.reject(res.data.code);
+            } else {
+                throw new Error(res.data.message);
             }
         })
         .catch((err) => {

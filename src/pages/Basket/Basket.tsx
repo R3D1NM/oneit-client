@@ -36,8 +36,12 @@ import {Separator} from '@/components/ui/separator';
 import {ScrollArea} from '@/components/ui/scroll-area';
 import {Product} from '@/lib/types';
 import BasketProductCard from './components/BasketProductCard';
+import {toast} from 'sonner';
+import {authAtom} from '@/api/auth';
+import {useAtomValue} from 'jotai';
 
 const Basket = () => {
+    const user = useAtomValue(authAtom);
     const {basketID} = useParams();
     const navigate = useNavigate();
     const [error, setError] = useState(false);
@@ -49,8 +53,29 @@ const Basket = () => {
     const basketProductAPI = useQuery({
         queryKey: ['basket', basketID, 'products'],
         queryFn: () => fetchBasketProducts(basketID || ''),
+        enabled: basketInfoAPI.isSuccess && !basketInfoAPI.isError,
     });
     // console.log(data);
+
+    if (basketInfoAPI.error?.toString() === '3009') {
+        return (
+            <div className="w-full pb-5 justify-center content-center text-center flex flex-col gap-2">
+                <p>바구니 참여자가 아닙니다.</p>
+                <Button
+                    onClick={() => {
+                        navigate('/');
+                    }}
+                    className="w-fit mx-auto"
+                >
+                    메인으로
+                </Button>
+            </div>
+        );
+    }
+    if (basketInfoAPI.error?.toString() === '4005') {
+        return <NotFound />;
+    }
+    console.log(basketProductAPI.error);
 
     const handleGoBack = () => {
         navigate(-1);
@@ -60,8 +85,12 @@ const Basket = () => {
             await deleteBasket(basketID || '');
             navigate('/');
         } catch (error) {
-            console.error(error);
-            setError(true);
+            if (error?.toString() === '3008') {
+                toast.error('바구니 관리자가 아닙니다.');
+            } else {
+                console.error(error);
+                setError(true);
+            }
         }
     };
 
@@ -122,10 +151,6 @@ const Basket = () => {
                                     바구니 설정
                                 </DropdownMenuLabel>
                                 <DropdownMenuGroup>
-                                    <DropdownMenuItem onSelect={handleEdit}>
-                                        <Edit />
-                                        <span>수정하기</span>
-                                    </DropdownMenuItem>
                                     <DropdownMenuItem
                                         onSelect={(e) => {
                                             navigate(`/basket/add/${basketID}`);
@@ -134,10 +159,24 @@ const Basket = () => {
                                         <PlusSquare />
                                         <span>상품추가</span>
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem onSelect={handleDelete}>
-                                        <Trash />
-                                        <span>삭제하기</span>
-                                    </DropdownMenuItem>
+                                    {user?.idx ===
+                                        basketInfoAPI.data?.createdUserIdx && (
+                                        <>
+                                            {' '}
+                                            <DropdownMenuItem
+                                                onSelect={handleEdit}
+                                            >
+                                                <Edit />
+                                                <span>수정하기</span>
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem
+                                                onSelect={handleDelete}
+                                            >
+                                                <Trash />
+                                                <span>삭제하기</span>
+                                            </DropdownMenuItem>
+                                        </>
+                                    )}
                                 </DropdownMenuGroup>
                             </DropdownMenuContent>
                         </DropdownMenu>

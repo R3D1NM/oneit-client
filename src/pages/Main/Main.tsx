@@ -15,15 +15,16 @@ import {
 import {Basket} from '@/lib/types';
 import {Key} from 'react';
 import {useAtomValue} from 'jotai';
-import {authAtom} from '@/api/auth';
+import {authAtom, isLoginAtom} from '@/api/auth';
 
 const Main = () => {
-    const user = useAtomValue(authAtom);
+    const isLogin = useAtomValue(isLoginAtom);
 
     const CurationList = () => {
         const {data, isLoading, isError} = useQuery({
             queryKey: ['basket'],
             queryFn: () => fetchBasketList(),
+            enabled: isLogin,
         });
         if (isLoading) return <Spinner />;
         if (isError) {
@@ -61,13 +62,13 @@ const Main = () => {
 
     return (
         <div className="flex flex-col overflow-hidden justify-center gap-2 p-1 w-full items-center mt-4 mb-5">
-            {user === null && (
+            {!isLogin && (
                 <BasketIntroCard
                     text="카카오 로그인하고 바구니를 만들어보세요"
                     login={false}
                 />
             )}
-            {user && <CurationList />}
+            {isLogin && <CurationList />}
             <Recommend />
         </div>
     );

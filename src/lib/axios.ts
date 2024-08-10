@@ -1,23 +1,40 @@
+import {authAtom} from '@/api/auth';
 import axios from 'axios';
+import {createStore, useAtomValue} from 'jotai';
 
 const baseURL = import.meta.env.PROD ? import.meta.env.VITE_API_URL : '/api';
 
 const instance = axios.create({
-	baseURL,
+    baseURL,
 });
 
 instance.interceptors.request.use(
-	(config) => {
-		const token = localStorage.getItem('token');
-		if (config.headers && token) {
-			config.headers.Authorization = `Bearer ${token}`;
-		}
-		return config;
-	},
-	(error) => {
-		return Promise.reject(error);
-	},
+    (config) => {
+        const token = localStorage.getItem('token');
+        if (config.headers && token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    },
 );
+
+// If 401 error occurs, move to login page
+instance.interceptors.response.use(
+    (res) => {
+        return res;
+    },
+    (error) => {
+        const token = localStorage.getItem('token');
+        if (error.response && error.response.status === 401 && !token) {
+            window.location.href = '/login';
+        }
+        return Promise.reject(error);
+    },
+);
+
 // axios.interceptors.response.use(
 //     (res) => {
 //         return res;
