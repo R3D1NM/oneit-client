@@ -12,7 +12,7 @@ import {
 const BasketCard = ({text, login}: {text: string; login: boolean}) => {
     return (
         <>
-            <Card className="w-full bg-gradient-to-br from-oneit-blue to-[#a3dbff] hover:from-[#a3dbff] hover:to-[#98d5fb] transition-colors duration-300 rounded-lg h-[60%] flex flex-col justify-between shadow-md border-0 max-w-md">
+            <Card className="w-full bg-gradient-to-br from-oneit-blue to-[#a3dbff] hover:from-[#a3dbff] hover:to-[#98d5fb] transition-colors duration-300 rounded-lg h-[50%] flex flex-col justify-between shadow-md border-0 max-w-md">
                 <Link
                     to={login ? '/basket/create' : '/login'}
                     className="w-full h-full flex flex-col justify-between"

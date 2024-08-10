@@ -18,10 +18,11 @@ import {useState} from 'react';
 interface ProductCardProps {
     product: Product;
     basketID: string;
+    shared: boolean;
 }
 
 const BasketProductCard = (props: ProductCardProps) => {
-    const {product, basketID} = props;
+    const {product, basketID, shared} = props;
     const [isOpen, setIsOpen] = useState(false);
 
     const handleDelete = async () => {
@@ -51,16 +52,18 @@ const BasketProductCard = (props: ProductCardProps) => {
                     </AspectRatio>
                 </a>
                 <div className="absolute top-0 right-0  transition-colors w-full justify-between flex">
-                    <Button
-                        variant={null}
-                        size="icon"
-                        onClick={(e) => setIsOpen(true)}
-                    >
-                        <MinusSquare
-                            stroke="#ffa0a0"
-                            className="group-hover:stroke-red-500 bg-white rounded-sm"
-                        />
-                    </Button>
+                    {!shared && (
+                        <Button
+                            variant={null}
+                            size="icon"
+                            onClick={(e) => setIsOpen(true)}
+                        >
+                            <MinusSquare
+                                stroke="#ffa0a0"
+                                className="group-hover:stroke-red-500 bg-white rounded-sm"
+                            />
+                        </Button>
+                    )}
                     <Button
                         variant={null}
                         className="flex flex-col p-1 m-1 bg-white rounded-sm"

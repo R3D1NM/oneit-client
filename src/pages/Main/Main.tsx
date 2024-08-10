@@ -60,7 +60,7 @@ const Main = () => {
     };
 
     return (
-        <div className="flex flex-col overflow-hidden justify-center gap-5 p-1 w-full items-center">
+        <div className="flex flex-col overflow-hidden justify-center gap-2 p-1 w-full items-center mt-4 mb-5">
             {user === null && (
                 <BasketIntroCard
                     text="카카오 로그인하고 바구니를 만들어보세요"

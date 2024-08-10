@@ -22,6 +22,7 @@ const Auth = React.lazy(() => import('./pages/Auth'));
 const Mypage = React.lazy(() => import('./pages/Mypage'));
 const CreateBasket = React.lazy(() => import('./pages/Basket/CreateBasket'));
 const EditBasket = React.lazy(() => import('./pages/Basket/EditBasket'));
+const SharedBasket = React.lazy(() => import('./pages/Basket/SharedBasket'));
 
 function App() {
     return (
@@ -66,15 +67,40 @@ function App() {
                                     />
                                     <Route
                                         path="/basket/:basketID"
-                                        element={<Basket />}
+                                        element={
+                                            <AuthRouter
+                                                option={true}
+                                                redirectTo="/login"
+                                            >
+                                                <Basket />
+                                            </AuthRouter>
+                                        }
                                     />
                                     <Route
                                         path="/basket/edit/:basketID"
-                                        element={<EditBasket />}
+                                        element={
+                                            <AuthRouter
+                                                option={true}
+                                                redirectTo="/login"
+                                            >
+                                                <EditBasket />
+                                            </AuthRouter>
+                                        }
                                     />
                                     <Route
                                         path="/basket/add/:basketID"
-                                        element={<AddToBasket />}
+                                        element={
+                                            <AuthRouter
+                                                option={true}
+                                                redirectTo="/login"
+                                            >
+                                                <AddToBasket />
+                                            </AuthRouter>
+                                        }
+                                    />
+                                    <Route
+                                        path="/basket/share/:basketID"
+                                        element={<SharedBasket />}
                                     />
                                     <Route path="/about" element={<About />} />
                                     <Route

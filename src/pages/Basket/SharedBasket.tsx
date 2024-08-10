@@ -37,7 +37,7 @@ import {ScrollArea} from '@/components/ui/scroll-area';
 import {Product} from '@/lib/types';
 import BasketProductCard from './components/BasketProductCard';
 
-const Basket = () => {
+const SharedBasket = () => {
     const {basketID} = useParams();
     const navigate = useNavigate();
     const [error, setError] = useState(false);
@@ -79,68 +79,11 @@ const Basket = () => {
     return (
         <>
             <div className="w-full pb-5">
-                <div className="flex py-3 flex-wrap items-center justify-between">
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        className=""
-                        onClick={handleGoBack}
-                    >
-                        <ChevronLeft className="" />
-                    </Button>
-                    {/* <p>{data?.brandName}</p> */}
+                <div className="flex py-3 flex-wrap items-center justify-end">
                     <div className="flex">
                         <Button variant="ghost" size="icon">
                             <Heart />
                         </Button>
-                        {basketInfoAPI.data?.accessStatus === 'PUBLIC' ? (
-                            <Share
-                                title="ONE!T - 선물 바구니"
-                                text={
-                                    `${basketInfoAPI.data?.name} - ${basketInfoAPI.data?.description}` ||
-                                    'ONE!T'
-                                }
-                                url={`https://oneit.gift/basket/share/${basketInfoAPI.data?.idx}`}
-                            />
-                        ) : (
-                            <Button variant="ghost" size="icon" disabled>
-                                <LockKeyhole />
-                            </Button>
-                        )}
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon">
-                                    <Settings />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent
-                                className="w-30"
-                                side="bottom"
-                                align="end"
-                            >
-                                <DropdownMenuLabel>
-                                    바구니 설정
-                                </DropdownMenuLabel>
-                                <DropdownMenuGroup>
-                                    <DropdownMenuItem onSelect={handleEdit}>
-                                        <Edit />
-                                        <span>수정하기</span>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem
-                                        onSelect={(e) => {
-                                            navigate(`/basket/add/${basketID}`);
-                                        }}
-                                    >
-                                        <PlusSquare />
-                                        <span>상품추가</span>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onSelect={handleDelete}>
-                                        <Trash />
-                                        <span>삭제하기</span>
-                                    </DropdownMenuItem>
-                                </DropdownMenuGroup>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
                     </div>
                 </div>
 
@@ -182,17 +125,18 @@ const Basket = () => {
                 <div className="grid grid-cols-2 gap-2">
                     {basketProductAPI.data?.map((product: Product) => (
                         <BasketProductCard
-                            shared={false}
+                            shared={true}
                             key={product.idx}
                             product={product}
                             basketID={basketID || ''}
                         />
                     ))}
                     <div
-                        className="rounded-lg overflow-hidden shadow-sm flex items-center justify-center hover:bg-primary-foreground"
-                        onClick={(e) => navigate(`/basket/add/${basketID}`)}
+                        className="rounded-lg overflow-hidden shadow-sm flex items-center justify-center hover:bg-primary-foreground text-center"
+                        onClick={(e) => navigate(`/login`)}
                     >
-                        상품 추가
+                        카카오 로그인하고
+                        <br /> 상품 추가하기
                     </div>
                 </div>
             </div>
@@ -244,4 +188,4 @@ const Basket = () => {
     );
 };
 
-export default Basket;
+export default SharedBasket;

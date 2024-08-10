@@ -8,14 +8,6 @@ import {ArrowUp, ChevronLeft, CircleX, PlusCircle} from 'lucide-react';
 import AddProductCard from './components/AddProductCard';
 import {emptySelected, selctedProductCount} from '@/atoms/basket';
 import {useAtomValue, useSetAtom} from 'jotai';
-import {
-    Drawer,
-    DrawerClose,
-    DrawerContent,
-    DrawerFooter,
-    DrawerHeader,
-    DrawerTrigger,
-} from '@/components/ui/drawer';
 import {useNavigate, useParams} from 'react-router-dom';
 import {addToBasket} from '@/api/basket';
 import {toast} from 'sonner';
@@ -76,7 +68,14 @@ const AddToBasket = () => {
 
     const handleAdd = () => {
         putIntoBasket(basketID || '');
-        toast.success('상품이 추가되었습니다.');
+        toast.success('상품이 추가되었습니다.', {
+            action: {
+                label: '확인하기',
+                onClick: () => {
+                    navigate('/basket/' + basketID);
+                },
+            },
+        });
     };
 
     if (isLoading) return <Spinner />;

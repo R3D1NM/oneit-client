@@ -26,17 +26,19 @@ import {
 } from '@/components/ui/drawer';
 import {addToBasket, fetchBasketList} from '@/api/basket';
 import {Basket} from '@/lib/types';
-import {useSetAtom} from 'jotai';
+import {useAtomValue, useSetAtom} from 'jotai';
 import {emptySelected, selectProduct} from '@/atoms/basket';
 import {toast} from 'sonner';
 import {ScrollArea} from '@/components/ui/scroll-area';
 import {cn} from '@/lib/utils';
+import {isLoginAtom} from '@/api/auth';
 
 const Product = () => {
     const {productID} = useParams();
     const putIntoBasket = useSetAtom(addToBasket);
     const emptyAll = useSetAtom(emptySelected);
     const onSelect = useSetAtom(selectProduct);
+    const loggedIn = useAtomValue(isLoginAtom);
 
     // console.log(productID);
 
@@ -69,7 +71,7 @@ const Product = () => {
     if (productAPI.isError) return <NotFound />;
 
     return (
-        <div className="w-full pb-12">
+        <div className={cn('w-full', loggedIn ? 'pb-20' : 'pb-16')}>
             <div className="flex py-3 flex-wrap items-center justify-between">
                 <Button
                     variant="ghost"
@@ -158,91 +160,97 @@ const Product = () => {
                 <p>Mauris vestibulum lacus vel orci consectetur semper. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
             </div> */}
 
-            <div className="fixed  mx-auto bottom-16 inset-x-0 flex justify-center gap-3 max-w-sm  h-15 w-full bg-white rounded-t-md mb-[-5px]">
-                <Drawer>
-                    <DrawerTrigger asChild>
-                        <Button className="w-full bg-oneit-blue hover:bg-oneit-blue/90 my-2">
-                            추가하기
-                        </Button>
-                    </DrawerTrigger>
-                    <DrawerContent>
-                        <div className="mx-auto w-full max-w-sm">
-                            <div className="p-4 pb-0">
-                                {/* My basket List */}
-                                {basketAPI.isLoading ? (
-                                    <Spinner />
-                                ) : basketAPI.data.lenght !== 0 ? (
-                                    <ScrollArea
-                                        className={cn(
-                                            'flex items-center justify-between w-full',
-                                            basketAPI.data?.length > 3
-                                                ? 'h-28'
-                                                : 'max-h-fit',
-                                        )}
-                                    >
-                                        {basketAPI.data?.map(
-                                            (basket: Basket) => {
-                                                return (
-                                                    <DrawerClose asChild>
-                                                        <Button
-                                                            variant="ghost"
-                                                            className="flex w-full items-center justify-between rounded-lg border-oneit-blue border-2 p-1 mt-1"
-                                                            onClick={() =>
-                                                                handleAddToBasket(
-                                                                    basket.idx.toString(),
-                                                                )
-                                                            }
-                                                        >
-                                                            <p className="ml-2">
-                                                                {basket.name}
-                                                            </p>
-                                                            <div className="flex text-muted-foreground text-sm items-center">
-                                                                <CalendarCheck className="mr-2" />
-                                                                {
-                                                                    basket.deadline
-                                                                        .toString()
-                                                                        .split(
-                                                                            'T',
-                                                                        )[0]
+            {loggedIn && (
+                <div className="fixed  mx-auto bottom-12 inset-x-0 flex justify-center gap-3 max-w-sm  h-15 w-full bg-white rounded-t-md p-1 mb-3 items-center">
+                    <Drawer>
+                        <DrawerTrigger asChild>
+                            <Button className="w-full bg-oneit-blue hover:bg-oneit-blue/90 my-2">
+                                추가하기
+                            </Button>
+                        </DrawerTrigger>
+                        <DrawerContent>
+                            <div className="mx-auto w-full max-w-sm">
+                                <div className="p-2 pb-0">
+                                    {/* My basket List */}
+                                    {basketAPI.isLoading ? (
+                                        <Spinner />
+                                    ) : basketAPI.data.lenght !== 0 ? (
+                                        <ScrollArea
+                                            className={cn(
+                                                'flex items-center justify-between w-full',
+                                                basketAPI.data?.length > 3
+                                                    ? 'h-28'
+                                                    : 'max-h-fit',
+                                            )}
+                                        >
+                                            {basketAPI.data?.map(
+                                                (basket: Basket) => {
+                                                    return (
+                                                        <DrawerClose asChild>
+                                                            <Button
+                                                                variant="ghost"
+                                                                className="flex w-full items-center justify-between rounded-lg border-oneit-blue border-2 p-1 mt-1"
+                                                                onClick={() =>
+                                                                    handleAddToBasket(
+                                                                        basket.idx.toString(),
+                                                                    )
                                                                 }
-                                                            </div>
-                                                        </Button>
-                                                    </DrawerClose>
-                                                );
-                                            },
-                                        )}
-                                    </ScrollArea>
-                                ) : (
-                                    <a href="/basket/add" className="w-full">
-                                        <Button
-                                            variant="ghost"
+                                                            >
+                                                                <p className="ml-2">
+                                                                    {
+                                                                        basket.name
+                                                                    }
+                                                                </p>
+                                                                <div className="flex text-muted-foreground text-sm items-center">
+                                                                    <CalendarCheck className="mr-2" />
+                                                                    {
+                                                                        basket.deadline
+                                                                            .toString()
+                                                                            .split(
+                                                                                'T',
+                                                                            )[0]
+                                                                    }
+                                                                </div>
+                                                            </Button>
+                                                        </DrawerClose>
+                                                    );
+                                                },
+                                            )}
+                                        </ScrollArea>
+                                    ) : (
+                                        <a
+                                            href="/basket/add"
                                             className="w-full"
                                         >
-                                            새로운 선물 바구니 만들기
-                                        </Button>
-                                    </a>
-                                )}
+                                            <Button
+                                                variant="ghost"
+                                                className="w-full"
+                                            >
+                                                새로운 선물 바구니 만들기
+                                            </Button>
+                                        </a>
+                                    )}
+                                </div>
+                                <DrawerFooter className="flex">
+                                    <DrawerClose asChild>
+                                        <Button variant="outline">취소</Button>
+                                    </DrawerClose>
+                                </DrawerFooter>
                             </div>
-                            <DrawerFooter className="flex">
-                                <DrawerClose asChild>
-                                    <Button variant="outline">취소</Button>
-                                </DrawerClose>
-                            </DrawerFooter>
-                        </div>
-                    </DrawerContent>
-                </Drawer>
-                <a
-                    href={productAPI.data?.productUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="w-[40%]"
-                >
-                    <Button size="lg" className="my-2 w-full">
-                        {productAPI.data?.mallName}
-                        <MoveRight className="pl-2" />
-                    </Button>
-                </a>
-            </div>
+                        </DrawerContent>
+                    </Drawer>
+                    <a
+                        href={productAPI.data?.productUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                    >
+                        <Button className="my-2 w-full">
+                            {productAPI.data?.mallName}
+                            <MoveRight className="pl-2 inline" />
+                        </Button>
+                    </a>
+                </div>
+            )}
         </div>
     );
 };
