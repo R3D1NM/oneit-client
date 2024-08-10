@@ -66,16 +66,32 @@ const AddToBasket = () => {
         navigate('/basket/' + basketID);
     };
 
-    const handleAdd = () => {
-        putIntoBasket(basketID || '');
-        toast.success('상품이 추가되었습니다.', {
-            action: {
-                label: '확인하기',
-                onClick: () => {
-                    navigate('/basket/' + basketID);
-                },
-            },
-        });
+    const handleAdd = async () => {
+        putIntoBasket(basketID || '')
+            .then((res) => {
+                if (res) {
+                    toast.success('상품이 추가되었습니다.', {
+                        action: {
+                            label: '확인하기',
+                            onClick: () => {
+                                navigate('/basket/' + basketID);
+                            },
+                        },
+                    });
+                }
+            })
+            .catch((err) => {
+                if (err.toString() === '3009') {
+                    toast.error('바구니 참여자가 아닙니다.', {
+                        action: {
+                            label: '메인으로',
+                            onClick: () => {
+                                navigate('/');
+                            },
+                        },
+                    });
+                }
+            });
     };
 
     if (isLoading) return <Spinner />;
