@@ -105,7 +105,11 @@ export const login = async (token: string) => {
 
 export const logout = async () => {
     localStorage.removeItem('token');
+    //redirect to main page
+    window.location.href = '/';
 };
+
+export const redirectURI = atom('/');
 
 // const getRefreshToken = async (): Promise<string> => {
 //     return axios.get("/auth/refresh", {

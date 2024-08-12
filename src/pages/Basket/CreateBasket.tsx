@@ -25,7 +25,7 @@ import {useForm} from 'react-hook-form';
 import {z} from 'zod';
 import {Textarea} from '@/components/ui/textarea';
 import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar';
-import {LockKeyhole, LockKeyholeOpen, User2Icon} from 'lucide-react';
+import {ImageIcon, LockKeyhole, LockKeyholeOpen, User2Icon} from 'lucide-react';
 import {createBasket} from '@/api/basket';
 import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group';
 import {useNavigate} from 'react-router-dom';
@@ -37,6 +37,7 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import {ToggleGroup, ToggleGroupItem} from '@/components/ui/toggle-group';
+import {AspectRatio} from '@/components/ui/aspect-ratio';
 
 const CreateBasket = () => {
     const [currentStep, setCurrentStep] = useState('title');
@@ -62,9 +63,13 @@ const CreateBasket = () => {
         description: z.string().optional(),
         image: z.instanceof(File).optional(),
         access: z.enum(['PUBLIC', 'PRIVATE']),
-        deadline: z.date({
-            required_error: '날짜를 선택해주세요.',
-        }),
+        deadline: z
+            .date({
+                required_error: '날짜를 선택해주세요.',
+            })
+            .min(new Date(), {
+                message: '과거의 날짜는 선택할 수 없습니다.',
+            }),
     });
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -121,7 +126,7 @@ const CreateBasket = () => {
                     >
                         {currentStep === 'title' && (
                             <>
-                                <div className="flex">
+                                <div className="flex justify-between">
                                     <FormField
                                         control={form.control}
                                         name="title"
@@ -133,6 +138,7 @@ const CreateBasket = () => {
                                                 <FormMessage />
                                                 <FormControl>
                                                     <Input
+                                                        autoFocus={true}
                                                         {...field}
                                                         placeholder="ex) 00의 생일 선물 바구니"
                                                     />
@@ -140,46 +146,23 @@ const CreateBasket = () => {
                                             </FormItem>
                                         )}
                                     />
-                                    <Avatar
-                                        className="w-16 border-2 h-16"
-                                        onClick={handleAvatarClick}
-                                    >
-                                        <AvatarImage
-                                            src={imageURL}
-                                            className="object-cover"
-                                        />
-                                        <AvatarFallback className="bg-secondary">
-                                            <User2Icon className="w-16 h-16" />
-                                        </AvatarFallback>
-                                    </Avatar>
-                                    <FormField
-                                        control={form.control}
-                                        name="access"
-                                        render={({field}) => (
-                                            <FormItem>
-                                                <FormMessage />
-                                                <ToggleGroup
-                                                    type="single"
-                                                    className="flex gap-2"
-                                                    onChange={field.onChange}
-                                                    defaultValue={field.value}
-                                                >
-                                                    <ToggleGroupItem
-                                                        value="PUBLIC"
-                                                        size="sm"
-                                                    >
-                                                        <LockKeyholeOpen />
-                                                    </ToggleGroupItem>
-                                                    <ToggleGroupItem
-                                                        value="PRIVATE"
-                                                        size="sm"
-                                                    >
-                                                        <LockKeyhole />
-                                                    </ToggleGroupItem>
-                                                </ToggleGroup>
-                                            </FormItem>
-                                        )}
-                                    />
+                                    <div className="w-20">
+                                        <AspectRatio
+                                            ratio={1 / 1}
+                                            className="w-full justify-center flex"
+                                            onClick={handleAvatarClick}
+                                        >
+                                            <img
+                                                src={
+                                                    imageURL ||
+                                                    'https://via.placeholder.com/400'
+                                                }
+                                                alt={'basket thumbnail'}
+                                                className="z-[-10] h-full object-cover hover:opacity-80 transition-opacity"
+                                            />
+                                        </AspectRatio>
+                                    </div>
+
                                     <FormField
                                         control={form.control}
                                         name="image"
@@ -220,6 +203,45 @@ const CreateBasket = () => {
                                         )}
                                     />
                                 </div>
+                                <FormField
+                                    control={form.control}
+                                    name="access"
+                                    render={({field}) => (
+                                        <FormItem className="flex">
+                                            <div className="flex flex-col">
+                                                <FormLabel>
+                                                    바구니 공개 여부
+                                                </FormLabel>
+                                                <FormMessage />
+                                            </div>
+                                            <ToggleGroup
+                                                type="single"
+                                                className="flex gap-2"
+                                                onValueChange={(value) => {
+                                                    if (
+                                                        value === 'PUBLIC' ||
+                                                        value === 'PRIVATE'
+                                                    )
+                                                        field.onChange(value);
+                                                }}
+                                                defaultValue={field.value}
+                                            >
+                                                <ToggleGroupItem
+                                                    value="PUBLIC"
+                                                    size="sm"
+                                                >
+                                                    <LockKeyholeOpen />
+                                                </ToggleGroupItem>
+                                                <ToggleGroupItem
+                                                    value="PRIVATE"
+                                                    size="sm"
+                                                >
+                                                    <LockKeyhole />
+                                                </ToggleGroupItem>
+                                            </ToggleGroup>
+                                        </FormItem>
+                                    )}
+                                />
                                 <FormField
                                     control={form.control}
                                     name="description"

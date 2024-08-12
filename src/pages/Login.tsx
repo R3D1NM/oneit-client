@@ -5,18 +5,31 @@ import {toast, Toaster} from 'sonner';
 const kakaoURL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${import.meta.env.VITE_KAKAO_REST_API_KEY}&redirect_uri=${import.meta.env.VITE_KAKAO_LOGIN_REDIRECT_URI}&scope=profile_nickname,profile_image,account_email,talk_message,friends`;
 
 const Login = () => {
-    const [showToast, setShowToast] = useState(false);
     useEffect(() => {
-        const success = new URL(window.location.href).searchParams.get(
-            'success',
+        const redirect = new URL(window.location.href).searchParams.get(
+            'redirect',
         );
+
+        if (redirect) {
+            localStorage.setItem('redirect', redirect);
+            // setRedirctURI(redirect);
+        } else {
+            //get uri of the page before login page
+            const referrer = document.referrer;
+            const uri = referrer ? new URL(referrer).pathname : '/';
+            console.log(uri);
+
+            // setRedirctURI(uri || '/');
+            localStorage.setItem('redirect', uri || '/');
+        }
+        // console.log(redirect);
         // console.log(showToast,success);
 
         // if (success === 'false') {
         //     // setShowToast(true);
         //     toast.error('로그인 실패');
         // }
-    }, [showToast]);
+    }, []);
 
     return (
         <>
@@ -28,7 +41,6 @@ const Login = () => {
                     </a>
                 </div>
             </div>
-            {/* {showToast && <Toaster />} */}
         </>
     );
 };

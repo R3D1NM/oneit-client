@@ -12,6 +12,7 @@ import {
     Heart,
     LockKeyhole,
     PlusSquare,
+    Send,
     Settings,
     Trash,
 } from 'lucide-react';
@@ -39,6 +40,19 @@ import BasketProductCard from './components/BasketProductCard';
 import {toast} from 'sonner';
 import {authAtom} from '@/api/auth';
 import {useAtomValue} from 'jotai';
+const {Kakao} = window;
+
+interface SelectedUser {
+    uuid: string;
+    id: string;
+    profile_nickname: string;
+    profile_thumbnail_image: string;
+}
+
+interface FriendPickerResponse {
+    selectedTotalCount: number;
+    users: SelectedUser[];
+}
 
 const Basket = () => {
     const user = useAtomValue(authAtom);
@@ -75,7 +89,7 @@ const Basket = () => {
     if (basketInfoAPI.error?.toString() === '4005') {
         return <NotFound />;
     }
-    console.log(basketProductAPI.error);
+    // console.log(basketProductAPI.error);
 
     const handleGoBack = () => {
         navigate(-1);
@@ -97,7 +111,58 @@ const Basket = () => {
     const handleEdit = () => {
         navigate(`/basket/edit/${basketID}`);
     };
-
+    const handleSend = async () => {
+        if (!Kakao.isInitialized()) {
+            Kakao.init(import.meta.env.VITE_KAKAO_API_KEY);
+        }
+        Kakao.Picker.selectFriends({
+            title: '친구 선택',
+            maxPickableCount: 1,
+            minPickableCount: 1,
+        })
+            .then((res: FriendPickerResponse) => {
+                console.log(res);
+                const uuid = res.users[0].uuid;
+                Kakao.API.request({
+                    url: '/v1/api/talk/friends/message/default/send',
+                    data: {
+                        receiver_uuids: [uuid],
+                        template_object: {
+                            object_type: 'feed',
+                            content: {
+                                title: `${user?.nickname}님이 선물 바구니를 보냈습니다.`,
+                                description: 'ONE!T에서 확인해보세요!',
+                                image_url:
+                                    basketInfoAPI.data?.imageUrl ||
+                                    'https://via.placeholder.com/200',
+                                link: {
+                                    web_url: `https://www.oneit.gift/basket/${basketID}`,
+                                    mobile_web_url: `https://www.oneit.gift/basket/${basketID}`,
+                                },
+                            },
+                            buttons: [
+                                {
+                                    title: '웹으로 보기',
+                                    link: {
+                                        mobile_web_url: `https://www.oneit.gift/basket/${basketID}`,
+                                        web_url: `https://www.oneit.gift/basket/${basketID}`,
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                })
+                    .then((response: any) => {
+                        console.log(response);
+                    })
+                    .catch((error: any) => {
+                        console.log(error);
+                    });
+            })
+            .catch((err: any) => {
+                console.log(err);
+            });
+    };
     const scrollToTop = () => {
         window.scrollTo({top: 0, behavior: 'smooth'});
     };
@@ -119,9 +184,9 @@ const Basket = () => {
                     </Button>
                     {/* <p>{data?.brandName}</p> */}
                     <div className="flex">
-                        <Button variant="ghost" size="icon">
+                        {/* <Button variant="ghost" size="icon">
                             <Heart />
-                        </Button>
+                        </Button> */}
                         {basketInfoAPI.data?.accessStatus === 'PUBLIC' ? (
                             <Share
                                 title="ONE!T - 선물 바구니"
@@ -163,6 +228,12 @@ const Basket = () => {
                                         basketInfoAPI.data?.createdUserIdx && (
                                         <>
                                             {' '}
+                                            <DropdownMenuItem
+                                                onSelect={handleSend}
+                                            >
+                                                <Send />
+                                                <span>보내기</span>
+                                            </DropdownMenuItem>
                                             <DropdownMenuItem
                                                 onSelect={handleEdit}
                                             >

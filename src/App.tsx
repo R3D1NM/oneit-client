@@ -8,6 +8,34 @@ import AuthRouter from './components/common/AuthRouter';
 import Navbar from '@/components/common/Navbar';
 import AddToBasket from './pages/Basket/AddToBasket';
 import {Toaster} from './components/ui/sonner';
+import {useParams} from 'react-router-dom';
+
+// Custom component to handle dynamic redirect
+const AuthRouterWithRedirect = ({
+    option,
+    children,
+    redirectTo,
+}: {
+    option: boolean | null;
+    children: React.ReactNode;
+    redirectTo: string;
+}) => {
+    const {basketID} = useParams();
+    if (basketID === undefined) {
+        return (
+            <AuthRouter option={option} redirectTo={'/'}>
+                {children}
+            </AuthRouter>
+        );
+    }
+
+    const redirect = redirectTo.replace(':basketID', basketID);
+    return (
+        <AuthRouter option={option} redirectTo={redirect}>
+            {children}
+        </AuthRouter>
+    );
+};
 
 const Main = React.lazy(() => import('./pages/Main/Main'));
 const Quiz = React.lazy(() => import('./pages/Recommend/Quiz'));
@@ -59,7 +87,7 @@ function App() {
                                         element={
                                             <AuthRouter
                                                 option={true}
-                                                redirectTo="/login"
+                                                redirectTo="/login?redirect=/basket/create"
                                             >
                                                 <CreateBasket />
                                             </AuthRouter>
@@ -68,34 +96,34 @@ function App() {
                                     <Route
                                         path="/basket/:basketID"
                                         element={
-                                            <AuthRouter
+                                            <AuthRouterWithRedirect
                                                 option={true}
-                                                redirectTo="/login"
+                                                redirectTo="/login?redirect=/basket/:basketID"
                                             >
                                                 <Basket />
-                                            </AuthRouter>
+                                            </AuthRouterWithRedirect>
                                         }
                                     />
                                     <Route
                                         path="/basket/edit/:basketID"
                                         element={
-                                            <AuthRouter
+                                            <AuthRouterWithRedirect
                                                 option={true}
-                                                redirectTo="/login"
+                                                redirectTo="/login?redirect=/basket/edit/:basketID"
                                             >
                                                 <EditBasket />
-                                            </AuthRouter>
+                                            </AuthRouterWithRedirect>
                                         }
                                     />
                                     <Route
                                         path="/basket/add/:basketID"
                                         element={
-                                            <AuthRouter
+                                            <AuthRouterWithRedirect
                                                 option={true}
-                                                redirectTo="/login"
+                                                redirectTo="/login?redirect=/basket/add/:basketID"
                                             >
                                                 <AddToBasket />
-                                            </AuthRouter>
+                                            </AuthRouterWithRedirect>
                                         }
                                     />
                                     <Route
@@ -130,7 +158,7 @@ function App() {
                                         element={
                                             <AuthRouter
                                                 option={true}
-                                                redirectTo="/login"
+                                                redirectTo="/login?redirect=/mypage"
                                             >
                                                 <Mypage />
                                             </AuthRouter>

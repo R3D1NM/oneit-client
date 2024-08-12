@@ -56,7 +56,7 @@ const Product = () => {
     });
 
     const handleGoBack = () => {
-        navigate('/curation');
+        navigate(-1);
     };
 
     const handleAddToBasket = (basketID: string) => {
