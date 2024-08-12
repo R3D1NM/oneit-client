@@ -154,9 +154,11 @@ const Basket = () => {
                 })
                     .then((response: any) => {
                         console.log(response);
+                        toast.success('선물 바구니 전달 완료');
                     })
                     .catch((error: any) => {
                         console.log(error);
+                        toast.error('선물 바구니 전달 실패');
                     });
             })
             .catch((err: any) => {
