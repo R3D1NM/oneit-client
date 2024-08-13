@@ -1,4 +1,9 @@
-import {deleteBasket, fetchBasketInfo, fetchBasketProducts} from '@/api/basket';
+import {
+    basketInvite,
+    deleteBasket,
+    fetchBasketInfo,
+    fetchBasketProducts,
+} from '@/api/basket';
 import {Spinner} from '@/components/ui/spinner';
 import {useQuery} from '@tanstack/react-query';
 import {useNavigate, useParams} from 'react-router-dom';
@@ -11,6 +16,7 @@ import {
     Edit,
     Heart,
     LockKeyhole,
+    MailPlusIcon,
     PlusSquare,
     Send,
     Settings,
@@ -40,6 +46,7 @@ import BasketProductCard from './components/BasketProductCard';
 import {toast} from 'sonner';
 import {authAtom} from '@/api/auth';
 import {useAtomValue} from 'jotai';
+import Logo from '@/assets/oneit.png';
 const {Kakao} = window;
 
 interface SelectedUser {
@@ -165,6 +172,45 @@ const Basket = () => {
                 console.log(err);
             });
     };
+
+    const handleInvite = async () => {
+        console.log(import.meta.env.BASE_URL);
+
+        basketInvite(basketID || '').then((res) => {
+            const invitationIdx = res.invitationIdx;
+
+            const url = `${import.meta.env.VITE_CURRENT_DOMAIN}/basket/${basketID}/invite/${invitationIdx}`;
+            if (!Kakao.isInitialized()) {
+                Kakao.init(import.meta.env.VITE_KAKAO_API_KEY);
+            }
+            Kakao.Share.sendDefault({
+                objectType: 'feed',
+                content: {
+                    title: user
+                        ? `${user?.nickname}님이 선물 바구니에 초대했습니다.`
+                        : 'ONE!T 선물 바구니에 초대되었습니다.',
+                    description: basketInfoAPI.data.name || 'ONE!T 선물 바구니',
+                    imageUrl:
+                        basketInfoAPI.data.imageUrl ||
+                        'https://www.oneit.gift/oneit.png',
+                    link: {
+                        mobileWebUrl: url,
+                        webUrl: url,
+                    },
+                },
+                buttons: [
+                    {
+                        title: 'ONE!T에서 확인하기',
+                        link: {
+                            mobileWebUrl: url,
+                            webUrl: url,
+                        },
+                    },
+                ],
+            });
+        });
+    };
+
     const scrollToTop = () => {
         window.scrollTo({top: 0, behavior: 'smooth'});
     };
@@ -223,29 +269,32 @@ const Basket = () => {
                                             navigate(`/basket/add/${basketID}`);
                                         }}
                                     >
-                                        <PlusSquare />
+                                        <PlusSquare className="mr-2" />
                                         <span>상품추가</span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onSelect={handleInvite}>
+                                        <MailPlusIcon className="mr-2" />
+                                        <span>초대하기</span>
                                     </DropdownMenuItem>
                                     {user?.idx ===
                                         basketInfoAPI.data?.createdUserIdx && (
                                         <>
-                                            {' '}
                                             <DropdownMenuItem
                                                 onSelect={handleSend}
                                             >
-                                                <Send />
+                                                <Send className="mr-2" />
                                                 <span>보내기</span>
                                             </DropdownMenuItem>
                                             <DropdownMenuItem
                                                 onSelect={handleEdit}
                                             >
-                                                <Edit />
+                                                <Edit className="mr-2" />
                                                 <span>수정하기</span>
                                             </DropdownMenuItem>
                                             <DropdownMenuItem
                                                 onSelect={handleDelete}
                                             >
-                                                <Trash />
+                                                <Trash className="mr-2" />
                                                 <span>삭제하기</span>
                                             </DropdownMenuItem>
                                         </>
@@ -258,10 +307,7 @@ const Basket = () => {
 
                 <div className="flex justify-center w-full">
                     <img
-                        src={
-                            basketInfoAPI.data?.imageUrl ||
-                            'https://via.placeholder.com/200'
-                        }
+                        src={basketInfoAPI.data?.imageUrl || Logo}
                         alt="recommended product"
                         // width={200}
                         // height={200}

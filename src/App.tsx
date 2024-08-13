@@ -51,6 +51,9 @@ const Mypage = React.lazy(() => import('./pages/Mypage'));
 const CreateBasket = React.lazy(() => import('./pages/Basket/CreateBasket'));
 const EditBasket = React.lazy(() => import('./pages/Basket/EditBasket'));
 const SharedBasket = React.lazy(() => import('./pages/Basket/SharedBasket'));
+const BasketInvitation = React.lazy(
+    () => import('./pages/Basket/BasketInvitation'),
+);
 
 function App() {
     return (
@@ -129,6 +132,10 @@ function App() {
                                     <Route
                                         path="/basket/share/:basketID"
                                         element={<SharedBasket />}
+                                    />
+                                    <Route
+                                        path="/basket/:basketID/invite/:inviteID"
+                                        element={<BasketInvitation />}
                                     />
                                     <Route path="/about" element={<About />} />
                                     <Route
