@@ -191,9 +191,25 @@ export const basketInvite = async (basketIdx: string) => {
 };
 
 export const confirmInvitation = async (invitationIdx: string) => {
-    // todo: remove userIdx
     return axios
-        .patch(`v1/giftbox/invitation/${invitationIdx}/status?userIdx=105`)
+        .patch(`v1/giftbox/invitation/${invitationIdx}/status`)
+        .then((res) => {
+            if (res.status === 200 && res.data.isSuccess) {
+                return Promise.resolve(res.data.result);
+            } else if (res.status === 200 && !res.data.isSuccess) {
+                return Promise.reject(res.data.code);
+            } else {
+                throw new Error(res.data.message);
+            }
+        })
+        .catch((err) => {
+            return Promise.reject(err);
+        });
+};
+
+export const fetcthBasketParticipants = async (basketIdx: string) => {
+    return axios
+        .get(`v1/giftbox/${basketIdx}/participants`)
         .then((res) => {
             if (res.status === 200 && res.data.isSuccess) {
                 return Promise.resolve(res.data.result);

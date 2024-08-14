@@ -1,4 +1,9 @@
-import {deleteBasket, fetchBasketInfo, fetchBasketProducts} from '@/api/basket';
+import {
+    deleteBasket,
+    fetchBasketInfo,
+    fetchBasketProducts,
+    fetcthBasketParticipants,
+} from '@/api/basket';
 import {Spinner} from '@/components/ui/spinner';
 import {useQuery} from '@tanstack/react-query';
 import {useNavigate, useParams} from 'react-router-dom';
@@ -8,6 +13,7 @@ import {
     ArrowUp,
     CalendarCheck,
     ChevronLeft,
+    Crown,
     Edit,
     Heart,
     LockKeyhole,
@@ -34,8 +40,14 @@ import {
 import {useState} from 'react';
 import {Separator} from '@/components/ui/separator';
 import {ScrollArea} from '@/components/ui/scroll-area';
-import {Product} from '@/lib/types';
+import {Participant, Product} from '@/lib/types';
 import BasketProductCard from './components/BasketProductCard';
+import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover';
+import ParticipantAvatar from './components/ParticipantAvatar';
+import {Avatar, AvatarImage} from '@/components/ui/avatar';
+import {cn} from '@/lib/utils';
+import {AspectRatio} from '@/components/ui/aspect-ratio';
+import BasketInfoCard from './components/BasketInfoCard';
 
 const SharedBasket = () => {
     const {basketID} = useParams();
@@ -50,24 +62,6 @@ const SharedBasket = () => {
         queryKey: ['basket', basketID, 'products'],
         queryFn: () => fetchBasketProducts(basketID || ''),
     });
-    // console.log(data);
-
-    const handleGoBack = () => {
-        navigate(-1);
-    };
-    const handleDelete = async () => {
-        try {
-            await deleteBasket(basketID || '');
-            navigate('/');
-        } catch (error) {
-            console.error(error);
-            setError(true);
-        }
-    };
-
-    const handleEdit = () => {
-        navigate(`/basket/edit/${basketID}`);
-    };
 
     const scrollToTop = () => {
         window.scrollTo({top: 0, behavior: 'smooth'});
@@ -87,36 +81,10 @@ const SharedBasket = () => {
                     </div>
                 </div>
 
-                <div className="flex justify-center w-full">
-                    <img
-                        src={
-                            basketInfoAPI.data?.imageUrl ||
-                            'https://via.placeholder.com/200'
-                        }
-                        alt="recommended product"
-                        // width={200}
-                        // height={200}
-                        className="object-cover group-hover:opacity-50 transition-opacity"
-                    />
-                </div>
-                <div className="py-2 bg-white dark:bg-gray-950">
-                    <h3 className="text-xl font-bold md:text-xl">
-                        {basketInfoAPI.data?.name}
-                    </h3>
-                    <p className="text-oneit-gray text-sm mb-2 overflow-hidden whitespace-nowrap  overflow-ellipsis">
-                        {basketInfoAPI.data?.description}
-                    </p>
-                    <div className="flex items-center justify-end">
-                        <span className="text-sm text-gray-500">
-                            <CalendarCheck className="inline-block mr-1" />
-                            {
-                                basketInfoAPI.data?.deadline
-                                    .toString()
-                                    .split('T')[0]
-                            }
-                        </span>
-                    </div>
-                </div>
+                <BasketInfoCard
+                    basket={basketInfoAPI.data}
+                    className="overflow-hidden  group  w-full my-2 "
+                />
                 <div className="p-1 w-full text-center justify-center bg-oneit-blue flex items-center rounded-md mb-3">
                     <h3 className="text-lg font-bold align-middle">
                         상품 목록

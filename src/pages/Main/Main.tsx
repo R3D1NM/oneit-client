@@ -1,4 +1,3 @@
-import BasketCard from '@/pages/Basket/components/BasketCard';
 import BasketIntroCard from './components/BasketCard';
 import Recommend from './components/RecommendCard';
 import {useQuery} from '@tanstack/react-query';
@@ -16,6 +15,8 @@ import {Basket} from '@/lib/types';
 import {Key} from 'react';
 import {useAtomValue} from 'jotai';
 import {authAtom, isLoginAtom} from '@/api/auth';
+import BasketInfoCard from '../Basket/components/BasketInfoCard';
+import {Link} from 'react-router-dom';
 
 const Main = () => {
     const isLogin = useAtomValue(isLoginAtom);
@@ -38,6 +39,8 @@ const Main = () => {
                 />
             );
         }
+        console.log(data);
+
         return (
             <Carousel
                 className="w-full"
@@ -49,7 +52,15 @@ const Main = () => {
                     {data?.map(
                         (basket: Basket, index: Key | null | undefined) => (
                             <CarouselItem key={index}>
-                                <BasketCard basket={basket} />
+                                <Link
+                                    to={`/basket/${basket.idx}`}
+                                    className="block"
+                                >
+                                    <BasketInfoCard
+                                        basket={basket}
+                                        className="rounded-lg overflow-hidden shadow-sm group  w-full my-2 border-[0.5px]"
+                                    />
+                                </Link>
                             </CarouselItem>
                         ),
                     )}
