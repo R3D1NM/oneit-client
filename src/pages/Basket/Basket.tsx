@@ -347,6 +347,8 @@ const Basket = () => {
                             key={product.idx}
                             product={product}
                             basketID={basketID || ''}
+                            voteStatus={product.voteStatus || 'NONE'}
+                            likeCount={product.likeCount || 0}
                         />
                     ))}
                     <div

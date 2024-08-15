@@ -1,4 +1,4 @@
-import {deleteBasketProduct} from '@/api/basket';
+import {basketProductVote, deleteBasketProduct} from '@/api/basket';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -19,10 +19,14 @@ interface ProductCardProps {
     product: Product;
     basketID: string;
     shared: boolean;
+    likeCount: number;
+    voteStatus: 'LIKE' | 'DISLIKE' | 'NONE';
 }
 
 const BasketProductCard = (props: ProductCardProps) => {
-    const {product, basketID, shared} = props;
+    const {product, basketID, shared, likeCount, voteStatus} = props;
+    const [vote, setVote] = useState<'LIKE' | 'DISLIKE' | 'NONE'>(voteStatus);
+    const [count, setCount] = useState(likeCount);
     const [isOpen, setIsOpen] = useState(false);
 
     const handleDelete = async () => {
@@ -30,6 +34,33 @@ const BasketProductCard = (props: ProductCardProps) => {
         //refresh page
         window.location.reload();
     };
+
+    const handleVote = () => {
+        let newVote: 'LIKE' | 'DISLIKE' | 'NONE';
+        let newCount: number;
+
+        if (vote === 'LIKE') {
+            newVote = 'NONE';
+            newCount = count - 1;
+        } else {
+            newVote = 'LIKE';
+            newCount = count + 1;
+        }
+
+        setVote(newVote);
+        setCount(newCount);
+
+        // console.log(basketID, product.idx, 'uuid', newVote);
+
+        basketProductVote(basketID, product.idx.toString(), 'uuid', newVote)
+            .then((res) => {
+                console.log(res);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
     return (
         <div
             key={product.idx}
@@ -67,10 +98,15 @@ const BasketProductCard = (props: ProductCardProps) => {
                     <Button
                         variant={null}
                         className="flex flex-col p-1 m-1 bg-white rounded-sm"
+                        onClick={handleVote}
                     >
-                        <Heart className="text-oneit-pink group-hover:text-red-500" />
+                        {vote == 'LIKE' ? (
+                            <Heart className="text-oneit-pink group-hover:text-red-500 fill-oneit-pink group-hover:fill-red-500" />
+                        ) : (
+                            <Heart className="text-oneit-pink group-hover:text-red-500" />
+                        )}
                         <span className="text-xs text-gray-500 text-center">
-                            25
+                            {count}
                         </span>
                     </Button>
                 </div>
