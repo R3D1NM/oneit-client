@@ -99,7 +99,7 @@ const CreateBasket = () => {
         try {
             const id: number = await makeBasket();
             if (id) {
-                navigate(`/basket/${id}`);
+                navigate(`/basket/${id}`, {replace: true});
             } else {
                 throw new Error('바구니 생성에 실패했습니다.');
             }
@@ -146,102 +146,49 @@ const CreateBasket = () => {
                                             </FormItem>
                                         )}
                                     />
-                                    <div className="w-20">
-                                        <AspectRatio
-                                            ratio={1 / 1}
-                                            className="w-full justify-center flex"
-                                            onClick={handleAvatarClick}
-                                        >
-                                            <img
-                                                src={
-                                                    imageURL ||
-                                                    'https://via.placeholder.com/400'
-                                                }
-                                                alt={'basket thumbnail'}
-                                                className="z-[-10] h-full object-cover hover:opacity-80 transition-opacity"
-                                            />
-                                        </AspectRatio>
-                                    </div>
-
                                     <FormField
                                         control={form.control}
-                                        name="image"
+                                        name="access"
                                         render={({field}) => (
-                                            <FormItem>
-                                                <FormControl>
-                                                    <Input
-                                                        {...fileRef}
-                                                        ref={fileInputRef}
-                                                        onChange={(event) => {
-                                                            const displayUrl: string =
-                                                                URL.createObjectURL(
-                                                                    event.target
-                                                                        .files![0],
-                                                                );
-
-                                                            setImageURL(
-                                                                displayUrl,
-                                                            );
-                                                            console.log(event);
-                                                            const file =
-                                                                event.target
-                                                                    .files![0];
-                                                            console.log(file);
-
+                                            <FormItem className="flex flex-col">
+                                                <div className="flex flex-col">
+                                                    <FormLabel>
+                                                        공개 여부
+                                                    </FormLabel>
+                                                    <FormMessage />
+                                                </div>
+                                                <ToggleGroup
+                                                    type="single"
+                                                    className="flex gap-2"
+                                                    onValueChange={(value) => {
+                                                        if (
+                                                            value ===
+                                                                'PUBLIC' ||
+                                                            value === 'PRIVATE'
+                                                        )
                                                             field.onChange(
-                                                                file,
+                                                                value,
                                                             );
-                                                        }}
-                                                        type="file"
-                                                        accept="image/*"
-                                                        style={{
-                                                            display: 'none',
-                                                        }}
-                                                    />
-                                                </FormControl>
+                                                    }}
+                                                    defaultValue={field.value}
+                                                >
+                                                    <ToggleGroupItem
+                                                        value="PUBLIC"
+                                                        size="sm"
+                                                    >
+                                                        <LockKeyholeOpen />
+                                                    </ToggleGroupItem>
+                                                    <ToggleGroupItem
+                                                        value="PRIVATE"
+                                                        size="sm"
+                                                    >
+                                                        <LockKeyhole />
+                                                    </ToggleGroupItem>
+                                                </ToggleGroup>
                                             </FormItem>
                                         )}
                                     />
                                 </div>
-                                <FormField
-                                    control={form.control}
-                                    name="access"
-                                    render={({field}) => (
-                                        <FormItem className="flex">
-                                            <div className="flex flex-col">
-                                                <FormLabel>
-                                                    바구니 공개 여부
-                                                </FormLabel>
-                                                <FormMessage />
-                                            </div>
-                                            <ToggleGroup
-                                                type="single"
-                                                className="flex gap-2"
-                                                onValueChange={(value) => {
-                                                    if (
-                                                        value === 'PUBLIC' ||
-                                                        value === 'PRIVATE'
-                                                    )
-                                                        field.onChange(value);
-                                                }}
-                                                defaultValue={field.value}
-                                            >
-                                                <ToggleGroupItem
-                                                    value="PUBLIC"
-                                                    size="sm"
-                                                >
-                                                    <LockKeyholeOpen />
-                                                </ToggleGroupItem>
-                                                <ToggleGroupItem
-                                                    value="PRIVATE"
-                                                    size="sm"
-                                                >
-                                                    <LockKeyhole />
-                                                </ToggleGroupItem>
-                                            </ToggleGroup>
-                                        </FormItem>
-                                    )}
-                                />
                                 <FormField
                                     control={form.control}
                                     name="description"
@@ -263,6 +210,83 @@ const CreateBasket = () => {
                                 />
                                 <div className="flex justify-end">
                                     <Button
+                                        onClick={() => {
+                                            if (
+                                                form.getValues().title.length >
+                                                2
+                                            ) {
+                                                setCurrentStep('thumbnail');
+                                            }
+                                        }}
+                                    >
+                                        다음
+                                    </Button>
+                                </div>
+                            </>
+                        )}
+                        {currentStep === 'thumbnail' && (
+                            <div>
+                                <FormField
+                                    control={form.control}
+                                    name="image"
+                                    render={({field}) => (
+                                        <FormItem>
+                                            <FormLabel>
+                                                바구니 대표 이미지 (선택)
+                                            </FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    {...fileRef}
+                                                    ref={fileInputRef}
+                                                    onChange={(event) => {
+                                                        const displayUrl: string =
+                                                            URL.createObjectURL(
+                                                                event.target
+                                                                    .files![0],
+                                                            );
+
+                                                        setImageURL(displayUrl);
+                                                        console.log(event);
+                                                        const file =
+                                                            event.target
+                                                                .files![0];
+                                                        console.log(file);
+
+                                                        field.onChange(file);
+                                                    }}
+                                                    type="file"
+                                                    accept="image/*"
+                                                    style={{
+                                                        display: 'none',
+                                                    }}
+                                                />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+                                <div className="w-full p-3">
+                                    <AspectRatio
+                                        ratio={1 / 1}
+                                        className="w-full justify-center flex"
+                                        onClick={handleAvatarClick}
+                                    >
+                                        <img
+                                            src={
+                                                imageURL ||
+                                                'https://via.placeholder.com/400'
+                                            }
+                                            alt={'basket thumbnail'}
+                                            className="z-[-10] h-full object-cover hover:opacity-80 transition-opacity"
+                                        />
+                                    </AspectRatio>
+                                </div>
+                                <div className="flex justify-end gap-2">
+                                    <Button
+                                        onClick={() => setCurrentStep('title')}
+                                    >
+                                        이전
+                                    </Button>
+                                    <Button
                                         onClick={() =>
                                             setCurrentStep('deadline')
                                         }
@@ -270,7 +294,7 @@ const CreateBasket = () => {
                                         다음
                                     </Button>
                                 </div>
-                            </>
+                            </div>
                         )}
                         {currentStep === 'deadline' && (
                             <>
@@ -295,7 +319,9 @@ const CreateBasket = () => {
                                 ></FormField>
                                 <div className="flex justify-end gap-2">
                                     <Button
-                                        onClick={() => setCurrentStep('title')}
+                                        onClick={() =>
+                                            setCurrentStep('thumbnail')
+                                        }
                                     >
                                         이전
                                     </Button>

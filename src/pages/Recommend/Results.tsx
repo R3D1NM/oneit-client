@@ -32,6 +32,7 @@ import {
 } from '@/components/ui/carousel';
 import Share from '@/components/common/Share';
 import KakaoShare from '@/components/common/KakaoShare';
+import {isLoginAtom} from '@/api/auth';
 
 const GiftCard = React.lazy(() => import('./components/GiftCard'));
 const NotFound = React.lazy(() => import('../NotFound'));
@@ -40,6 +41,7 @@ const Results = () => {
     const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
     const {chatID} = useParams();
+    const isLogin = useAtomValue(isLoginAtom);
 
     const getResult = useSetAtom(getGift);
     const product = useAtomValue(gift);
@@ -116,99 +118,34 @@ const Results = () => {
                         <div className="flex flex-col justify-evenly px-2">
                             <Button
                                 size="sm"
-                                onClick={() => setShowModal(true)}
+                                onClick={() => navigate('/curation')}
                                 className="w-full mt-2"
                             >
                                 더 찾아보기
                             </Button>
-                            <Button
-                                size="sm"
-                                onClick={() => setShowModal(true)}
-                                className="bg-oneit-blue hover:bg-oneit-blue/90 w-full mt-2"
-                            >
-                                메인으로
-                            </Button>
+                            {!isLogin && (
+                                <div className="flex items-center">
+                                    <Button
+                                        onClick={() => {
+                                            const uri = new URL(
+                                                window.location.href,
+                                            ).pathname;
+                                            // console.log(uri);
+
+                                            navigate('/login?redirect=' + uri);
+                                        }}
+                                        className="bg-kakao-yellow hover:bg-kakao-yellow/90 w-full mt-2"
+                                    >
+                                        <span>
+                                            카카오 로그인 후 바구니에 추가하기
+                                        </span>
+                                    </Button>
+                                </div>
+                            )}
                         </div>
                     )}
                 </Card>
             </div>
-            {showModal && (
-                <Dialog open={showModal} onOpenChange={setShowModal}>
-                    <DialogContent className="sm:max-w-[425px]">
-                        <DialogHeader>
-                            <DialogTitle>
-                                더 많은 선물을 추천 받고 싶다면?
-                            </DialogTitle>
-                        </DialogHeader>
-                        <div className="flex flex-col">
-                            <p className="m-1 text-lg">
-                                ONE!T의 SNS 채널에서 확인하세요!
-                            </p>
-                            <div className="flex justify-start">
-                                <a
-                                    href="http://pf.kakao.com/_kbUxgG"
-                                    target="_blank"
-                                    rel="noreferrer"
-                                >
-                                    {/* <Button className='bg-[#FEE500] text-[#191919] hover:bg-[#FEE500] hover:text-[#191919]'> */}
-                                    <img
-                                        src={Kakao}
-                                        alt="kakao-channel"
-                                        className="h-[35px] mr-1"
-                                    ></img>
-                                    {/* <p className='m-1'>오픈채팅</p> */}
-                                    {/* </Button> */}
-                                </a>
-                                <a
-                                    href="https://www.instagram.com/oneit.gift"
-                                    target="_blank"
-                                    rel="noreferrer"
-                                >
-                                    <img
-                                        src={Instagram}
-                                        alt="instagram"
-                                        className="h-[35px] mr-1"
-                                    ></img>
-                                </a>
-                                <a
-                                    href="https://blog.naver.com/oneit_gift"
-                                    target="_blank"
-                                    rel="noreferrer"
-                                >
-                                    <img
-                                        src={Naver}
-                                        alt="naver-blog"
-                                        className="h-[35px]"
-                                    ></img>
-                                </a>
-                            </div>
-                        </div>
-                        <div className="flex justify-end gap-2">
-                            {/* <Button variant="outline" onClick={() => setShowModal(false)}>
-                    뒤로가기
-                    </Button> */}
-                            <Button
-                                type="submit"
-                                className="bg-oneit-blue hover:bg-oneit-blue/90"
-                                onClick={() => {
-                                    navigate('/');
-                                }}
-                            >
-                                메인으로
-                            </Button>
-                            <Button
-                                type="submit"
-                                onClick={() => {
-                                    setShowModal(false);
-                                    handleRetry();
-                                }}
-                            >
-                                추천받기
-                            </Button>
-                        </div>
-                    </DialogContent>
-                </Dialog>
-            )}
         </>
     );
 };

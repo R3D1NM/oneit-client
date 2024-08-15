@@ -35,8 +35,8 @@ const Login = () => {
         <>
             <div className="flex flex-col content-center mt-3 w-fit justify-center gap-2">
                 ONE!T에 가입하고 더 많은 서비스를 이용하세요!
-                <div>
-                    <a href={kakaoURL}>
+                <div className="flex justify-center">
+                    <a href={kakaoURL} className="flex justify-center">
                         <img src={kakaoLoginImage} alt="카카오 로그인" />
                     </a>
                 </div>

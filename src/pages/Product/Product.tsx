@@ -64,7 +64,14 @@ const Product = () => {
             emptyAll();
             onSelect(productAPI.data);
             putIntoBasket(basketID || '');
-            toast.success('상품이 추가되었습니다.');
+            toast.success('상품이 추가되었습니다.', {
+                action: {
+                    label: '확인하기',
+                    onClick: () => {
+                        navigate('/basket/' + basketID);
+                    },
+                },
+            });
         }
     };
 
@@ -87,10 +94,14 @@ const Product = () => {
                     <Button variant="ghost" size="icon">
                         <Heart />
                     </Button>
-                    <Share
-                        title="ONE!T"
-                        text={productAPI.data?.name || 'ONE!T'}
+                    <KakaoShare
+                        title="ONE!T - 선물 추천"
+                        description={productAPI.data?.name || 'ONE!T'}
                         url={`https://oneit.gift/product/${productAPI.data?.idx}`}
+                        image={
+                            productAPI.data?.thumbnailUrl ||
+                            'https://www.oneit.gift/oneit.png'
+                        }
                     />
                 </div>
             </div>
@@ -126,24 +137,23 @@ const Product = () => {
             </div>
             <Separator className="mb-2" />
             <div className="flex flex-col">
-                <div className="flex w-full p-1 overflow-hidden whitespace-nowrap  overflow-ellipsis">
-                    {productAPI.data?.keywords.map((keyword, idx) => {
-                        return (
-                            <p
+                <div className="flex w-full overflow-hidden whitespace-nowrap overflow-ellipsis">
+                    <p className="text-oneit-pink text-sm inline-block">
+                        {productAPI.data?.keywords.map((keyword, idx) => (
+                            <span
                                 key={idx}
-                                className="text-oneit-pink text-sm inline-block mr-1"
-                            >{`#${keyword}`}</p>
-                        );
-                    })}
-                    {/* <p className="text-oneit-pink">#실용적인 #태그 #태그</p> */}
+                                className="mr-1"
+                            >{`#${keyword}`}</span>
+                        ))}
+                    </p>
                 </div>
                 <div className="flex">
                     <p>요즘 스트레스를 많이 받는 친구에게 추천</p>
                 </div>
                 <div className="flex items-center gap-2"></div>
             </div>
-            <Separator className="my-2" />
-            <div className="flex flex-col items-center">
+            {/* <Separator className="my-2" /> */}
+            {/* <div className="flex flex-col items-center">
                 <div className="flex items-center justify-center">
                     <div className="flex items-center gap-1 mr-2">
                         <StarIcon className="w-5 h-5 fill-primary" />
@@ -155,7 +165,7 @@ const Product = () => {
                     <span className="text-lg font-medium">3.2</span>
                 </div>
                 <p>"선물 관점의 후기 한줄평으로"</p>
-            </div>
+            </div> */}
             {/* <div className="border-[0.3px] my-1"></div>
             <div>
                 <p>상품 설명</p>
@@ -165,7 +175,7 @@ const Product = () => {
             </div> */}
 
             {loggedIn && (
-                <div className="fixed  mx-auto bottom-12 inset-x-0 flex justify-center gap-3 max-w-sm  h-15 w-full bg-white rounded-t-md p-1 mb-3 items-center">
+                <div className="fixed  mx-auto bottom-12 inset-x-0 flex justify-center gap-2 max-w-sm  h-15 w-full bg-white rounded-t-md py-1 px-2 mb-3 items-center border-t-[1px]">
                     <Drawer>
                         <DrawerTrigger asChild>
                             <Button className="w-full bg-oneit-blue hover:bg-oneit-blue/90 my-2">
@@ -259,6 +269,18 @@ const Product = () => {
                             <MoveRight className="pl-2 inline" />
                         </Button>
                     </a>
+                </div>
+            )}
+            {!loggedIn && (
+                <div className="fixed  mx-auto bottom-12 inset-x-0 flex justify-center gap-3 max-w-sm  h-15 w-full bg-white rounded-t-md p-1 mb-3 items-center">
+                    <Button
+                        className="w-full bg-kakao-yellow hover:bg-kakao-yellow/90"
+                        onClick={() =>
+                            navigate(`/login?redirect=/product/${productID}`)
+                        }
+                    >
+                        카카오 로그인하고 바구니에 담기
+                    </Button>
                 </div>
             )}
         </div>

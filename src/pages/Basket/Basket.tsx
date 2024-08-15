@@ -55,6 +55,7 @@ import {Avatar, AvatarImage} from '@/components/ui/avatar';
 import {cn} from '@/lib/utils';
 import {AspectRatio} from '@/components/ui/aspect-ratio';
 import BasketInfoCard from './components/BasketInfoCard';
+import KakaoShare from '@/components/common/KakaoShare';
 const {Kakao} = window;
 
 interface SelectedUser {
@@ -104,7 +105,7 @@ const Basket = () => {
     if (basketInfoAPI.error?.toString() === '4005') {
         return <NotFound />;
     }
-    // console.log(basketProductAPI.error);
+    console.log(basketProductAPI?.error);
 
     const handleGoBack = () => {
         navigate(-1);
@@ -244,11 +245,17 @@ const Basket = () => {
                             <Heart />
                         </Button> */}
                         {basketInfoAPI.data?.accessStatus === 'PUBLIC' ? (
-                            <Share
-                                title="ONE!T - 선물 바구니"
-                                text={
-                                    `${basketInfoAPI.data?.name} - ${basketInfoAPI.data?.description}` ||
-                                    'ONE!T'
+                            <KakaoShare
+                                title={
+                                    'ONE!T 선물 바구니 - ' +
+                                    basketInfoAPI.data?.name
+                                }
+                                description={
+                                    basketInfoAPI.data?.description || 'ONE!T'
+                                }
+                                image={
+                                    basketInfoAPI.data?.imageUrl ||
+                                    'https://www.oneit.gift/oneit.png'
                                 }
                                 url={`https://oneit.gift/basket/share/${basketInfoAPI.data?.idx}`}
                             />
