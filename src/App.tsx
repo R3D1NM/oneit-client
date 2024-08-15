@@ -55,6 +55,7 @@ const SharedBasket = React.lazy(() => import('./pages/Basket/SharedBasket'));
 const BasketInvitation = React.lazy(
     () => import('./pages/Basket/BasketInvitation'),
 );
+const Discover = React.lazy(() => import('./pages/Discover/Discover'));
 
 function App() {
     return (
@@ -85,6 +86,10 @@ function App() {
                                     <Route
                                         path="/curation"
                                         element={<Curation />}
+                                    />
+                                    <Route
+                                        path="/discover"
+                                        element={<Discover />}
                                     />
                                     <Route
                                         path="/basket/create"

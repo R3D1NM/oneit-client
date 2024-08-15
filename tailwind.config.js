@@ -25,7 +25,7 @@ export default{
         'oneit-pink': '#ffa0a0',
         'oneit-navy': '#1B3F87',
         'oneit-blue': '#A1DBFF',
-        'oneit-orange': '#FCB968',
+        'oneit-orange': '#FFD070',
         'oneit-gray': '#4A4A4A',
         'kakao-yellow': '#FEE500',
         border: "hsl(var(--border))",

@@ -148,7 +148,9 @@ const Product = () => {
                     </p>
                 </div>
                 <div className="flex">
-                    <p>요즘 스트레스를 많이 받는 친구에게 추천</p>
+                    <p className="break-words  whitespace-normal">
+                        {productAPI.data?.description}
+                    </p>
                 </div>
                 <div className="flex items-center gap-2"></div>
             </div>

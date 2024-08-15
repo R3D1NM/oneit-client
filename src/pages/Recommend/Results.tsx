@@ -16,6 +16,7 @@ import {
     DialogContent,
     DialogHeader,
     DialogTitle,
+    DialogTrigger,
 } from '@/components/ui/dialog';
 import Kakao from '@/assets/kakao.png';
 import Naver from '@/assets/naver_blog.png';
@@ -116,13 +117,56 @@ const Results = () => {
                     </div>
                     {isValid && (
                         <div className="flex flex-col justify-evenly px-2">
-                            <Button
-                                size="sm"
-                                onClick={() => navigate('/curation')}
-                                className="w-full mt-2"
-                            >
-                                더 찾아보기
-                            </Button>
+                            <Dialog>
+                                <DialogTrigger asChild>
+                                    <Button
+                                        size="sm"
+                                        // onClick={() => navigate('/curation')}
+                                        className="w-full mt-2"
+                                    >
+                                        더 찾아보기
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>
+                                            더 많은 선물을 보려면?
+                                        </DialogTitle>
+                                    </DialogHeader>
+                                    <div className="grid grid-cols-3 gap-2 h-32">
+                                        <Button
+                                            className="h-full bg-oneit-blue hover:bg-oneit-blue/90"
+                                            onClick={() =>
+                                                navigate('/discover')
+                                            }
+                                        >
+                                            <span className="break-keep whitespace-normal">
+                                                주제별 컬렉션 탐색하기
+                                            </span>
+                                        </Button>
+                                        <Button
+                                            className="h-full"
+                                            onClick={() => {
+                                                navigate('/curation');
+                                            }}
+                                        >
+                                            <span className="break-keep whitespace-normal">
+                                                ONE!T 선물 목록 살펴보기
+                                            </span>
+                                        </Button>
+                                        <Button
+                                            className="h-full bg-oneit-orange hover:bg-oneit-orange/90"
+                                            onClick={() => {
+                                                navigate('/recommend');
+                                            }}
+                                        >
+                                            <span className="break-keep whitespace-normal">
+                                                ONE!T에게 다시 추천 받기
+                                            </span>
+                                        </Button>
+                                    </div>
+                                </DialogContent>
+                            </Dialog>
                             {!isLogin && (
                                 <div className="flex items-center">
                                     <Button

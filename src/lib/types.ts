@@ -23,6 +23,7 @@ export type Product = {
     categoryDisplayName: string;
     keywords: string[];
     status: string;
+    description: string;
     likeCount?: number;
     voteStatus?: 'LIKE' | 'DISLIKE' | 'NONE';
 };
