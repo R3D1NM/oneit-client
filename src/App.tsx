@@ -55,6 +55,7 @@ const BasketInvitation = React.lazy(
     () => import('./pages/Basket/BasketInvitation'),
 );
 const Discover = React.lazy(() => import('./pages/Discover/Discover'));
+const Collection = React.lazy(() => import('./pages/Discover/Collection'));
 
 function App() {
     return (
@@ -89,6 +90,10 @@ function App() {
                                     <Route
                                         path="/discover"
                                         element={<Discover />}
+                                    />
+                                    <Route
+                                        path="/collection/:collectionID"
+                                        element={<Collection />}
                                     />
                                     <Route
                                         path="/basket/create"

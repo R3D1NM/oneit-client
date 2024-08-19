@@ -67,5 +67,12 @@ export interface Participant {
     userIdx?: number;
     nickname: string;
     profileImage: string;
-    userRole?: string;
+    userRole?: 'MANAGER' | 'PARTICIPANT';
 }
+
+export type Collection = {
+    idx: number;
+    name: string;
+    description?: string;
+    thumbnailUrl: string;
+};
