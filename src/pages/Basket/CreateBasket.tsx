@@ -126,69 +126,62 @@ const CreateBasket = () => {
                     >
                         {currentStep === 'title' && (
                             <>
-                                <div className="flex justify-between">
-                                    <FormField
-                                        control={form.control}
-                                        name="title"
-                                        render={({field}) => (
-                                            <FormItem>
+                                <FormField
+                                    control={form.control}
+                                    name="title"
+                                    render={({field}) => (
+                                        <FormItem>
+                                            <FormLabel>바구니 이름</FormLabel>
+                                            <FormMessage />
+                                            <FormControl>
+                                                <Input
+                                                    autoFocus={true}
+                                                    {...field}
+                                                    placeholder="ex) 00의 생일 선물 바구니"
+                                                />
+                                            </FormControl>
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={form.control}
+                                    name="access"
+                                    render={({field}) => (
+                                        <FormItem className="flex justify-start gap-5 items-center">
+                                            <div className="flex flex-col">
                                                 <FormLabel>
-                                                    바구니 이름
+                                                    바구니 공개 여부
                                                 </FormLabel>
-                                                <FormMessage />
-                                                <FormControl>
-                                                    <Input
-                                                        autoFocus={true}
-                                                        {...field}
-                                                        placeholder="ex) 00의 생일 선물 바구니"
-                                                    />
-                                                </FormControl>
-                                            </FormItem>
-                                        )}
-                                    />
-                                    <FormField
-                                        control={form.control}
-                                        name="access"
-                                        render={({field}) => (
-                                            <FormItem className="flex flex-col">
-                                                <div className="flex flex-col">
-                                                    <FormLabel>
-                                                        공개 여부
-                                                    </FormLabel>
-                                                    <FormMessage />
-                                                </div>
-                                                <ToggleGroup
-                                                    type="single"
-                                                    className="flex gap-2"
-                                                    onValueChange={(value) => {
-                                                        if (
-                                                            value ===
-                                                                'PUBLIC' ||
-                                                            value === 'PRIVATE'
-                                                        )
-                                                            field.onChange(
-                                                                value,
-                                                            );
-                                                    }}
-                                                    defaultValue={field.value}
+                                                {/* <FormMessage /> */}
+                                            </div>
+                                            <ToggleGroup
+                                                type="single"
+                                                className="flex gap-2"
+                                                onValueChange={(value) => {
+                                                    if (
+                                                        value === 'PUBLIC' ||
+                                                        value === 'PRIVATE'
+                                                    )
+                                                        field.onChange(value);
+                                                }}
+                                                defaultValue={field.value}
+                                            >
+                                                <ToggleGroupItem
+                                                    value="PUBLIC"
+                                                    size="sm"
                                                 >
-                                                    <ToggleGroupItem
-                                                        value="PUBLIC"
-                                                        size="sm"
-                                                    >
-                                                        <LockKeyholeOpen />
-                                                    </ToggleGroupItem>
-                                                    <ToggleGroupItem
-                                                        value="PRIVATE"
-                                                        size="sm"
-                                                    >
-                                                        <LockKeyhole />
-                                                    </ToggleGroupItem>
-                                                </ToggleGroup>
-                                            </FormItem>
-                                        )}
-                                    />
-                                </div>
+                                                    <LockKeyholeOpen />
+                                                </ToggleGroupItem>
+                                                <ToggleGroupItem
+                                                    value="PRIVATE"
+                                                    size="sm"
+                                                >
+                                                    <LockKeyhole />
+                                                </ToggleGroupItem>
+                                            </ToggleGroup>
+                                        </FormItem>
+                                    )}
+                                />
                                 <FormField
                                     control={form.control}
                                     name="description"

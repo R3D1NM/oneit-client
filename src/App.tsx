@@ -3,7 +3,6 @@ import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import {Spinner} from '@/components/ui/spinner';
 import Header from './components/common/Header';
 import NotFound from './pages/NotFound';
-import Footer from './components/common/Footer';
 import AuthRouter from './components/common/AuthRouter';
 import Navbar from '@/components/common/Navbar';
 import AddToBasket from './pages/Basket/AddToBasket';
@@ -179,7 +178,7 @@ function App() {
                                     />
                                     {import.meta.env.DEV && (
                                         <Route
-                                            path="fakeLogin"
+                                            path="/fakeLogin"
                                             element={<FakeLogin />}
                                         />
                                     )}

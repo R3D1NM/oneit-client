@@ -3,7 +3,7 @@ import {Spinner} from '@/components/ui/spinner';
 import axios from 'axios';
 import {useAtomValue, useSetAtom} from 'jotai';
 import {useEffect} from 'react';
-import {useNavigate} from 'react-router-dom';
+import {redirect, useNavigate} from 'react-router-dom';
 
 const {Kakao} = window;
 
@@ -50,16 +50,23 @@ const Auth = () => {
                         const redirect = localStorage.getItem('redirect');
                         console.log(redirect);
 
-                        navigate(redirect || '/');
+                        navigate(redirect || '/', {replace: true});
                     })
                     .catch((err) => {
                         console.log(err);
-                        // navigate('/login');
+                        navigate(
+                            '/login?redirect=' +
+                                localStorage.getItem('redirect'),
+                            {replace: true},
+                        );
                     });
             })
             .catch((err) => {
                 console.log(err);
-                // navigate('/login');
+                navigate(
+                    '/login?redirect=' + localStorage.getItem('redirect'),
+                    {replace: true},
+                );
             });
     }, []);
 

@@ -90,7 +90,7 @@ const EditBasket = () => {
     const {reset} = form;
 
     const handleGoBack = () => {
-        navigate('/basket/' + basketID);
+        navigate('/basket/' + basketID, {replace: true});
     };
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
@@ -254,12 +254,15 @@ const EditBasket = () => {
                                                 <ToggleGroupItem
                                                     value="PUBLIC"
                                                     size="sm"
+                                                    variant={null}
+                                                    className="p-0"
                                                 >
                                                     <LockKeyholeOpen />
                                                 </ToggleGroupItem>
                                                 <ToggleGroupItem
                                                     value="PRIVATE"
                                                     size="sm"
+                                                    variant={null}
                                                 >
                                                     <LockKeyhole />
                                                 </ToggleGroupItem>
