@@ -8,6 +8,29 @@
     <script src="https://cdn.amplitude.com/libs/analytics-browser-2.10.0-min.js.gz"></script>
     <script src="https://cdn.amplitude.com/libs/plugin-session-replay-browser-1.6.17-min.js.gz"></script>
     <script>window.amplitude.add(window.sessionReplay.plugin({ sampleRate: 1 })).promise.then(function () { window.amplitude.init('3f8ba05c21ad7da371e83976aefe486d', { "autocapture": { "elementInteractions": true } }); });</script>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GT-WV8VJ3C4"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date());
+
+      gtag('config', 'GT-WV8VJ3C4');
+    </script>
+
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+        w[l] = w[l] || []; w[l].push({
+          'gtm.start':
+            new Date().getTime(), event: 'gtm.js'
+        }); var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+          })(window, document, 'script', 'dataLayer', 'GTM-WSK86FM8');</script>
+    <!-- End Google Tag Manager -->
+    
+
     <!-- Primary Meta Tags -->
     <title>WANNA GIFT IT, ONE!T</title>
     <meta name="title" content="WANNA GIFT IT, ONE!T" />
@@ -28,11 +51,16 @@
     <meta property="twitter:description" content="선물 추천은 ONE!T" />
     <meta property="twitter:image" content="https://www.oneit.gift/oneit.png" />
 
+    
     <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.2/kakao.min.js" integrity="sha384-TiCUE00h649CAMonG018J2ujOgDKW/kVWlChEuu4jK2vxfAAD0eZxzCKakxg55G4" crossorigin="anonymous"></script>
 
 
   </head>
   <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WSK86FM8" height="0" width="0"
+        style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
