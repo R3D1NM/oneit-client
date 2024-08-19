@@ -1,42 +1,32 @@
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { Button } from "@/components/ui/button"
-import { MenuIcon } from "lucide-react"
+import {Button} from '@/components/ui/button';
+import {User2} from 'lucide-react';
+import {useAtomValue} from 'jotai';
+import {isLoginAtom} from '@/api/auth';
 
 const Header = () => {
-  return (
-    <header className=" top-0 bg-white flex min-h-[5svh] items-center w-full justify-between px-4 md:px-6 shadow-md py-1 relative">
-      <div className="flex">
-        <a href="/" className="flex items-center justify-center">
-          <span className="text-black text-3xl font-Bayon">One!t</span>
-        </a>
-      </div>
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button variant="ghost" size="icon" className="ml-auto hover:bg-transparent">
-            <MenuIcon className="h-6 w-6" />
-            <span className="sr-only">Toggle navigation</span>
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="right">
-          {/* todo: connect pages */}
-          <div className="grid gap-4 p-6">
-            <a href="/" >
-              메인 페이지
-            </a>
-            <a href="/about">
-              서비스 소개
-            </a>
-            <a href="/recommend" >
-              선물 뭐 주지?
-            </a>
-            <a href="/basket" >
-              이 중에 뭐 주지?
-            </a>
-          </div>
-        </SheetContent>
-      </Sheet>
-    </header>
-  )
-}
+    const isLogin = useAtomValue(isLoginAtom);
 
-export default Header
+    const toMypage = () => {
+        if (isLogin) {
+            window.location.href = '/mypage';
+        } else {
+            window.location.href = '/login';
+        }
+    };
+    return (
+        <header className="fixed top-0 bg-white flex min-h-[5svh] items-center w-full max-w-sm left-1/2 transform -translate-x-1/2 justify-between px-4 md:px-6 shadow-md py-1 z-50">
+            <div className="flex">
+                <a href="/" className="flex items-center justify-center">
+                    <span className="text-black text-3xl font-Bayon">
+                        One!t
+                    </span>
+                </a>
+            </div>
+            <Button variant="ghost" onClick={toMypage} size="icon">
+                <User2 className="h-6 w-6" />
+            </Button>
+        </header>
+    );
+};
+
+export default Header;

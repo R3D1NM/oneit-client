@@ -49,8 +49,11 @@
   * {
     @apply border-border;
   }
+  html {
+    @apply scrollbar-hide;
+  }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground scrollbar-hide;
     font-family: Godo;
     -webkit-user-select: none;
     -moz-user-select: none;
