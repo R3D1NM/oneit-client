@@ -8,6 +8,10 @@ import {
     CarouselPrevious,
 } from '@/components/ui/carousel';
 import {Collection} from '@/lib/types';
+import {fetchCollectionList} from '@/api/collection';
+import {useQuery} from '@tanstack/react-query';
+import {Spinner} from '@/components/ui/spinner';
+import NotFound from '../NotFound';
 const mockCollections = [
     {
         idx: 1,
@@ -42,6 +46,13 @@ const mockCollections = [
 ];
 
 const Discover = () => {
+    const {data, isLoading, isError} = useQuery({
+        queryKey: ['collections'],
+        queryFn: () => fetchCollectionList(),
+    });
+    if (isLoading) return <Spinner />;
+    if (isError) return <NotFound />;
+
     return (
         <div className="w-full pb-5 pt-4 flex flex-col justify-center">
             <Carousel
@@ -51,7 +62,7 @@ const Discover = () => {
                 autoplayInterval={2500}
             >
                 <CarouselContent>
-                    {mockCollections?.map(
+                    {data?.map(
                         (
                             collection: Collection,
                             index: Key | null | undefined,
