@@ -93,7 +93,7 @@ const GiftCard = (props: GiftCardProps) => {
                                         {/* My basket List */}
                                         {basketAPI.isLoading ? (
                                             <Spinner />
-                                        ) : basketAPI.data.lenght !== 0 ? (
+                                        ) : basketAPI.data.length !== 0 ? (
                                             <ScrollArea
                                                 className={cn(
                                                     'flex items-center justify-between w-full',
