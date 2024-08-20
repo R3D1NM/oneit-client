@@ -9,10 +9,15 @@ import mkcert from 'vite-plugin-mkcert';
 export default ({mode}: {mode: string}) => {
     // Load environment variables based on the current mode
     const env = loadEnv(mode, process.cwd());
+    const isProduction =
+        mode === 'production' ||
+        process.env.NODE_ENV === 'production' ||
+        process.env.PROD === 'true' ||
+        process.env.VERCEL_ENV === 'production';
 
     return defineConfig({
         esbuild: {
-            drop: env.PROD ? ['console', 'debugger'] : [],
+            drop: env.isProduction ? ['console', 'debugger'] : [],
         },
         plugins: [
             react({
