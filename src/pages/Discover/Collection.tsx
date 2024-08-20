@@ -71,7 +71,7 @@ const Collection = () => {
                         title={'ONE!T 선물 컬렉션 - ' + data?.collectionName}
                         description={data?.collectionDescription || 'ONE!T'}
                         image={
-                            'https://' + data.collectionThumbnailUrl ||
+                            data.collectionThumbnailUrl ||
                             'https://www.oneit.gift/oneit.png'
                         }
                         url={`https://oneit.gift/collection/${collectionID}`}
@@ -83,7 +83,7 @@ const Collection = () => {
                     <AspectRatio ratio={1 / 1} className="justify-center flex">
                         <img
                             src={
-                                'https://' + data.collectionThumbnailUrl ||
+                                data.collectionThumbnailUrl ||
                                 'https://via.placeholder.com/400'
                             }
                             alt={data.collectionName}

@@ -18,7 +18,7 @@ const DiscoverCard = (props: {collection: Collection}) => {
                         >
                             <img
                                 src={
-                                    'https://' + collection.thumbnailUrl ||
+                                    collection.thumbnailUrl ||
                                     'https://via.placeholder.com/400'
                                 }
                                 alt={collection.name}
@@ -35,7 +35,7 @@ const DiscoverCard = (props: {collection: Collection}) => {
                         title={'ONE!T 선물 컬렉션 - ' + collection?.name}
                         description={collection?.description || 'ONE!T'}
                         image={
-                            'https://' + collection.thumbnailUrl ||
+                            collection.thumbnailUrl ||
                             'https://www.oneit.gift/oneit.png'
                         }
                         url={`https://oneit.gift/collection/${collection?.idx}`}
