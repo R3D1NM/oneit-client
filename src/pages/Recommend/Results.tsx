@@ -1,16 +1,8 @@
 import {useAtomValue, useSetAtom} from 'jotai';
-import {
-    answers,
-    comment,
-    gift,
-    isValidGift,
-    name,
-    recipient,
-    title,
-} from '@/atoms/recommend';
+import {comment, gift, isValidGift, name, title} from '@/atoms/recommend';
 import {useNavigate, useParams} from 'react-router-dom';
 import {Button} from '@/components/ui/button';
-import React, {Suspense, useEffect, useState} from 'react';
+import React, {Suspense, useEffect} from 'react';
 import {
     Dialog,
     DialogContent,
@@ -18,9 +10,6 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog';
-import Kakao from '@/assets/kakao.png';
-import Naver from '@/assets/naver_blog.png';
-import Instagram from '@/assets/instagram.png';
 import {Spinner} from '@/components/ui/spinner';
 import {getGift} from '@/api/product';
 import {Card, CardTitle} from '@/components/ui/card';
@@ -31,7 +20,6 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from '@/components/ui/carousel';
-import Share from '@/components/common/Share';
 import KakaoShare from '@/components/common/KakaoShare';
 import {isLoginAtom} from '@/api/auth';
 
@@ -39,7 +27,6 @@ const GiftCard = React.lazy(() => import('./components/GiftCard'));
 const NotFound = React.lazy(() => import('../NotFound'));
 
 const Results = () => {
-    const [showModal, setShowModal] = useState(false);
     const navigate = useNavigate();
     const {chatID} = useParams();
     const isLogin = useAtomValue(isLoginAtom);
@@ -47,18 +34,11 @@ const Results = () => {
     const getResult = useSetAtom(getGift);
     const product = useAtomValue(gift);
     const isValid = useAtomValue(isValidGift);
-    const removeAnswers = useSetAtom(answers);
 
     const userName = useAtomValue(name);
-    const userRecipient = useAtomValue(recipient);
 
     const userType = useAtomValue(title);
     const userComment = useAtomValue(comment);
-
-    const handleRetry = () => {
-        removeAnswers({} as {[key: string]: string});
-        navigate('/recommend');
-    };
 
     useEffect(() => {
         if (!chatID || chatID === '') {
@@ -83,7 +63,7 @@ const Results = () => {
                             <KakaoShare
                                 title={`ONE!T - ${userName === '' ? '' : userName + '을 위한 '}선물 추천`}
                                 description="WANNA GIFT IT, ONE!T"
-                                url={`https://www.oneit.gift/result/${chatID}`}
+                                url={`/result/${chatID}`}
                                 image={product[0].thumbnailUrl}
                             />
                         )}

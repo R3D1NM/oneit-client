@@ -12,6 +12,7 @@ import {
 import {AspectRatio} from '@/components/ui/aspect-ratio';
 import {Button} from '@/components/ui/button';
 import {Product} from '@/lib/types';
+import {useMutation} from '@tanstack/react-query';
 import {Heart, MinusSquare} from 'lucide-react';
 import {useState} from 'react';
 
@@ -29,10 +30,13 @@ const BasketProductCard = (props: ProductCardProps) => {
     const [count, setCount] = useState(likeCount);
     const [isOpen, setIsOpen] = useState(false);
 
+    const deleteAPI = useMutation({
+        mutationFn: () => deleteBasketProduct(basketID || '', product.idx),
+        onSuccess: () => window.location.reload(),
+    });
+
     const handleDelete = async () => {
-        await deleteBasketProduct(basketID || '', product.idx);
-        //refresh page
-        window.location.reload();
+        deleteAPI.mutate();
     };
 
     const handleVote = () => {

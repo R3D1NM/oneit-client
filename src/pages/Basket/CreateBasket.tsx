@@ -1,7 +1,6 @@
 import {Input} from '@/components/ui/input';
-import {Label} from '@/components/ui/label';
 import {useAtom, useSetAtom} from 'jotai';
-import {ChangeEvent, useRef, useState} from 'react';
+import {useRef, useState} from 'react';
 import {
     basketName,
     basketDescription,
@@ -24,24 +23,15 @@ import {
 import {useForm} from 'react-hook-form';
 import {z} from 'zod';
 import {Textarea} from '@/components/ui/textarea';
-import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar';
-import {ImageIcon, LockKeyhole, LockKeyholeOpen, User2Icon} from 'lucide-react';
+import {LockKeyhole, LockKeyholeOpen} from 'lucide-react';
 import {createBasket} from '@/api/basket';
-import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group';
 import {useNavigate} from 'react-router-dom';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
 import {ToggleGroup, ToggleGroupItem} from '@/components/ui/toggle-group';
 import {AspectRatio} from '@/components/ui/aspect-ratio';
+import {useMutation} from '@tanstack/react-query';
 
 const CreateBasket = () => {
     const [currentStep, setCurrentStep] = useState('title');
-    const [error, setError] = useState(false);
     const [title, setTitle] = useAtom(basketName);
     const [description, setDescription] = useAtom(basketDescription);
     const [imageURL, setImageURL] = useAtom(imageUrl);
@@ -50,6 +40,13 @@ const CreateBasket = () => {
     const [deadline, setDeadline] = useAtom(basketDeadline);
     const makeBasket = useSetAtom(createBasket);
     const navigate = useNavigate();
+
+    const submitAPI = useMutation({
+        mutationFn: makeBasket,
+        onSuccess: (data) => {
+            navigate(`/basket/${data}`, {replace: true});
+        },
+    });
 
     const formSchema = z.object({
         title: z
@@ -96,17 +93,7 @@ const CreateBasket = () => {
         setImage(values.image || null);
         console.log(values);
         setDeadline(values.deadline);
-        try {
-            const id: number = await makeBasket();
-            if (id) {
-                navigate(`/basket/${id}`, {replace: true});
-            } else {
-                throw new Error('바구니 생성에 실패했습니다.');
-            }
-        } catch (e) {
-            console.log(e);
-            setError(true);
-        }
+        submitAPI.mutate();
     };
 
     const handleAvatarClick = () => {
@@ -325,44 +312,6 @@ const CreateBasket = () => {
                     </form>
                 </Form>
             </div>
-            {error && (
-                <Dialog open={error} onOpenChange={setError}>
-                    <DialogContent
-                        className="sm:max-w-[425px]"
-                        onInteractOutside={(e: {
-                            preventDefault: () => void;
-                        }) => {
-                            e.preventDefault();
-                        }}
-                    >
-                        <DialogHeader>
-                            <DialogTitle>문제 발생</DialogTitle>
-                        </DialogHeader>
-                        <DialogDescription>
-                            문제가 발생했습니다. 다시 시도해주세요.
-                        </DialogDescription>
-                        <div className="flex justify-end gap-2">
-                            <Button
-                                variant="outline"
-                                onClick={() => {
-                                    setError(false);
-                                    navigate('/');
-                                }}
-                            >
-                                메인으로
-                            </Button>
-                            <Button
-                                type="submit"
-                                onClick={() => {
-                                    setError(false);
-                                }}
-                            >
-                                다시시도
-                            </Button>
-                        </div>
-                    </DialogContent>
-                </Dialog>
-            )}
         </>
     );
 };

@@ -46,9 +46,9 @@ const Auth = () => {
                     .then(() => {
                         //go back to the page before login page
                         useUpdateAuth();
-                        console.log('login success');
+                        console.log('[AUTH] login success');
                         const redirect = localStorage.getItem('redirect');
-                        console.log(redirect);
+                        console.log(`[AUTH] Redirect to ${redirect}`);
 
                         navigate(redirect || '/', {replace: true});
                     })

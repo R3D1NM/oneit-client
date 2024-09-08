@@ -42,7 +42,7 @@
 		"firebase": "^10.12.2",
 		"jotai": "^2.8.4",
 		"jotai-devtools": "^0.10.0",
-		"jotai-tanstack-query": "^0.8.5",
+		"jotai-tanstack-query": "^0.8.7",
 		"lottie-web": "^5.12.2",
 		"lucide-react": "^0.399.0",
 		"nanoid": "^5.0.7",

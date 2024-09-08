@@ -4,13 +4,12 @@ import {Spinner} from '@/components/ui/spinner';
 import NotFound from '../NotFound';
 import {useProductListInfinite} from '@/hooks/useProductListInfinite';
 import {Button} from '@/components/ui/button';
-import {ArrowUp, ChevronLeft, CircleX, PlusCircle} from 'lucide-react';
+import {ArrowUp, ChevronLeft} from 'lucide-react';
 import AddProductCard from './components/AddProductCard';
 import {emptySelected, selctedProductCount} from '@/atoms/basket';
-import {useAtomValue, useSetAtom} from 'jotai';
+import {useAtom, useAtomValue, useSetAtom} from 'jotai';
 import {useNavigate, useParams} from 'react-router-dom';
 import {addToBasket} from '@/api/basket';
-import {toast} from 'sonner';
 
 const AddToBasket = () => {
     const {data, isLoading, isError, fetchNextPage, hasNextPage} =
@@ -18,7 +17,7 @@ const AddToBasket = () => {
     const nextFetchTargetRef = useRef<HTMLDivElement | null>(null); // ref 객체 생성
     const selectedCount = useAtomValue(selctedProductCount);
     const emptyAll = useSetAtom(emptySelected);
-    const putIntoBasket = useSetAtom(addToBasket);
+    const [{mutate}] = useAtom(addToBasket);
     const {basketID} = useParams();
     const navigate = useNavigate();
 
@@ -67,31 +66,8 @@ const AddToBasket = () => {
     };
 
     const handleAdd = async () => {
-        putIntoBasket(basketID || '')
-            .then((res) => {
-                if (res) {
-                    toast.success('상품이 추가되었습니다.', {
-                        action: {
-                            label: '확인하기',
-                            onClick: () => {
-                                navigate('/basket/' + basketID);
-                            },
-                        },
-                    });
-                }
-            })
-            .catch((err) => {
-                if (err.toString() === '3009') {
-                    toast.error('바구니 참여자가 아닙니다.', {
-                        action: {
-                            label: '메인으로',
-                            onClick: () => {
-                                navigate('/');
-                            },
-                        },
-                    });
-                }
-            });
+        mutate(basketID || '');
+        emptyAll();
     };
 
     if (isLoading) return <Spinner />;

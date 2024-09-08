@@ -19,7 +19,7 @@ import {ToggleGroup, ToggleGroupItem} from '@/components/ui/toggle-group';
 import {Input} from '@/components/ui/input';
 import {Textarea} from '@/components/ui/textarea';
 import {zodResolver} from '@hookform/resolvers/zod';
-import {useQuery} from '@tanstack/react-query';
+import {useMutation, useQuery} from '@tanstack/react-query';
 import {
     CalendarCheck,
     CalendarIcon,
@@ -41,10 +41,26 @@ import {Basket} from '@/lib/types';
 const EditBasket = () => {
     const {basketID} = useParams();
     const navigate = useNavigate();
-    const [error, setError] = useState(false);
     const {data, isLoading, isError} = useQuery({
         queryKey: ['basket', basketID],
         queryFn: () => fetchBasketInfo(basketID || ''),
+    });
+
+    const submitAPI = useMutation({
+        mutationFn: async ({
+            basketID,
+            basket,
+            image,
+        }: {
+            basketID: string;
+            basket: Basket;
+            image: File | null;
+        }) => {
+            return await editBasket(basketID, basket, image);
+        },
+        onSuccess: () => {
+            navigate(`/basket/${basketID}`);
+        },
     });
 
     const [title, setTitle] = useState('');
@@ -109,13 +125,11 @@ const EditBasket = () => {
             idx: 0,
         };
 
-        try {
-            await editBasket(basketID || '', basket, values.image || null);
-            navigate(`/basket/${basketID}`);
-        } catch (e) {
-            console.log(e);
-            setError(true);
-        }
+        submitAPI.mutate({
+            basketID: basketID || '',
+            basket,
+            image: values.image || null,
+        });
     };
 
     const handleAvatarClick = () => {
@@ -368,44 +382,6 @@ const EditBasket = () => {
                     </form>
                 </Form>
             </div>
-            {(isError || error) && (
-                <Dialog open={error} onOpenChange={setError}>
-                    <DialogContent
-                        className="sm:max-w-[425px]"
-                        onInteractOutside={(e: {
-                            preventDefault: () => void;
-                        }) => {
-                            e.preventDefault();
-                        }}
-                    >
-                        <DialogHeader>
-                            <DialogTitle>문제 발생</DialogTitle>
-                        </DialogHeader>
-                        <DialogDescription>
-                            문제가 발생했습니다. 다시 시도해주세요.
-                        </DialogDescription>
-                        <div className="flex justify-end gap-2">
-                            <Button
-                                variant="outline"
-                                onClick={() => {
-                                    setError(false);
-                                    navigate('/');
-                                }}
-                            >
-                                메인으로
-                            </Button>
-                            <Button
-                                type="submit"
-                                onClick={() => {
-                                    setError(false);
-                                }}
-                            >
-                                다시시도
-                            </Button>
-                        </div>
-                    </DialogContent>
-                </Dialog>
-            )}
         </>
     );
 };

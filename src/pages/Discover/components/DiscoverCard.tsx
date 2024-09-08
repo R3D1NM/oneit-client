@@ -38,7 +38,7 @@ const DiscoverCard = (props: {collection: Collection}) => {
                             collection.thumbnailUrl ||
                             'https://www.oneit.gift/oneit.png'
                         }
-                        url={`https://oneit.gift/collection/${collection?.idx}`}
+                        url={`/collection/${collection.idx}`}
                     />
                 </div>
                 <Link to={`/collection/${collection.idx}`} className="block">

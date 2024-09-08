@@ -12,38 +12,6 @@ import {fetchCollectionList} from '@/api/collection';
 import {useQuery} from '@tanstack/react-query';
 import {Spinner} from '@/components/ui/spinner';
 import NotFound from '../NotFound';
-const mockCollections = [
-    {
-        idx: 1,
-        name: 'Collection Name',
-        description: 'Collection Description',
-        thumbnailUrl: 'https://via.placeholder.com/400',
-    },
-    {
-        idx: 2,
-        name: 'Collection Name',
-        description: 'Collection Description',
-        thumbnailUrl: 'https://via.placeholder.com/400',
-    },
-    {
-        idx: 3,
-        name: 'Collection Name',
-        description: 'Collection Description',
-        thumbnailUrl: 'https://via.placeholder.com/400',
-    },
-    {
-        idx: 4,
-        name: 'Collection Name',
-        description: 'Collection Description',
-        thumbnailUrl: 'https://via.placeholder.com/400',
-    },
-    {
-        idx: 5,
-        name: 'Collection Name',
-        description: 'Collection Description',
-        thumbnailUrl: 'https://via.placeholder.com/400',
-    },
-];
 
 const Discover = () => {
     const {data, isLoading, isError} = useQuery({

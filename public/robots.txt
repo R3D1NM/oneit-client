@@ -2,3 +2,5 @@
 User-agent: *
 Disallow: /result/
 Disallow: /quiz/
+Disallow: /basket/
+Disallow: /mypage/

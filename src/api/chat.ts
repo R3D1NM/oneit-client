@@ -71,17 +71,17 @@ interface Payload {
 const recommend = async (payload: Payload) => {
     return new Promise<Product[]>((resolve, reject) => {
         axios
-            .post('/v1/product/result/category', payload)
+            .post('/v2/product/result/category', payload)
             .then((res) => {
-                console.log(res.data);
+                // console.log(res.data);
 
-                if (!res.data.isSuccess)
-                    throw new Error('Failed to get recommend list');
+                // if (!res.data.isSuccess)
+                //     throw new Error('Failed to get recommend list');
 
-                resolve(res.data.result);
+                resolve(res.data);
             })
             .catch((err) => {
-                console.log(err);
+                // console.log(err);
                 reject(err);
             });
     });

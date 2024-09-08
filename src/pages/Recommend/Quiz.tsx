@@ -12,7 +12,6 @@ import {
 } from '@/components/ui/dialog';
 import {Button} from '@/components/ui/button';
 import {finishChat, next} from '@/api/chat';
-import {Question} from '@/lib/types';
 import {Card} from '@/components/ui/card';
 import {parse} from 'cox-postposition';
 import {Progress} from '@/components/ui/progress';
@@ -37,8 +36,6 @@ const Quiz = () => {
     const [selected, setSelected] = useState(0);
 
     // Debugging logs
-    // console.log('Questions:', questionList[currentDepth], 'Loading:', isloading);
-
     // console.log('Questions:', questionList[currentDepth], 'Loading:', isloading);
 
     const handleAnswerClick = async (index: number) => {

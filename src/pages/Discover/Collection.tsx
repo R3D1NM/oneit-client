@@ -1,42 +1,14 @@
 import {Product} from '@/lib/types';
-import React from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import ProductCard from '../Product/components/ProductCard';
 import {AspectRatio} from '@/components/ui/aspect-ratio';
 import {Button} from '@/components/ui/button';
 import {ChevronLeft, Heart} from 'lucide-react';
 import KakaoShare from '@/components/common/KakaoShare';
-import {Separator} from '@/components/ui/separator';
 import {useQuery} from '@tanstack/react-query';
 import {fetchCollectionDetail} from '@/api/collection';
 import {Spinner} from '@/components/ui/spinner';
 import NotFound from '../NotFound';
-
-const mockCollection = {
-    idx: 1,
-    name: 'Collection Name',
-    description: 'Collection Description',
-    thumbnailUrl: 'https://via.placeholder.com/400',
-};
-
-const mockProducts: Product[] = [
-    {
-        idx: 1,
-        name: 'Product Name',
-        description: 'Product Description',
-        thumbnailUrl: 'https://via.placeholder.com/400',
-        originalPrice: 10000,
-        currentPrice: 8000,
-    },
-    {
-        idx: 2,
-        name: 'Product Name',
-        description: 'Product Description',
-        thumbnailUrl: 'https://via.placeholder.com/400',
-        originalPrice: 10000,
-        currentPrice: 8000,
-    },
-];
 
 const Collection = () => {
     const {collectionID} = useParams();
@@ -74,7 +46,7 @@ const Collection = () => {
                             data.collectionThumbnailUrl ||
                             'https://www.oneit.gift/oneit.png'
                         }
-                        url={`https://oneit.gift/collection/${collectionID}`}
+                        url={`/collection/${collectionID}`}
                     />
                 </div>
             </div>
