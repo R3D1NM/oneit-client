@@ -6,7 +6,11 @@ import {useProductListInfinite} from '@/hooks/useProductListInfinite';
 import {Button} from '@/components/ui/button';
 import {ArrowUp, ChevronLeft} from 'lucide-react';
 import AddProductCard from './components/AddProductCard';
-import {emptySelected, selctedProductCount} from '@/atoms/basket';
+import {
+    emptySelected,
+    selctedProductCount,
+    selectedProduct,
+} from '@/atoms/basket';
 import {useAtom, useAtomValue, useSetAtom} from 'jotai';
 import {useNavigate, useParams} from 'react-router-dom';
 import {addToBasket} from '@/api/basket';
@@ -16,7 +20,7 @@ const AddToBasket = () => {
         useProductListInfinite();
     const nextFetchTargetRef = useRef<HTMLDivElement | null>(null); // ref 객체 생성
     const selectedCount = useAtomValue(selctedProductCount);
-    const emptyAll = useSetAtom(emptySelected);
+    const [selected, setSelected] = useAtom(selectedProduct);
     const [{mutate}] = useAtom(addToBasket);
     const {basketID} = useParams();
     const navigate = useNavigate();
@@ -66,8 +70,9 @@ const AddToBasket = () => {
     };
 
     const handleAdd = async () => {
-        mutate(basketID || '');
-        emptyAll();
+        mutate({basketIdx: basketID || '', selected});
+        setSelected([]);
+        // emptyAll();
     };
 
     if (isLoading) return <Spinner />;
@@ -116,7 +121,7 @@ const AddToBasket = () => {
                     </Button>
                     <Button
                         variant="ghost"
-                        onClick={emptyAll}
+                        onClick={() => setSelected([])}
                         className="w-full flex flex-col items-center gap-1 text-muted-foreground hover:text-foreground"
                     >
                         <span className="text-xs">선택 해제</span>

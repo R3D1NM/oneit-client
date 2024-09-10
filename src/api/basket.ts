@@ -7,7 +7,7 @@ import {
     thumbnail,
 } from '@/atoms/basket';
 import axios from '@/lib/axios';
-import {Basket} from '@/lib/types';
+import {Basket, Product} from '@/lib/types';
 import {atom} from 'jotai';
 import {atomWithMutation, atomWithQuery} from 'jotai-tanstack-query';
 import {toast} from 'sonner';
@@ -107,13 +107,17 @@ export const editBasket = async (
         });
 };
 
-type AddToBasketVariables = string;
+type AddToBasketVariables = {
+    basketIdx: string;
+    selected: Product[];
+};
 
 export const addToBasket = atomWithMutation<unknown, AddToBasketVariables>(
     (get) => ({
         mutationKey: ['addToBasket'],
-        mutationFn: async (basketIdx: AddToBasketVariables) => {
-            const selected = get(selectedProduct);
+        mutationFn: async ({basketIdx, selected}: AddToBasketVariables) => {
+            console.log(selected);
+
             const products = selected.map((p) => Number(p.idx));
             return axios
                 .post(`v2/giftbox/${basketIdx}/products`, products)
@@ -129,7 +133,7 @@ export const addToBasket = atomWithMutation<unknown, AddToBasketVariables>(
                 action: {
                     label: '확인하기',
                     onClick: () => {
-                        window.location.href = '/basket/' + variables;
+                        window.location.href = '/basket/' + variables.basketIdx;
                     },
                 },
             });

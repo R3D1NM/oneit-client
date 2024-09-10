@@ -13,7 +13,7 @@ import {
 import {addToBasket, fetchBasketList} from '@/api/basket';
 import {useQuery} from '@tanstack/react-query';
 import {Spinner} from '@/components/ui/spinner';
-import {emptySelected, selectProduct} from '@/atoms/basket';
+import {emptySelected, selectedProduct, selectProduct} from '@/atoms/basket';
 import {cn} from '@/lib/utils';
 import {CalendarCheck} from 'lucide-react';
 import {ScrollArea} from '@/components/ui/scroll-area';
@@ -24,7 +24,7 @@ interface GiftCardProps {
 
 const GiftCard = (props: GiftCardProps) => {
     const isLogin = useAtomValue(isLoginAtom);
-    const emptyAll = useSetAtom(emptySelected);
+    const [selected, setSelected] = useAtom(selectedProduct);
     const [{mutate}] = useAtom(addToBasket);
     const onSelect = useSetAtom(selectProduct);
     const {product} = props;
@@ -38,9 +38,7 @@ const GiftCard = (props: GiftCardProps) => {
 
     const handleAddToBasket = (basketID: string) => {
         if (product) {
-            onSelect(product);
-            mutate(basketID || '');
-            emptyAll();
+            mutate({basketIdx: basketID || '', selected: [product]});
         }
     };
 

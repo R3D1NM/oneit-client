@@ -17,17 +17,14 @@ import {
 } from '@/components/ui/drawer';
 import {addToBasket, fetchBasketList} from '@/api/basket';
 import {Basket} from '@/lib/types';
-import {useAtom, useAtomValue, useSetAtom} from 'jotai';
-import {emptySelected, selectProduct} from '@/atoms/basket';
+import {useAtom, useAtomValue} from 'jotai';
 import {ScrollArea} from '@/components/ui/scroll-area';
 import {cn} from '@/lib/utils';
 import {isLoginAtom} from '@/api/auth';
 
 const Product = () => {
     const {productID} = useParams();
-    const emptyAll = useSetAtom(emptySelected);
     const [{mutate}] = useAtom(addToBasket);
-    const onSelect = useSetAtom(selectProduct);
     const loggedIn = useAtomValue(isLoginAtom);
 
     // console.log(productID);
@@ -51,9 +48,7 @@ const Product = () => {
 
     const handleAddToBasket = (basketID: string) => {
         if (productAPI.data) {
-            onSelect(productAPI.data);
-            mutate(basketID || '');
-            emptyAll();
+            mutate({basketIdx: basketID || '', selected: [productAPI.data]});
         }
     };
 

@@ -86,7 +86,14 @@ const handler404 = (code: string) => {
             });
             break;
         default:
-            toast.error('요청을 찾을 수 없습니다.');
+            toast.error('요청을 찾을 수 없습니다.', {
+                action: {
+                    label: '메인으로',
+                    onClick: () => {
+                        window.location.href = '/';
+                    },
+                },
+            });
     }
 };
 
