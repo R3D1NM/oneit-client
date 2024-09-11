@@ -63,6 +63,8 @@ const BasketInvitation = React.lazy(
 );
 const Discover = React.lazy(() => import('./pages/Discover/Discover'));
 const Collection = React.lazy(() => import('./pages/Discover/Collection'));
+const Inquiry = React.lazy(() => import('./pages/Inquiry/Inquiry'));
+const InquiryChoice = React.lazy(() => import('./pages/Inquiry/InquiryChoice'));
 
 function App() {
     const {handleError} = useApiError();
@@ -97,11 +99,11 @@ function App() {
                                                 element={<Recommend />}
                                             />
                                             <Route
-                                                path="/quiz/:chatID/:currentDepth"
+                                                path="/recommend/:chatID/:currentDepth"
                                                 element={<Quiz />}
                                             />
                                             <Route
-                                                path="/result/:chatID"
+                                                path="/recommend/:chatID/result"
                                                 element={<Results />}
                                             />
                                             <Route
@@ -113,7 +115,7 @@ function App() {
                                                 element={<Curation />}
                                             />
                                             <Route
-                                                path="/discover"
+                                                path="/collection"
                                                 element={<Discover />}
                                             />
                                             <Route
@@ -171,6 +173,14 @@ function App() {
                                             <Route
                                                 path="/basket/:basketID/invite/:inviteID"
                                                 element={<BasketInvitation />}
+                                            />
+                                            <Route
+                                                path="/inquiry/:inquiryID"
+                                                element={<Inquiry />}
+                                            />
+                                            <Route
+                                                path="/inquiry/:inquiryID/choice"
+                                                element={<InquiryChoice />}
                                             />
                                             <Route
                                                 path="/about"

@@ -17,6 +17,7 @@ import {emptySelected, selectedProduct, selectProduct} from '@/atoms/basket';
 import {cn} from '@/lib/utils';
 import {CalendarCheck} from 'lucide-react';
 import {ScrollArea} from '@/components/ui/scroll-area';
+import {DialogTitle} from '@/components/ui/dialog';
 
 interface GiftCardProps {
     product: Product;
@@ -75,6 +76,7 @@ const GiftCard = (props: GiftCardProps) => {
                                 </Button>
                             </DrawerTrigger>
                             <DrawerContent>
+                                <DialogTitle></DialogTitle>
                                 <div className="mx-auto w-full max-w-sm">
                                     <div className="p-2 pb-0">
                                         {/* My basket List */}

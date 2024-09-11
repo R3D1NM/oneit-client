@@ -31,7 +31,7 @@ const Recommend = () => {
 
     const handleStart = async () => {
         const chatID = nanoid(10);
-        navigate(`/quiz/${chatID}/0`);
+        navigate(`/recommend/${chatID}/0`);
         setLoading(true);
         try {
             await start(chatID);

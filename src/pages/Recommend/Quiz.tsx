@@ -40,20 +40,20 @@ const Quiz = () => {
 
     const handleAnswerClick = async (index: number) => {
         setSelected(index);
-        console.log('Depth:', currentDepth, 'Selected:', index);
-        console.log('Depth:', currentDepth, 'Selected:', index);
+        // console.log('Depth:', currentDepth, 'Selected:', index);
+        // console.log('Depth:', currentDepth, 'Selected:', index);
 
         if (currentDepth < MAXDEPTH - 1) {
             try {
                 await getNextQuestion(index, currentDepth);
-                navigate(`/quiz/${chatID}/${currentDepth + 1}`);
+                navigate(`/recommend/${chatID}/${currentDepth + 1}`);
             } catch (error) {
                 setError(true);
             }
         } else if (currentDepth === MAXDEPTH - 1) {
             try {
                 await endChat(chatID, index, currentDepth);
-                navigate(`/result/${chatID}`);
+                navigate(`/recommend/${chatID}/result`);
             } catch (error) {
                 setError(true);
             }

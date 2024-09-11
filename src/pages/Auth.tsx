@@ -37,9 +37,9 @@ const Auth = () => {
         }
         getToken()
             .then(async (res) => {
-                console.log(res);
+                // console.log(res);
                 const kakaoToken = res.data.access_token;
-                console.log(Kakao);
+                // console.log(Kakao);
                 Kakao.Auth.setAccessToken(kakaoToken);
 
                 login(kakaoToken)
@@ -53,7 +53,7 @@ const Auth = () => {
                         navigate(redirect || '/', {replace: true});
                     })
                     .catch((err) => {
-                        console.log(err);
+                        // console.log(err);
                         navigate(
                             '/login?redirect=' +
                                 localStorage.getItem('redirect'),
@@ -62,7 +62,7 @@ const Auth = () => {
                     });
             })
             .catch((err) => {
-                console.log(err);
+                // console.log(err);
                 navigate(
                     '/login?redirect=' + localStorage.getItem('redirect'),
                     {replace: true},

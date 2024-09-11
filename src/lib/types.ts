@@ -13,7 +13,7 @@ export type Product = {
     idx: number;
     name: string;
     originalPrice: number;
-    currentPrice: number;
+    currentPrice?: number;
     discountRate?: number;
     brandName?: string;
     mallName?: string;
@@ -75,4 +75,11 @@ export type Collection = {
     name: string;
     description?: string;
     thumbnailUrl: string;
+};
+
+export type Emoji = {
+    idx: number;
+    name: string;
+    content: string;
+    emojiImageURL: string;
 };

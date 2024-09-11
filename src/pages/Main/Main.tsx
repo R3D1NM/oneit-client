@@ -39,7 +39,7 @@ const Main = () => {
                 />
             );
         }
-        console.log(data);
+        // console.log(data);
 
         return (
             <Carousel

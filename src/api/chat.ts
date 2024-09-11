@@ -40,7 +40,7 @@ export const startChat = atom(null, async (get, set, chatID) => {
             createdAt: serverTimestamp(),
         });
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         throw new Error('Failed to start chat');
     } finally {
         set(loading, false);
@@ -56,7 +56,7 @@ export const next = atom(
             prev[currentDepth] = newTag;
             return prev;
         });
-        console.log('New keyword', newTag);
+        // console.log('New keyword', newTag);
     },
 );
 
@@ -117,7 +117,7 @@ export const finishChat = atom(
                 keywords: get(answers),
             };
 
-            console.log('Payload', payload);
+            // console.log('Payload', payload);
 
             const recommendList = await recommend(payload);
 
@@ -128,7 +128,7 @@ export const finishChat = atom(
             const result = resultList.find((result) =>
                 result.tags.every((tag) => tags.includes(tag)),
             );
-            console.log(result);
+            // console.log(result);
 
             set(title, result?.title || '네가 주면 난 다 좋아! 🎁');
             set(comment, result?.comment || '#까다롭지_않아요 #취향_안_타요');
@@ -141,7 +141,7 @@ export const finishChat = atom(
                 },
             });
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             throw new Error('Failed to finish chat');
         } finally {
             set(loading, false);

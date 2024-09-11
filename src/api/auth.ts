@@ -9,7 +9,7 @@ const getMe = async () => {
     return axios
         .get('/v2/kakao/user')
         .then((res) => {
-            console.log(res);
+            // console.log(res);
             return Promise.resolve(res.data);
         })
         .catch((err) => {
@@ -30,7 +30,7 @@ const getAuth = async (): Promise<User | null> => {
         return getMe()
             .then((res) => res)
             .catch((err) => {
-                console.log(err);
+                // console.log(err);
                 return null;
             });
     }

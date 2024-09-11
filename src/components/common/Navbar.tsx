@@ -11,7 +11,7 @@ const Navbar = () => {
                 <span className="text-xs">Home</span>
             </a>
             <a
-                href="/discover"
+                href="/collection"
                 className="flex flex-col items-center gap-1 text-muted-foreground hover:text-foreground"
             >
                 <CompassIcon className="h-6 w-6" />
