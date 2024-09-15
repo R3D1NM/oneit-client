@@ -124,7 +124,7 @@ const AddToBasket = () => {
                 <div ref={nextFetchTargetRef} className="col-span-2"></div>
             )}
             <Button
-                className="fixed bottom-16 right-0 px-3 py-6 rounded-full shadow-lg m-1"
+                className="fixed bottom-0 right-0 px-3 py-6 rounded-full shadow-lg m-1"
                 onClick={scrollToTop}
             >
                 <ArrowUp />

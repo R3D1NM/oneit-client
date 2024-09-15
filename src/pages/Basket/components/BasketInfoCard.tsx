@@ -12,6 +12,8 @@ const BasketInfoCard = ({
     basket,
     ...rest
 }: {basket: Basket} & React.HTMLAttributes<HTMLSpanElement>) => {
+    console.log(basket.idx, basket.deadline);
+
     return (
         <div className="" {...rest}>
             <AspectRatio ratio={1 / 1} className="justify-center flex">
@@ -61,9 +63,10 @@ const BasketInfoCard = ({
                                             />
                                         ),
                                     )}
-                                {basket.participants?.length > 2 && (
-                                    <PlusCircle className="text-oneit-pink h-10 w-10 z-10 bg-white rounded-full p-0" />
-                                )}
+                                {basket.participants?.length &&
+                                    basket.participants?.length > 2 && (
+                                        <PlusCircle className="text-oneit-pink h-10 w-10 z-10 bg-white rounded-full p-0" />
+                                    )}
                             </div>
                         </PopoverTrigger>
                         <PopoverContent
