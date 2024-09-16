@@ -1,6 +1,7 @@
 import {Product} from '@/lib/types';
 import {atomWithMutation} from 'jotai-tanstack-query';
 import axios from '@/lib/axios';
+import {choices} from '@/atoms/inquiry';
 const {Kakao} = window;
 
 type CreateInquiryVariables = {
@@ -48,3 +49,29 @@ export const createInquiry = atomWithMutation<unknown, CreateInquiryVariables>(
         },
     }),
 );
+
+export const getInquiry = async (inquiryIdx: string) => {
+    return axios
+        .get(`/v2/inquiry/${inquiryIdx}`)
+        .then((res) => {
+            return Promise.resolve(res.data);
+        })
+        .catch((err) => {
+            return Promise.reject(err);
+        });
+};
+
+export const submitInquiry = atomWithMutation<unknown, string>((get) => ({
+    mutationKey: ['submitInquiry'],
+    mutationFn: async (inquiryIdx: string) => {
+        const payload = get(choices);
+        return axios
+            .post(`/v2/inquiry/${inquiryIdx}/emoji`, payload)
+            .then((res) => {
+                return Promise.resolve(res.data);
+            })
+            .catch((err) => {
+                return Promise.reject(err);
+            });
+    },
+}));

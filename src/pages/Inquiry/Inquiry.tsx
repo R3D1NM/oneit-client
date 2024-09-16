@@ -1,19 +1,30 @@
 import {Button} from '@/components/ui/button';
 import boxImage from '@/assets/giftbox2.png';
 import {useNavigate, useParams} from 'react-router-dom';
+import {useQuery} from '@tanstack/react-query';
+import {getInquiry} from '@/api/inquiry';
 
 const Inquiry = () => {
-    const {inquiryId} = useParams();
+    const {inquiryID} = useParams();
     const navigate = useNavigate();
+
+    const inquiryAPI = useQuery({
+        queryKey: ['inquiry', inquiryID],
+        queryFn: () => getInquiry(inquiryID || ''),
+    });
+
     const handleStart = () => {
-        navigate(`/inquiry/${inquiryId}/choice`);
+        navigate(`/inquiry/${inquiryID}/choice`);
     };
     return (
         <div className="flex flex-col content-center w-full gap-2 justify-center">
             <div className="rounded-lg overflow-hidden shadow-sm border-[1px] w-full p-3">
                 <div className="flex flex-col gap-2 w-full justify-center">
                     <h2 className="flex text-3xl">
-                        000님을 위한 <br /> 선물이 준비되었어요!
+                        {inquiryAPI.data?.target
+                            ? inquiryAPI.data.target + '님을 위한'
+                            : '친구들이 고른'}{' '}
+                        <br /> 선물이 준비되었어요!
                     </h2>
                     <img src={boxImage} className="w-full p-3" />
 
