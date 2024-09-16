@@ -32,10 +32,24 @@ import {Participant, Product} from '@/lib/types';
 import BasketProductCard from './components/BasketProductCard';
 import {toast} from 'sonner';
 import {authAtom} from '@/api/auth';
-import {useAtomValue} from 'jotai';
+import {useAtom, useAtomValue} from 'jotai';
 
 import BasketInfoCard from './components/BasketInfoCard';
 import KakaoShare from '@/components/common/KakaoShare';
+import {selctedProductCount, selectedProduct} from '@/atoms/basket';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
+import {Label} from '@/components/ui/label';
+import {Input} from '@/components/ui/input';
+import {useEffect, useState} from 'react';
+import {createInquiry} from '@/api/inquiry';
 const {Kakao} = window;
 
 interface SelectedUser {
@@ -54,6 +68,17 @@ const Basket = () => {
     const user = useAtomValue(authAtom);
     const {basketID} = useParams();
     const navigate = useNavigate();
+    const selectedCount = useAtomValue(selctedProductCount);
+    const [selected, setSelected] = useAtom(selectedProduct);
+    const [target, setTarget] = useState('');
+    const [{mutate}] = useAtom(createInquiry);
+
+    useEffect(() => {
+        if (!Kakao.isInitialized()) {
+            Kakao.init(import.meta.env.VITE_KAKAO_API_KEY);
+        }
+    }, []);
+
     const basketInfoAPI = useQuery({
         queryKey: ['basket', basketID],
         queryFn: () => fetchBasketInfo(basketID || ''),
@@ -79,9 +104,7 @@ const Basket = () => {
             const invitationIdx = data.invitationIdx;
 
             const url = `${import.meta.env.VITE_CURRENT_DOMAIN}/basket/${basketID}/invite/${invitationIdx}`;
-            if (!Kakao.isInitialized()) {
-                Kakao.init(import.meta.env.VITE_KAKAO_API_KEY);
-            }
+
             Kakao.Share.sendDefault({
                 objectType: 'feed',
                 content: {
@@ -125,9 +148,6 @@ const Basket = () => {
         navigate(`/basket/edit/${basketID}`);
     };
     const handleSend = async () => {
-        if (!Kakao.isInitialized()) {
-            Kakao.init(import.meta.env.VITE_KAKAO_API_KEY);
-        }
         Kakao.Picker.selectFriends({
             title: '친구 선택',
             maxPickableCount: 1,
@@ -177,6 +197,11 @@ const Basket = () => {
             .catch((err: any) => {
                 console.log(err);
             });
+    };
+
+    const handleInquiry = () => {
+        mutate({basketIdx: basketID || '', selected, target});
+        setSelected([]);
     };
 
     const handleInvite = async () => {
@@ -330,6 +355,59 @@ const Basket = () => {
             >
                 <ArrowUp />
             </Button>
+            {selectedCount > 0 && (
+                <nav className="fixed bottom-16  w-full bg-white shadow-md flex justify-center max-w-sm gap-2 rounded-lg">
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button
+                                variant="ghost"
+                                className="w-full flex flex-col items-center gap-1 text-muted-foreground hover:text-foreground"
+                            >
+                                <span className="text-xs">물어보기</span>
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px]">
+                            <DialogHeader>
+                                <DialogTitle>
+                                    물어볼 상대의 이름을 입력해주세요
+                                </DialogTitle>
+                            </DialogHeader>
+                            <div className="grid gap-4 py-4">
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label
+                                        htmlFor="taget"
+                                        className="text-right"
+                                    >
+                                        이름
+                                    </Label>
+                                    <Input
+                                        id="target"
+                                        placeholder="누구에게 물어볼까요?"
+                                        className="col-span-3"
+                                        value={target}
+                                        onChange={(e) =>
+                                            setTarget(e.target.value)
+                                        }
+                                    />
+                                </div>
+                            </div>
+                            <DialogFooter>
+                                <Button onClick={handleInquiry} type="submit">
+                                    물어보기
+                                </Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+
+                    <Button
+                        variant="ghost"
+                        onClick={() => setSelected([])}
+                        className="w-full flex flex-col items-center gap-1 text-muted-foreground hover:text-foreground"
+                    >
+                        <span className="text-xs">선택 해제</span>
+                    </Button>
+                </nav>
+            )}
         </>
     );
 };

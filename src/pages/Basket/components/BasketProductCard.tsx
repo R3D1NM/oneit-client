@@ -1,4 +1,5 @@
 import {basketProductVote, deleteBasketProduct} from '@/api/basket';
+import {selctedProductCount, selectProduct} from '@/atoms/basket';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -12,9 +13,11 @@ import {
 import {AspectRatio} from '@/components/ui/aspect-ratio';
 import {Button} from '@/components/ui/button';
 import {Product} from '@/lib/types';
+import {cn} from '@/lib/utils';
 import {useMutation} from '@tanstack/react-query';
+import {useAtomValue, useSetAtom} from 'jotai';
 import {Heart, MinusSquare} from 'lucide-react';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 
 interface ProductCardProps {
     product: Product;
@@ -29,11 +32,25 @@ const BasketProductCard = (props: ProductCardProps) => {
     const [vote, setVote] = useState<'LIKE' | 'DISLIKE' | 'NONE'>(voteStatus);
     const [count, setCount] = useState(likeCount);
     const [isOpen, setIsOpen] = useState(false);
+    const onSelect = useSetAtom(selectProduct);
+    const [isSelected, setIsSelected] = useState(false);
+    const selectedCount = useAtomValue(selctedProductCount);
 
     const deleteAPI = useMutation({
         mutationFn: () => deleteBasketProduct(basketID || '', product.idx),
         onSuccess: () => window.location.reload(),
     });
+
+    useEffect(() => {
+        if (selectedCount === 0) {
+            setIsSelected(false);
+        }
+    });
+
+    const handleClick = () => {
+        setIsSelected(!isSelected);
+        onSelect(product);
+    };
 
     const handleDelete = async () => {
         deleteAPI.mutate();
@@ -68,7 +85,10 @@ const BasketProductCard = (props: ProductCardProps) => {
     return (
         <div
             key={product.idx}
-            className="rounded-lg overflow-hidden shadow-sm flex flex-col"
+            className={cn(
+                'rounded-lg overflow-hidden shadow-sm flex flex-col',
+                isSelected && 'border-[1px] border-oneit-blue',
+            )}
         >
             <div className="relative group">
                 <a href={`/product/${product.idx}`} className="block">
@@ -134,18 +154,16 @@ const BasketProductCard = (props: ProductCardProps) => {
                     </AlertDialogContent>
                 </AlertDialog>
             </div>
-            <a href={`/product/${product.idx}`} className="block">
-                <div className="p-4">
-                    <h3 className="max-w-full text-sm font-semibold mb-2 overflow-hidden whitespace-nowrap overflow-ellipsis">
-                        {product.name}
-                    </h3>
-                    <div className="flex items-center justify-between">
-                        <span className="font-bold text-lg">
-                            {product.originalPrice.toLocaleString()}원
-                        </span>
-                    </div>
+            <div className={cn('p-4 border-t-[0.5px]')} onClick={handleClick}>
+                <h3 className="max-w-full  text-sm font-semibold mb-2 overflow-hidden whitespace-nowrap  overflow-ellipsis">
+                    {product.name}
+                </h3>
+                <div className="flex items-center justify-end">
+                    <span className="font-bold text-lg">
+                        {product.originalPrice.toLocaleString()}원
+                    </span>
                 </div>
-            </a>
+            </div>
         </div>
     );
 };
