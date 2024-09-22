@@ -240,6 +240,10 @@ function App() {
                                                 element={<Main />}
                                             />
                                             <Route
+                                                path="/404"
+                                                element={<NotFound />}
+                                            />
+                                            <Route
                                                 path="*"
                                                 element={<NotFound />}
                                             />

@@ -1,3 +1,4 @@
+import {sendErrorToSlack} from '@/lib/slack';
 import {AxiosError, AxiosResponse, isAxiosError} from 'axios';
 import {useCallback} from 'react';
 import {toast} from 'sonner';
@@ -19,9 +20,17 @@ const useApiError = () => {
                 toast.error(
                     '서버 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
                 );
+                sendErrorToSlack({
+                    message: `[${status}] ${code} | ${message} | ${error.response?.data}`,
+                    errorPoint: error.stack || '',
+                });
             }
         } else {
             toast.error('서버 에러가 발생했습니다. 잠시 후 다시 시도해주세요.');
+            sendErrorToSlack({
+                message: error.toString(),
+                errorPoint: error?.stack || '',
+            });
         }
         return Error;
     }, []);

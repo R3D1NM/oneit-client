@@ -1,4 +1,4 @@
-import {useAtomValue, useSetAtom} from 'jotai';
+import {useAtom, useAtomValue, useSetAtom} from 'jotai';
 import {loading, name, question, recipient} from '@/atoms/recommend';
 import {useNavigate, useParams} from 'react-router-dom';
 import {Spinner} from '@/components/ui/spinner';
@@ -11,18 +11,18 @@ import {
     DialogHeader,
 } from '@/components/ui/dialog';
 import {Button} from '@/components/ui/button';
-import {finishChat, next} from '@/api/chat';
+import {finishRecommend, next} from '@/api/chat';
 import {Card} from '@/components/ui/card';
 import {parse} from 'cox-postposition';
 import {Progress} from '@/components/ui/progress';
+import {useQuery} from '@tanstack/react-query';
 
 // MAX DEPTH of the chat
 const MAXDEPTH = 8;
 
 const Quiz = () => {
     const isloading = useAtomValue(loading);
-    const getNextQuestion = useSetAtom(next);
-    const endChat = useSetAtom(finishChat);
+    const setAnswers = useSetAtom(next);
     const questionList = useAtomValue(question);
     const userRecipient = useAtomValue(recipient);
     const userName = useAtomValue(name);
@@ -35,6 +35,8 @@ const Quiz = () => {
     const [error, setError] = useState(false);
     const [selected, setSelected] = useState(0);
 
+    const [{mutate}] = useAtom(finishRecommend);
+
     // Debugging logs
     // console.log('Questions:', questionList[currentDepth], 'Loading:', isloading);
 
@@ -44,19 +46,12 @@ const Quiz = () => {
         // console.log('Depth:', currentDepth, 'Selected:', index);
 
         if (currentDepth < MAXDEPTH - 1) {
-            try {
-                await getNextQuestion(index, currentDepth);
-                navigate(`/recommend/${chatID}/${currentDepth + 1}`);
-            } catch (error) {
-                setError(true);
-            }
+            await setAnswers(index, currentDepth);
+            navigate(`/recommend/${chatID}/${currentDepth + 1}`);
         } else if (currentDepth === MAXDEPTH - 1) {
-            try {
-                await endChat(chatID, index, currentDepth);
-                navigate(`/recommend/${chatID}/result`);
-            } catch (error) {
-                setError(true);
-            }
+            await setAnswers(index, currentDepth);
+            mutate({chatID});
+            navigate(`/recommend/${chatID}/result`);
         } else {
             setError(true);
         }

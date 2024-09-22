@@ -30,7 +30,6 @@ const KakaoShare = (props: KakaoShareProps) => {
 
     const handleShare = () => {
         console.log(props);
-        const URL = 'https://' + window.location.hostname + url;
 
         const payload = {
             objectType: 'feed',
@@ -39,16 +38,16 @@ const KakaoShare = (props: KakaoShareProps) => {
                 description: description || '',
                 imageUrl: image || 'https://www.oneit.gift/oneit.png',
                 link: {
-                    mobileWebUrl: URL,
-                    webUrl: URL,
+                    mobileWebUrl: import.meta.env.VITE_CURRENT_DOMAIN + url,
+                    webUrl: import.meta.env.VITE_CURRENT_DOMAIN + url,
                 },
             },
             buttons: [
                 {
                     title: 'ONE!T에서 확인하기',
                     link: {
-                        mobileWebUrl: URL,
-                        webUrl: URL,
+                        mobileWebUrl: import.meta.env.VITE_CURRENT_DOMAIN + url,
+                        webUrl: import.meta.env.VITE_CURRENT_DOMAIN + url,
                     },
                 },
             ],

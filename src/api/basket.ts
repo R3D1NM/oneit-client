@@ -9,7 +9,7 @@ import {
 import axios from '@/lib/axios';
 import {Basket, Product} from '@/lib/types';
 import {atom} from 'jotai';
-import {atomWithMutation, atomWithQuery} from 'jotai-tanstack-query';
+import {atomWithMutation} from 'jotai-tanstack-query';
 import {toast} from 'sonner';
 
 export const createBasket = atom(null, async (get, set) => {
