@@ -7,20 +7,13 @@ const getMe = async () => {
     //get user info
     //todo: get user info from server
     return axios
-        .get('/v1/kakao/user')
+        .get('/v2/kakao/user')
         .then((res) => {
-            console.log(res);
-
-            if (res.status == 200 && res.data.isSuccess) {
-                return Promise.resolve(res.data.result);
-            } else if (res.status == 200 && !res.data.isSuccess) {
-                return Promise.reject(res.data.code);
-            } else {
-                throw new Error('Failed to get user info');
-            }
+            // console.log(res);
+            return Promise.resolve(res.data);
         })
         .catch((err) => {
-            console.log(err);
+            // console.log(err);
             return Promise.reject(err);
         });
 };
@@ -31,21 +24,13 @@ const getAuth = async (): Promise<User | null> => {
         access: localStorage.getItem('token'),
         // refresh: cookies.get('refreshToken'),
     };
-    console.log('token', token);
+    // console.log('token', token);
 
     if (token.access) {
         return getMe()
             .then((res) => res)
             .catch((err) => {
-                console.log(err);
-                if (err?.toString() == '2104') {
-                    localStorage.removeItem('token');
-                } else if (
-                    err?.response?.status == 401 &&
-                    err?.response?.data?.code == 2104
-                ) {
-                    localStorage.removeItem('token');
-                }
+                // console.log(err);
                 return null;
             });
     }
@@ -68,7 +53,7 @@ export const authAtom = atomWithDefault(getAuth);
 authAtom.debugLabel = 'authAtom';
 
 export const updateAuthAtom = atom(null, async (get, set) => {
-    console.log('updating auth');
+    console.log('[AUTH] updating auth');
 
     set(authAtom, getAuth());
 });
@@ -83,24 +68,19 @@ export const isLoginAtom = atom(async (get) => {
 });
 
 export const login = async (token: string) => {
-    try {
-        const res = await axios.post('/v1/kakao/login', {
+    return axios
+        .post('/v2/kakao/login', {
             accessToken: token,
-        });
-
-        if (res.status == 200 && res.data.isSuccess) {
-            // const { accessToken, refreshToken } = res.data as LoginResponse;
-            const accessToken = res.data.result.accessToken;
+        })
+        .then((res) => {
+            const accessToken = res.data.accessToken;
             localStorage.setItem('token', accessToken);
-            // cookies.set("refreshToken", refreshToken, { path: "/", httpOnly: true });
             return Promise.resolve();
-        } else {
-            throw new Error('Failed to login');
-        }
-    } catch (err) {
-        console.log(err);
-        return Promise.reject(err);
-    }
+        })
+        .catch((err) => {
+            console.log(err);
+            return Promise.reject(err);
+        });
 };
 
 export const logout = async () => {

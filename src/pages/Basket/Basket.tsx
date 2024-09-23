@@ -3,20 +3,16 @@ import {
     deleteBasket,
     fetchBasketInfo,
     fetchBasketProducts,
-    fetcthBasketParticipants,
 } from '@/api/basket';
 import {Spinner} from '@/components/ui/spinner';
-import {useQuery} from '@tanstack/react-query';
+import {useMutation, useQuery} from '@tanstack/react-query';
 import {useNavigate, useParams} from 'react-router-dom';
 import NotFound from '../NotFound';
 import {Button} from '@/components/ui/button';
 import {
     ArrowUp,
-    CalendarCheck,
     ChevronLeft,
-    Crown,
     Edit,
-    Heart,
     LockKeyhole,
     MailPlusIcon,
     PlusSquare,
@@ -24,7 +20,6 @@ import {
     Settings,
     Trash,
 } from 'lucide-react';
-import Share from '@/components/common/Share';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -33,29 +28,28 @@ import {
     DropdownMenuLabel,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
-import {useState} from 'react';
-import {Separator} from '@/components/ui/separator';
-import {ScrollArea} from '@/components/ui/scroll-area';
 import {Participant, Product} from '@/lib/types';
 import BasketProductCard from './components/BasketProductCard';
 import {toast} from 'sonner';
 import {authAtom} from '@/api/auth';
-import {useAtomValue} from 'jotai';
-import Logo from '@/assets/oneit.png';
-import ParticipantAvatar from './components/ParticipantAvatar';
-import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover';
-import {Avatar, AvatarImage} from '@/components/ui/avatar';
-import {cn} from '@/lib/utils';
-import {AspectRatio} from '@/components/ui/aspect-ratio';
+import {useAtom, useAtomValue} from 'jotai';
+
 import BasketInfoCard from './components/BasketInfoCard';
 import KakaoShare from '@/components/common/KakaoShare';
+import {selctedProductCount, selectedProduct} from '@/atoms/basket';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
+import {Label} from '@/components/ui/label';
+import {Input} from '@/components/ui/input';
+import {useEffect, useState} from 'react';
+import {createInquiry} from '@/api/inquiry';
 const {Kakao} = window;
 
 interface SelectedUser {
@@ -74,7 +68,17 @@ const Basket = () => {
     const user = useAtomValue(authAtom);
     const {basketID} = useParams();
     const navigate = useNavigate();
-    const [error, setError] = useState(false);
+    const selectedCount = useAtomValue(selctedProductCount);
+    const [selected, setSelected] = useAtom(selectedProduct);
+    const [target, setTarget] = useState('');
+    const [{mutate}] = useAtom(createInquiry);
+
+    useEffect(() => {
+        if (!Kakao.isInitialized()) {
+            Kakao.init(import.meta.env.VITE_KAKAO_API_KEY);
+        }
+    }, []);
+
     const basketInfoAPI = useQuery({
         queryKey: ['basket', basketID],
         queryFn: () => fetchBasketInfo(basketID || ''),
@@ -87,50 +91,63 @@ const Basket = () => {
     });
     // console.log(data);
 
-    if (basketInfoAPI.error?.toString() === '3009') {
-        return (
-            <div className="w-full pb-5 justify-center content-center text-center flex flex-col gap-2">
-                <p>바구니 참여자가 아닙니다.</p>
-                <Button
-                    onClick={() => {
-                        navigate('/');
-                    }}
-                    className="w-fit mx-auto"
-                >
-                    메인으로
-                </Button>
-            </div>
-        );
+    const deleteAPI = useMutation({
+        mutationFn: () => deleteBasket(basketID || ''),
+        onSuccess: (data) => {
+            navigate(`/basket/${basketID}`);
+        },
+    });
+
+    const inviteAPI = useMutation({
+        mutationFn: () => basketInvite(basketID || ''),
+        onSuccess: (data) => {
+            const invitationIdx = data.invitationIdx;
+
+            const url = `${import.meta.env.VITE_CURRENT_DOMAIN}/basket/${basketID}/invite/${invitationIdx}`;
+
+            Kakao.Share.sendDefault({
+                objectType: 'feed',
+                content: {
+                    title: user
+                        ? `${user?.nickname}님이 선물 바구니에 초대했습니다.`
+                        : 'ONE!T 선물 바구니에 초대되었습니다.',
+                    description: basketInfoAPI.data.name || 'ONE!T 선물 바구니',
+                    imageUrl:
+                        basketInfoAPI.data.imageUrl ||
+                        'https://www.oneit.gift/oneit.png',
+                    link: {
+                        mobileWebUrl: url,
+                        webUrl: url,
+                    },
+                },
+                buttons: [
+                    {
+                        title: 'ONE!T에서 확인하기',
+                        link: {
+                            mobileWebUrl: url,
+                            webUrl: url,
+                        },
+                    },
+                ],
+            });
+        },
+    });
+
+    if (basketInfoAPI.error) {
+        console.log(basketInfoAPI.error);
     }
-    if (basketInfoAPI.error?.toString() === '4005') {
-        return <NotFound />;
-    }
-    console.log(basketProductAPI?.error);
 
     const handleGoBack = () => {
         navigate(-1);
     };
     const handleDelete = async () => {
-        try {
-            await deleteBasket(basketID || '');
-            navigate('/');
-        } catch (error) {
-            if (error?.toString() === '3008') {
-                toast.error('바구니 관리자가 아닙니다.');
-            } else {
-                console.error(error);
-                setError(true);
-            }
-        }
+        deleteAPI.mutate();
     };
 
     const handleEdit = () => {
         navigate(`/basket/edit/${basketID}`);
     };
     const handleSend = async () => {
-        if (!Kakao.isInitialized()) {
-            Kakao.init(import.meta.env.VITE_KAKAO_API_KEY);
-        }
         Kakao.Picker.selectFriends({
             title: '친구 선택',
             maxPickableCount: 1,
@@ -182,42 +199,14 @@ const Basket = () => {
             });
     };
 
+    const handleInquiry = () => {
+        mutate({basketIdx: basketID || '', selected, target});
+        setSelected([]);
+    };
+
     const handleInvite = async () => {
         console.log(import.meta.env.BASE_URL);
-
-        basketInvite(basketID || '').then((res) => {
-            const invitationIdx = res.invitationIdx;
-
-            const url = `${import.meta.env.VITE_CURRENT_DOMAIN}/basket/${basketID}/invite/${invitationIdx}`;
-            if (!Kakao.isInitialized()) {
-                Kakao.init(import.meta.env.VITE_KAKAO_API_KEY);
-            }
-            Kakao.Share.sendDefault({
-                objectType: 'feed',
-                content: {
-                    title: user
-                        ? `${user?.nickname}님이 선물 바구니에 초대했습니다.`
-                        : 'ONE!T 선물 바구니에 초대되었습니다.',
-                    description: basketInfoAPI.data.name || 'ONE!T 선물 바구니',
-                    imageUrl:
-                        basketInfoAPI.data.imageUrl ||
-                        'https://www.oneit.gift/oneit.png',
-                    link: {
-                        mobileWebUrl: url,
-                        webUrl: url,
-                    },
-                },
-                buttons: [
-                    {
-                        title: 'ONE!T에서 확인하기',
-                        link: {
-                            mobileWebUrl: url,
-                            webUrl: url,
-                        },
-                    },
-                ],
-            });
-        });
+        inviteAPI.mutate();
     };
 
     const scrollToTop = () => {
@@ -257,7 +246,7 @@ const Basket = () => {
                                     basketInfoAPI.data?.imageUrl ||
                                     'https://www.oneit.gift/oneit.png'
                                 }
-                                url={`https://oneit.gift/basket/share/${basketID}`}
+                                url={`/basket/share/${basketID}`}
                             />
                         ) : (
                             <Button variant="ghost" size="icon" disabled>
@@ -359,50 +348,66 @@ const Basket = () => {
                     </div>
                 </div>
             </div>
-            {error && (
-                <Dialog open={error} onOpenChange={setError}>
-                    <DialogContent
-                        className="sm:max-w-[425px]"
-                        onInteractOutside={(e: {
-                            preventDefault: () => void;
-                        }) => {
-                            e.preventDefault();
-                        }}
-                    >
-                        <DialogHeader>
-                            <DialogTitle>문제 발생</DialogTitle>
-                        </DialogHeader>
-                        <DialogDescription>
-                            문제가 발생했습니다. 다시 시도해주세요.
-                        </DialogDescription>
-                        <div className="flex justify-end gap-2">
-                            <Button
-                                variant="outline"
-                                onClick={() => {
-                                    setError(false);
-                                    navigate('/');
-                                }}
-                            >
-                                메인으로
-                            </Button>
-                            <Button
-                                type="submit"
-                                onClick={() => {
-                                    setError(false);
-                                }}
-                            >
-                                다시시도
-                            </Button>
-                        </div>
-                    </DialogContent>
-                </Dialog>
-            )}
+
             <Button
                 className="fixed bottom-0 right-0 px-3 py-6 rounded-full shadow-lg m-1"
                 onClick={scrollToTop}
             >
                 <ArrowUp />
             </Button>
+            {selectedCount > 0 && (
+                <nav className="fixed bottom-16  w-full bg-white shadow-md flex justify-center max-w-sm gap-2 rounded-lg">
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button
+                                variant="ghost"
+                                className="w-full flex flex-col items-center gap-1 text-muted-foreground hover:text-foreground"
+                            >
+                                <span className="text-xs">물어보기</span>
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px]">
+                            <DialogHeader>
+                                <DialogTitle>
+                                    물어볼 상대의 이름을 입력해주세요
+                                </DialogTitle>
+                            </DialogHeader>
+                            <div className="grid gap-4 py-4">
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label
+                                        htmlFor="taget"
+                                        className="text-right"
+                                    >
+                                        이름
+                                    </Label>
+                                    <Input
+                                        id="target"
+                                        placeholder="누구에게 물어볼까요?"
+                                        className="col-span-3"
+                                        value={target}
+                                        onChange={(e) =>
+                                            setTarget(e.target.value)
+                                        }
+                                    />
+                                </div>
+                            </div>
+                            <DialogFooter>
+                                <Button onClick={handleInquiry} type="submit">
+                                    물어보기
+                                </Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+
+                    <Button
+                        variant="ghost"
+                        onClick={() => setSelected([])}
+                        className="w-full flex flex-col items-center gap-1 text-muted-foreground hover:text-foreground"
+                    >
+                        <span className="text-xs">선택 해제</span>
+                    </Button>
+                </nav>
+            )}
         </>
     );
 };

@@ -1,0 +1,32 @@
+[
+    {
+        "idx": 1,
+        "name": "LOVE",
+        "content": "취향저격!",
+        "emojiImageName": "emoji_love.png"
+    },
+    {
+        "idx": 2,
+        "name": "LIKE",
+        "content": "마음에 들어요",
+        "emojiImageName": "emoji_like.png"
+    },
+    {
+        "idx": 3,
+        "name": "ALREADY_HAVE",
+        "content": "이미 있는 상품이에요",
+        "emojiImageName": "emoji_already_have.png"
+    },
+    {
+        "idx": 4,
+        "name": "DESIGN_MISS",
+        "content": "괜찮은데 디자인이 별로에요",
+        "emojiImageName": "emoji_design_miss.png"
+    },
+    {
+        "idx": 5,
+        "name": "DISLIKE",
+        "content": "취향이 아니에요",
+        "emojiImageName": "emoji_dislike.png"
+    }
+]

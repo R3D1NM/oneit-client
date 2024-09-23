@@ -7,8 +7,10 @@ import {
     thumbnail,
 } from '@/atoms/basket';
 import axios from '@/lib/axios';
-import {Basket} from '@/lib/types';
+import {Basket, Product} from '@/lib/types';
 import {atom} from 'jotai';
+import {atomWithMutation} from 'jotai-tanstack-query';
+import {toast} from 'sonner';
 
 export const createBasket = atom(null, async (get, set) => {
     const data = {
@@ -27,7 +29,7 @@ export const createBasket = atom(null, async (get, set) => {
     set(thumbnail, null);
     set(accessStatus, 'PUBLIC');
     return axios
-        .post('/v1/giftbox', payload, {
+        .post('/v2/giftbox', payload, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
@@ -35,29 +37,18 @@ export const createBasket = atom(null, async (get, set) => {
         })
         .then((res) => {
             console.log(res);
-            if (res.status === 200 && res.data.isSuccess) {
-                return Promise.resolve(res.data.result);
-            }
+            return Promise.resolve(res.data);
         })
         .catch((err) => {
-            console.log(err);
             return Promise.reject(err);
         });
 });
 
 export const fetchBasketInfo = async (basketID: string) => {
     return axios
-        .get(`/v1/giftbox/${basketID}`)
+        .get(`/v2/giftbox/${basketID}`)
         .then((res) => {
-            if (res.status === 200 && res.data.isSuccess) {
-                return Promise.resolve(res.data.result);
-            } else if (res.status === 401) {
-                return Promise.reject(res.data.message);
-            } else if (res.status === 200 && !res.data.isSuccess) {
-                return Promise.reject(res.data.code);
-            } else {
-                throw new Error(res.data.message);
-            }
+            return Promise.resolve(res.data);
         })
         .catch((err) => {
             return Promise.reject(err);
@@ -65,27 +56,25 @@ export const fetchBasketInfo = async (basketID: string) => {
 };
 
 export const fetchBasketList = async () => {
-    return axios.get('/v1/giftbox').then((res) => {
-        if (res.status === 200 && res.data.isSuccess) {
-            return Promise.resolve(res.data.result);
-        } else if (res.status === 200 && !res.data.isSuccess) {
-            return Promise.reject(res.data.code);
-        } else {
-            throw new Error(res.data.message);
-        }
-    });
+    return axios
+        .get('/v2/giftbox')
+        .then((res) => {
+            return Promise.resolve(res.data);
+        })
+        .catch((err) => {
+            return Promise.reject(err);
+        });
 };
 
 export const deleteBasket = async (basketID: string) => {
-    return axios.delete(`/v1/giftbox/${basketID}`).then((res) => {
-        if (res.status === 200 && res.data.isSuccess) {
-            return Promise.resolve(res.data.result);
-        } else if (res.status === 200 && !res.data.isSuccess) {
-            return Promise.reject(res.data.code);
-        } else {
-            throw new Error(res.data.message);
-        }
-    });
+    return axios
+        .delete(`/v2/giftbox/${basketID}`)
+        .then((res) => {
+            return Promise.resolve(res.data);
+        })
+        .catch((err) => {
+            return Promise.reject(err);
+        });
 };
 
 export const editBasket = async (
@@ -104,49 +93,74 @@ export const editBasket = async (
     payload.append('request', JSON.stringify(data));
     payload.append('image', thumbnail as File);
     return axios
-        .put(`/v1/giftbox/${basketID}`, basket, {
+        .put(`/v2/giftbox/${basketID}`, basket, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
             transformRequest: [() => payload],
         })
         .then((res) => {
-            if (res.status === 200 && res.data.isSuccess) {
-                return Promise.resolve(res.data.result);
-            } else if (res.status === 200 && !res.data.isSuccess) {
-                return Promise.reject(res.data.code);
-            } else {
-                throw new Error(res.data.message);
-            }
-        });
-};
-
-export const addToBasket = atom(null, async (get, set, basketIdx: string) => {
-    const selected = get(selectedProduct);
-    const products = selected.map((p) => Number(p.idx));
-    return axios
-        .post(`v1/giftbox/${basketIdx}/products`, products)
-        .then((res) => {
-            if (res.status === 200 && res.data.isSuccess) {
-                set(selectedProduct, []);
-                return Promise.resolve(res.data.result);
-            } else if (res.status === 200 && !res.data.isSuccess) {
-                return Promise.reject(res.data.code);
-            } else {
-                throw new Error(res.data.message);
-            }
+            return Promise.resolve(res.data);
         })
         .catch((err) => {
             return Promise.reject(err);
         });
-});
+};
+
+type AddToBasketVariables = {
+    basketIdx: string;
+    selected: Product[];
+};
+
+export const addToBasket = atomWithMutation<unknown, AddToBasketVariables>(
+    (get) => ({
+        mutationKey: ['addToBasket'],
+        mutationFn: async ({basketIdx, selected}: AddToBasketVariables) => {
+            console.log(selected);
+
+            const products = selected.map((p) => Number(p.idx));
+            return axios
+                .post(`v2/giftbox/${basketIdx}/products`, products)
+                .then((res) => {
+                    return Promise.resolve(res.data);
+                })
+                .catch((err) => {
+                    return Promise.reject(err);
+                });
+        },
+        onSuccess: (data, variables, context) => {
+            toast.success('상품이 추가되었습니다.', {
+                action: {
+                    label: '확인하기',
+                    onClick: () => {
+                        window.location.href = '/basket/' + variables.basketIdx;
+                    },
+                },
+            });
+        },
+    }),
+);
+
+// export const addToBasket = atom(null, async (get, set, basketIdx: string) => {
+//     const selected = get(selectedProduct);
+//     const products = selected.map((p) => Number(p.idx));
+//     return axios
+//         .post(`v2/giftbox/${basketIdx}/products`, products)
+//         .then((res) => {
+//             set(selectedProduct, []);
+//             return Promise.resolve(res.data);
+//         })
+//         .catch((err) => {
+//             return Promise.reject(err);
+//         });
+// });
 
 export const fetchBasketProducts = async (basketIdx: string) => {
     return axios
-        .get(`v1/giftbox/${basketIdx}/products`)
+        .get(`v2/giftbox/${basketIdx}/products`)
         .then((res) => {
-            if (res.status === 200 && res.data.isSuccess) {
-                return Promise.resolve(res.data.result);
+            if (res.status === 200) {
+                return Promise.resolve(res.data);
             }
         })
         .catch((err) => {
@@ -160,12 +174,12 @@ export const deleteBasketProduct = async (
 ) => {
     const payload = [Number(productIdx)];
     return axios
-        .delete(`v1/giftbox/${basketIdx}/products`, {
+        .delete(`v2/giftbox/${basketIdx}/products`, {
             data: payload,
         })
         .then((res) => {
-            if (res.status === 200 && res.data.isSuccess) {
-                return Promise.resolve(res.data.result);
+            if (res.status === 200) {
+                return Promise.resolve(res.data);
             }
         })
         .catch((err) => {
@@ -175,15 +189,9 @@ export const deleteBasketProduct = async (
 
 export const basketInvite = async (basketIdx: string) => {
     return axios
-        .post(`v1/giftbox/${basketIdx}/invitation`)
+        .post(`v2/giftbox/${basketIdx}/invitation`)
         .then((res) => {
-            if (res.status === 200 && res.data.isSuccess) {
-                return Promise.resolve(res.data.result);
-            } else if (res.status === 200 && !res.data.isSuccess) {
-                return Promise.reject(res.data.code);
-            } else {
-                throw new Error(res.data.message);
-            }
+            return Promise.resolve(res.data);
         })
         .catch((err) => {
             return Promise.reject(err);
@@ -192,32 +200,21 @@ export const basketInvite = async (basketIdx: string) => {
 
 export const confirmInvitation = async (invitationIdx: string) => {
     return axios
-        .patch(`v1/giftbox/invitation/${invitationIdx}/status`)
+        .patch(`v2/giftbox/invitation/${invitationIdx}/status`)
         .then((res) => {
-            if (res.status === 200 && res.data.isSuccess) {
-                return Promise.resolve(res.data.result);
-            } else if (res.status === 200 && !res.data.isSuccess) {
-                return Promise.reject(res.data.code);
-            } else {
-                throw new Error(res.data.message);
-            }
+            return Promise.resolve(res.data);
         })
         .catch((err) => {
+            console.log(err);
             return Promise.reject(err);
         });
 };
 
 export const fetcthBasketParticipants = async (basketIdx: string) => {
     return axios
-        .get(`v1/giftbox/${basketIdx}/participants`)
+        .get(`v2/giftbox/${basketIdx}/participants`)
         .then((res) => {
-            if (res.status === 200 && res.data.isSuccess) {
-                return Promise.resolve(res.data.result);
-            } else if (res.status === 200 && !res.data.isSuccess) {
-                return Promise.reject(res.data.code);
-            } else {
-                throw new Error(res.data.message);
-            }
+            return Promise.resolve(res.data);
         })
         .catch((err) => {
             return Promise.reject(err);
@@ -231,20 +228,14 @@ export const basketProductVote = async (
     vote: 'LIKE' | 'DISLIKE' | 'NONE',
 ) => {
     return axios
-        .put(`v1/giftbox/products/vote`, {
+        .put(`v2/giftbox/products/vote`, {
             giftboxIdx: basketIdx,
             productIdx,
             browserUuid,
             vote,
         })
         .then((res) => {
-            if (res.status === 200 && res.data.isSuccess) {
-                return Promise.resolve(res.data.result);
-            } else if (res.status === 200 && !res.data.isSuccess) {
-                return Promise.reject(res.data.code);
-            } else {
-                throw new Error(res.data.message);
-            }
+            return Promise.resolve(res.data);
         })
         .catch((err) => {
             return Promise.reject(err);

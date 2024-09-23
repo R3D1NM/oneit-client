@@ -1,8 +1,8 @@
 import {Basket, Product} from '@/lib/types';
 import Gift from '@/assets/giftbox.png';
 import {Button} from '@/components/ui/button';
-import {authAtom, isLoginAtom} from '@/api/auth';
-import {useAtomValue, useSetAtom} from 'jotai';
+import {isLoginAtom} from '@/api/auth';
+import {useAtom, useAtomValue, useSetAtom} from 'jotai';
 import {
     Drawer,
     DrawerClose,
@@ -13,12 +13,11 @@ import {
 import {addToBasket, fetchBasketList} from '@/api/basket';
 import {useQuery} from '@tanstack/react-query';
 import {Spinner} from '@/components/ui/spinner';
-import {emptySelected, selectProduct} from '@/atoms/basket';
-import {toast} from 'sonner';
-import {useNavigate} from 'react-router-dom';
+import {emptySelected, selectedProduct, selectProduct} from '@/atoms/basket';
 import {cn} from '@/lib/utils';
 import {CalendarCheck} from 'lucide-react';
 import {ScrollArea} from '@/components/ui/scroll-area';
+import {DialogTitle} from '@/components/ui/dialog';
 
 interface GiftCardProps {
     product: Product;
@@ -26,10 +25,9 @@ interface GiftCardProps {
 
 const GiftCard = (props: GiftCardProps) => {
     const isLogin = useAtomValue(isLoginAtom);
-    const putIntoBasket = useSetAtom(addToBasket);
-    const emptyAll = useSetAtom(emptySelected);
+    const [selected, setSelected] = useAtom(selectedProduct);
+    const [{mutate}] = useAtom(addToBasket);
     const onSelect = useSetAtom(selectProduct);
-    const navigate = useNavigate();
     const {product} = props;
 
     const basketAPI = useQuery({
@@ -41,17 +39,7 @@ const GiftCard = (props: GiftCardProps) => {
 
     const handleAddToBasket = (basketID: string) => {
         if (product) {
-            emptyAll();
-            onSelect(product);
-            putIntoBasket(basketID || '');
-            toast.success('상품이 추가되었습니다.', {
-                action: {
-                    label: '확인하기',
-                    onClick: () => {
-                        navigate('/basket/' + basketID);
-                    },
-                },
-            });
+            mutate({basketIdx: basketID || '', selected: [product]});
         }
     };
 
@@ -88,6 +76,7 @@ const GiftCard = (props: GiftCardProps) => {
                                 </Button>
                             </DrawerTrigger>
                             <DrawerContent>
+                                <DialogTitle></DialogTitle>
                                 <div className="mx-auto w-full max-w-sm">
                                     <div className="p-2 pb-0">
                                         {/* My basket List */}

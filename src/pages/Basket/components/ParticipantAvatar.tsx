@@ -14,24 +14,22 @@ const ParticipantAvatar = (props: Participant) => {
     return (
         <TooltipProvider>
             <div>
-                <a>
-                    <Tooltip>
-                        <TooltipTrigger>
-                            <Avatar
-                                className={cn(
-                                    props.userRole == 'MANAGER' &&
-                                        'border-2 border-oneit-pink',
-                                )}
-                            >
-                                <AvatarImage src={props.profileImage} />
-                                <AvatarFallback>
-                                    <UserCircle2 />
-                                </AvatarFallback>
-                            </Avatar>
-                        </TooltipTrigger>
-                        <TooltipContent>{props.nickname}</TooltipContent>
-                    </Tooltip>
-                </a>
+                <Tooltip>
+                    <TooltipTrigger>
+                        <Avatar
+                            className={cn(
+                                props.userRole == 'MANAGER' &&
+                                    'border-2 border-oneit-pink',
+                            )}
+                        >
+                            <AvatarImage src={props.profileImage} />
+                            <AvatarFallback>
+                                <UserCircle2 />
+                            </AvatarFallback>
+                        </Avatar>
+                    </TooltipTrigger>
+                    <TooltipContent>{props.nickname}</TooltipContent>
+                </Tooltip>
             </div>
         </TooltipProvider>
     );

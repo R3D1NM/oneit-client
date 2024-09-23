@@ -63,10 +63,9 @@ const BasketInfoCard = ({
                                             />
                                         ),
                                     )}
-                                {basket.participants?.length &&
-                                    basket.participants?.length > 2 && (
-                                        <PlusCircle className="text-oneit-pink h-10 w-10 z-10 bg-white rounded-full p-0" />
-                                    )}
+                                {(basket.participants?.length ?? 0) > 2 && (
+                                    <PlusCircle className="text-oneit-pink h-10 w-10 z-10 bg-white rounded-full p-0" />
+                                )}
                             </div>
                         </PopoverTrigger>
                         <PopoverContent

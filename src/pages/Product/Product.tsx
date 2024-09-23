@@ -1,18 +1,9 @@
-import {Link, useNavigate, useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {useQuery} from '@tanstack/react-query';
 import Gift from '@/assets/giftbox.png';
 import {Button} from '@/components/ui/button';
 import KakaoShare from '@/components/common/KakaoShare';
-import {
-    CalendarCheck,
-    ChevronLeft,
-    Heart,
-    MoveRight,
-    PlusSquare,
-    Star,
-    StarIcon,
-} from 'lucide-react';
-import Share from '@/components/common/Share';
+import {CalendarCheck, ChevronLeft, Heart, MoveRight} from 'lucide-react';
 import {Spinner} from '@/components/ui/spinner';
 import NotFound from '../NotFound';
 import {Separator} from '@/components/ui/separator';
@@ -26,18 +17,14 @@ import {
 } from '@/components/ui/drawer';
 import {addToBasket, fetchBasketList} from '@/api/basket';
 import {Basket} from '@/lib/types';
-import {useAtomValue, useSetAtom} from 'jotai';
-import {emptySelected, selectProduct} from '@/atoms/basket';
-import {toast} from 'sonner';
+import {useAtom, useAtomValue} from 'jotai';
 import {ScrollArea} from '@/components/ui/scroll-area';
 import {cn} from '@/lib/utils';
 import {isLoginAtom} from '@/api/auth';
 
 const Product = () => {
     const {productID} = useParams();
-    const putIntoBasket = useSetAtom(addToBasket);
-    const emptyAll = useSetAtom(emptySelected);
-    const onSelect = useSetAtom(selectProduct);
+    const [{mutate}] = useAtom(addToBasket);
     const loggedIn = useAtomValue(isLoginAtom);
 
     // console.log(productID);
@@ -61,17 +48,7 @@ const Product = () => {
 
     const handleAddToBasket = (basketID: string) => {
         if (productAPI.data) {
-            emptyAll();
-            onSelect(productAPI.data);
-            putIntoBasket(basketID || '');
-            toast.success('상품이 추가되었습니다.', {
-                action: {
-                    label: '확인하기',
-                    onClick: () => {
-                        navigate('/basket/' + basketID);
-                    },
-                },
-            });
+            mutate({basketIdx: basketID || '', selected: [productAPI.data]});
         }
     };
 
@@ -97,7 +74,7 @@ const Product = () => {
                     <KakaoShare
                         title="ONE!T - 선물 추천"
                         description={productAPI.data?.name || 'ONE!T'}
-                        url={`https://oneit.gift/product/${productAPI.data?.idx}`}
+                        url={`/product/${productAPI.data?.idx}`}
                         image={
                             productAPI.data?.thumbnailUrl ||
                             'https://www.oneit.gift/oneit.png'
@@ -139,7 +116,7 @@ const Product = () => {
             <div className="flex flex-col">
                 <div className="flex w-full overflow-hidden whitespace-nowrap overflow-ellipsis">
                     <p className="text-oneit-pink text-sm inline-block">
-                        {productAPI.data?.keywords.map((keyword, idx) => (
+                        {productAPI.data?.keywords?.map((keyword, idx) => (
                             <span
                                 key={idx}
                                 className="mr-1"
@@ -154,27 +131,6 @@ const Product = () => {
                 </div>
                 <div className="flex items-center gap-2"></div>
             </div>
-            {/* <Separator className="my-2" /> */}
-            {/* <div className="flex flex-col items-center">
-                <div className="flex items-center justify-center">
-                    <div className="flex items-center gap-1 mr-2">
-                        <StarIcon className="w-5 h-5 fill-primary" />
-                        <StarIcon className="w-5 h-5 fill-primary" />
-                        <StarIcon className="w-5 h-5 fill-primary" />
-                        <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
-                        <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
-                    </div>
-                    <span className="text-lg font-medium">3.2</span>
-                </div>
-                <p>"선물 관점의 후기 한줄평으로"</p>
-            </div> */}
-            {/* <div className="border-[0.3px] my-1"></div>
-            <div>
-                <p>상품 설명</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec porta ante vehicula, gravida nunc at, ullamcorper ligula. Nullam fermentum nec lectus eget consectetur.</p>
-                <p>Mauris vestibulum lacus vel orci consectetur semper. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
-                <p>Mauris vestibulum lacus vel orci consectetur semper. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
-            </div> */}
 
             {loggedIn && (
                 <div className="fixed  mx-auto bottom-12 inset-x-0 flex justify-center gap-2 max-w-sm  h-15 w-full bg-white rounded-t-md py-1 px-2 mb-3 items-center border-t-[1px]">
@@ -190,7 +146,7 @@ const Product = () => {
                                     {/* My basket List */}
                                     {basketAPI.isLoading ? (
                                         <Spinner />
-                                    ) : basketAPI.data.lenght !== 0 ? (
+                                    ) : basketAPI.data?.length !== 0 ? (
                                         <ScrollArea
                                             className={cn(
                                                 'flex items-center justify-between w-full',

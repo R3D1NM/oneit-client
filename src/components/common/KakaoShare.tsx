@@ -22,11 +22,7 @@ interface KakaoShareProps {
 
 const KakaoShare = (props: KakaoShareProps) => {
     const {url, title, description, image} = props;
-    // const prodUrl = `https://www.oneit.gift/result/${chatID}`
     useEffect(() => {
-        // console.log(Kakao);
-        // console.log(product);
-
         if (!Kakao.isInitialized()) {
             Kakao.init(import.meta.env.VITE_KAKAO_API_KEY);
         }
@@ -35,27 +31,30 @@ const KakaoShare = (props: KakaoShareProps) => {
     const handleShare = () => {
         console.log(props);
 
-        Kakao.Share.sendDefault({
+        const payload = {
             objectType: 'feed',
             content: {
-                title: title || 'ONE!T 선물 추천',
-                description: description || '선물 추천 결과',
-                imageUrl: image || Logo,
+                title: title || 'ONE!T - 선물 추천 플랫폼',
+                description: description || '',
+                imageUrl: image || 'https://www.oneit.gift/oneit.png',
                 link: {
-                    mobileWebUrl: url,
-                    webUrl: url,
+                    mobileWebUrl: import.meta.env.VITE_CURRENT_DOMAIN + url,
+                    webUrl: import.meta.env.VITE_CURRENT_DOMAIN + url,
                 },
             },
             buttons: [
                 {
                     title: 'ONE!T에서 확인하기',
                     link: {
-                        mobileWebUrl: url,
-                        webUrl: url,
+                        mobileWebUrl: import.meta.env.VITE_CURRENT_DOMAIN + url,
+                        webUrl: import.meta.env.VITE_CURRENT_DOMAIN + url,
                     },
                 },
             ],
-        });
+        };
+        console.log(payload);
+
+        Kakao.Share.sendDefault(payload);
     };
 
     return (

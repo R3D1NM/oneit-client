@@ -16,33 +16,22 @@ import {
     SelectValue,
     SelectContent,
 } from '@/components/ui/select';
-import {startChat} from '@/api/chat';
+import {startRecommend} from '@/api/chat';
 
 const Recommend = () => {
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
-
     const [userName, setUserName] = useAtom(name);
     const [price, setPrice] = useAtom<number[]>(priceRange);
     const [userRecipient, setUserRecipient] = useAtom(recipient);
     const [userGender, setUserGender] = useAtom(gender);
 
-    const start = useSetAtom(startChat);
+    const [{mutate}] = useAtom(startRecommend);
 
     const handleStart = async () => {
         const chatID = nanoid(10);
-        navigate(`/quiz/${chatID}/0`);
-        setLoading(true);
-        try {
-            await start(chatID);
-        } catch (error) {
-            console.log(error);
-        } finally {
-            setLoading(false); // End loading
-        }
+        mutate({chatID});
+        navigate(`/recommend/${chatID}/0`);
     };
-
-    if (loading) return <Spinner />;
 
     return (
         <div className="flex flex-col content-center w-full gap-2 justify-center">
