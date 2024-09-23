@@ -49,6 +49,7 @@ const Quiz = React.lazy(() => import('./pages/Recommend/Quiz'));
 const Results = React.lazy(() => import('./pages/Recommend/Results'));
 const Product = React.lazy(() => import('./pages/Product/Product'));
 const Curation = React.lazy(() => import('./pages/Product/Curation'));
+const BasketList = React.lazy(() => import('./pages/Basket/BasketList'));
 const Basket = React.lazy(() => import('./pages/Basket/Basket'));
 const About = React.lazy(() => import('./pages/About'));
 const Recommend = React.lazy(() => import('./pages/Recommend/Recommend'));

@@ -12,6 +12,8 @@ const BasketInfoCard = ({
     basket,
     ...rest
 }: {basket: Basket} & React.HTMLAttributes<HTMLSpanElement>) => {
+    console.log(basket.idx, basket.deadline);
+
     return (
         <div className="" {...rest}>
             <AspectRatio ratio={1 / 1} className="justify-center flex">
