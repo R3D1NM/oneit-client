@@ -45,25 +45,31 @@ const AuthRouterWithRedirect = ({
 };
 
 const Main = React.lazy(() => import('./pages/Main/Main'));
-const Quiz = React.lazy(() => import('./pages/Recommend/Quiz'));
-const Results = React.lazy(() => import('./pages/Recommend/Results'));
-const Product = React.lazy(() => import('./pages/Product/Product'));
 const Curation = React.lazy(() => import('./pages/Product/Curation'));
-const BasketList = React.lazy(() => import('./pages/Basket/BasketList'));
-const Basket = React.lazy(() => import('./pages/Basket/Basket'));
+const Product = React.lazy(() => import('./pages/Product/Product'));
+
 const About = React.lazy(() => import('./pages/About'));
 const Recommend = React.lazy(() => import('./pages/Recommend/Recommend'));
+const Quiz = React.lazy(() => import('./pages/Recommend/Quiz'));
+const Results = React.lazy(() => import('./pages/Recommend/Results'));
+
 const Login = React.lazy(() => import('./pages/Login'));
 const Auth = React.lazy(() => import('./pages/Auth'));
-const Mypage = React.lazy(() => import('./pages/Mypage'));
+const Mypage = React.lazy(() => import('./pages/Mypage/Mypage'));
+const Friends = React.lazy(() => import('./pages/Mypage/Friends'));
+
+const BasketList = React.lazy(() => import('./pages/Basket/BasketList'));
+const Basket = React.lazy(() => import('./pages/Basket/Basket'));
 const CreateBasket = React.lazy(() => import('./pages/Basket/CreateBasket'));
 const EditBasket = React.lazy(() => import('./pages/Basket/EditBasket'));
 const SharedBasket = React.lazy(() => import('./pages/Basket/SharedBasket'));
 const BasketInvitation = React.lazy(
     () => import('./pages/Basket/BasketInvitation'),
 );
+
 const Discover = React.lazy(() => import('./pages/Discover/Discover'));
 const Collection = React.lazy(() => import('./pages/Discover/Collection'));
+
 const Inquiry = React.lazy(() => import('./pages/Inquiry/Inquiry'));
 const InquiryChoice = React.lazy(() => import('./pages/Inquiry/InquiryChoice'));
 const InquiryResult = React.lazy(() => import('./pages/Inquiry/InquiryResult'));
@@ -227,6 +233,17 @@ function App() {
                                                         redirectTo="/login?redirect=/mypage"
                                                     >
                                                         <Mypage />
+                                                    </AuthRouter>
+                                                }
+                                            />
+                                            <Route
+                                                path="/friends"
+                                                element={
+                                                    <AuthRouter
+                                                        option={true}
+                                                        redirectTo="/login?redirect=/friends"
+                                                    >
+                                                        <Friends />
                                                     </AuthRouter>
                                                 }
                                             />
