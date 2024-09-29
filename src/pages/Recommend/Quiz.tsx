@@ -35,7 +35,7 @@ const Quiz = () => {
     const [error, setError] = useState(false);
     const [selected, setSelected] = useState(0);
 
-    const [{mutate}] = useAtom(finishRecommend);
+    const [{mutate, mutateAsync}] = useAtom(finishRecommend);
 
     // Debugging logs
     // console.log('Questions:', questionList[currentDepth], 'Loading:', isloading);
@@ -50,7 +50,7 @@ const Quiz = () => {
             navigate(`/recommend/${chatID}/${currentDepth + 1}`);
         } else if (currentDepth === MAXDEPTH - 1) {
             await setAnswers(index, currentDepth);
-            mutate({chatID});
+            mutateAsync({chatID});
             navigate(`/recommend/${chatID}/result`);
         } else {
             setError(true);

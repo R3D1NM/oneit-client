@@ -38,6 +38,7 @@ const Results = () => {
     const recommendedAPI = useQuery({
         queryKey: ['fetchRecommendedProducts', chatID],
         queryFn: () => fetchRecommendedProducts(chatID || ''),
+        retry: 3,
     });
 
     useEffect(() => {
