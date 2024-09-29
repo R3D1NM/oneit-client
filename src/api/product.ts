@@ -7,7 +7,7 @@ export const fetchRecommendedProducts = async (chatID: string) => {
     const dbRef = ref(db);
     return read(child(dbRef, `/recommendRecord/${chatID}`))
         .then((snapshot) => {
-            if (snapshot.exists()) {
+            if (snapshot.exists() && snapshot.val().resultType) {
                 const data = snapshot.val();
                 console.log(data);
 
