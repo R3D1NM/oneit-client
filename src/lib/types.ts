@@ -96,3 +96,10 @@ export type Friend = {
     profileImg: string;
     birthDate: Date;
 };
+
+export type SignUpUser = {
+    name: string;
+    nickname: string;
+    gender: 'FEMALE' | 'MALE';
+    birthDate: string;
+};

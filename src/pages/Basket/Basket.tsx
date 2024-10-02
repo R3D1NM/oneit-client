@@ -147,57 +147,57 @@ const Basket = () => {
     const handleEdit = () => {
         navigate(`/basket/edit/${basketID}`);
     };
-    const handleSend = async () => {
-        Kakao.Picker.selectFriends({
-            title: '친구 선택',
-            maxPickableCount: 1,
-            minPickableCount: 1,
-        })
-            .then((res: FriendPickerResponse) => {
-                console.log(res);
-                const uuid = res.users[0].uuid;
-                Kakao.API.request({
-                    url: '/v1/api/talk/friends/message/default/send',
-                    data: {
-                        receiver_uuids: [uuid],
-                        template_object: {
-                            object_type: 'feed',
-                            content: {
-                                title: `${user?.nickname}님이 선물 바구니를 보냈습니다.`,
-                                description: 'ONE!T에서 확인해보세요!',
-                                image_url:
-                                    basketInfoAPI.data?.imageUrl ||
-                                    'https://via.placeholder.com/200',
-                                link: {
-                                    web_url: `https://www.oneit.gift/basket/${basketID}`,
-                                    mobile_web_url: `https://www.oneit.gift/basket/${basketID}`,
-                                },
-                            },
-                            buttons: [
-                                {
-                                    title: '웹으로 보기',
-                                    link: {
-                                        mobile_web_url: `https://www.oneit.gift/basket/${basketID}`,
-                                        web_url: `https://www.oneit.gift/basket/${basketID}`,
-                                    },
-                                },
-                            ],
-                        },
-                    },
-                })
-                    .then((response: any) => {
-                        console.log(response);
-                        toast.success('선물 바구니 전달 완료');
-                    })
-                    .catch((error: any) => {
-                        console.log(error);
-                        toast.error('선물 바구니 전달 실패');
-                    });
-            })
-            .catch((err: any) => {
-                console.log(err);
-            });
-    };
+    // const handleSend = async () => {
+    //     Kakao.Picker.selectFriends({
+    //         title: '친구 선택',
+    //         maxPickableCount: 1,
+    //         minPickableCount: 1,
+    //     })
+    //         .then((res: FriendPickerResponse) => {
+    //             console.log(res);
+    //             const uuid = res.users[0].uuid;
+    //             Kakao.API.request({
+    //                 url: '/v1/api/talk/friends/message/default/send',
+    //                 data: {
+    //                     receiver_uuids: [uuid],
+    //                     template_object: {
+    //                         object_type: 'feed',
+    //                         content: {
+    //                             title: `${user?.nickname}님이 선물 바구니를 보냈습니다.`,
+    //                             description: 'ONE!T에서 확인해보세요!',
+    //                             image_url:
+    //                                 basketInfoAPI.data?.imageUrl ||
+    //                                 'https://via.placeholder.com/200',
+    //                             link: {
+    //                                 web_url: `https://www.oneit.gift/basket/${basketID}`,
+    //                                 mobile_web_url: `https://www.oneit.gift/basket/${basketID}`,
+    //                             },
+    //                         },
+    //                         buttons: [
+    //                             {
+    //                                 title: '웹으로 보기',
+    //                                 link: {
+    //                                     mobile_web_url: `https://www.oneit.gift/basket/${basketID}`,
+    //                                     web_url: `https://www.oneit.gift/basket/${basketID}`,
+    //                                 },
+    //                             },
+    //                         ],
+    //                     },
+    //                 },
+    //             })
+    //                 .then((response: any) => {
+    //                     console.log(response);
+    //                     toast.success('선물 바구니 전달 완료');
+    //                 })
+    //                 .catch((error: any) => {
+    //                     console.log(error);
+    //                     toast.error('선물 바구니 전달 실패');
+    //                 });
+    //         })
+    //         .catch((err: any) => {
+    //             console.log(err);
+    //         });
+    // };
 
     const handleInquiry = () => {
         mutate({basketIdx: basketID || '', selected, target});
@@ -293,12 +293,12 @@ const Basket = () => {
                                             basketInfoAPI.data
                                                 ?.createdUserIdx && (
                                             <>
-                                                <DropdownMenuItem
+                                                {/* <DropdownMenuItem
                                                     onSelect={handleSend}
                                                 >
                                                     <Send className="mr-2" />
                                                     <span>보내기</span>
-                                                </DropdownMenuItem>
+                                                </DropdownMenuItem> */}
                                                 <DropdownMenuItem
                                                     onSelect={handleEdit}
                                                 >

@@ -47,10 +47,11 @@ const Auth = () => {
                         //go back to the page before login page
                         useUpdateAuth();
                         console.log('[AUTH] login success');
-                        const redirect = localStorage.getItem('redirect');
-                        console.log(`[AUTH] Redirect to ${redirect}`);
+                        navigate('/signup');
+                        // const redirect = localStorage.getItem('redirect');
+                        // console.log(`[AUTH] Redirect to ${redirect}`);
 
-                        navigate(redirect || '/', {replace: true});
+                        // navigate(redirect || '/', {replace: true});
                     })
                     .catch((err) => {
                         // console.log(err);
