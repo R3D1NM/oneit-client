@@ -43,15 +43,19 @@ const Auth = () => {
                 Kakao.Auth.setAccessToken(kakaoToken);
 
                 login(kakaoToken)
-                    .then(() => {
+                    .then((isSignedUp: boolean) => {
                         //go back to the page before login page
                         useUpdateAuth();
                         console.log('[AUTH] login success');
-                        navigate('/signup');
-                        // const redirect = localStorage.getItem('redirect');
-                        // console.log(`[AUTH] Redirect to ${redirect}`);
+                        if (isSignedUp) {
+                            const redirect = localStorage.getItem('redirect');
+                            console.log(`[AUTH] Redirect to ${redirect}`);
 
-                        // navigate(redirect || '/', {replace: true});
+                            navigate(redirect || '/', {replace: true});
+                        } else {
+                            console.log('[AUTH] Redirect to signup');
+                            navigate('/signup', {replace: true});
+                        }
                     })
                     .catch((err) => {
                         // console.log(err);

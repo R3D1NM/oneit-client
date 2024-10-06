@@ -75,7 +75,7 @@ export const login = async (token: string) => {
         .then((res) => {
             const accessToken = res.data.accessToken;
             localStorage.setItem('token', accessToken);
-            return Promise.resolve();
+            return Promise.resolve(res.data.isSignedUp);
         })
         .catch((err) => {
             console.log(err);
