@@ -7,6 +7,24 @@ interface SlackErrorProps {
     errorPoint: string;
 }
 
+export const sendInfoToSlack = async (message: string) => {
+    const now = new Date();
+    const text = `[INFO] ${message} \n when: ${now.toTimeString()} \n from: ${import.meta.env.VITE_CURRENT_DOMAIN}`;
+    const headers = {
+        'Content-Type': 'application/x-www-form-urlencoded',
+    };
+    try {
+        await axios({
+            method: 'post',
+            url: 'https://hooks.slack.com/services/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',
+            data: JSON.stringify({text}),
+            headers,
+        });
+    } catch (slackError) {
+        console.error('[SLACK]', slackError);
+    }
+};
+
 export const sendErrorToSlack = async ({
     message,
     errorPoint,

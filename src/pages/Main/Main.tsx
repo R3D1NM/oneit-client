@@ -17,9 +17,11 @@ import {useAtomValue} from 'jotai';
 import {authAtom, isLoginAtom} from '@/api/auth';
 import BasketInfoCard from '../Basket/components/BasketInfoCard';
 import {Link} from 'react-router-dom';
+import {FCMToken} from '@/api/notification';
 
 const Main = () => {
     const isLogin = useAtomValue(isLoginAtom);
+    const token = useAtomValue(FCMToken);
 
     const CurationList = () => {
         const {data, isLoading, isError} = useQuery({
