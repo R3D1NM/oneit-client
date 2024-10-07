@@ -16,9 +16,7 @@ export const sendInfoToSlack = async (message: string) => {
     try {
         await axios({
             method: 'post',
-
-            url: 'https://hooks.slack.com/services/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',
-
+            url: import.meta.env.VITE_SLACK_INFO_WEBHOOK_URL,
             data: JSON.stringify({text}),
             headers,
         });
