@@ -16,6 +16,7 @@ import {
     QueryClientProvider,
 } from '@tanstack/react-query';
 import {ReactQueryDevtools} from '@tanstack/react-query-devtools';
+import '@/lib/firebase';
 
 // Custom component to handle dynamic redirect
 const AuthRouterWithRedirect = ({
