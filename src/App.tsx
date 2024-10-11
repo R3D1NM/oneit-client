@@ -49,9 +49,6 @@ const Main = React.lazy(() => import('./pages/Main/Main'));
 const Curation = React.lazy(() => import('./pages/Product/Curation'));
 const Product = React.lazy(() => import('./pages/Product/Product'));
 
-const BasketList = React.lazy(() => import('./pages/Basket/BasketList'));
-const Basket = React.lazy(() => import('./pages/Basket/Basket'));
-
 const About = React.lazy(() => import('./pages/About'));
 const Recommend = React.lazy(() => import('./pages/Recommend/Recommend'));
 const Quiz = React.lazy(() => import('./pages/Recommend/Quiz'));
@@ -135,6 +132,17 @@ function App() {
                                             <Route
                                                 path="/collection/:collectionID"
                                                 element={<Collection />}
+                                            />
+                                            <Route
+                                                path="/basket"
+                                                element={
+                                                    <AuthRouter
+                                                        option={true}
+                                                        redirectTo="/login?redirect=/basket"
+                                                    >
+                                                        <BasketList />
+                                                    </AuthRouter>
+                                                }
                                             />
                                             <Route
                                                 path="/basket/create"
