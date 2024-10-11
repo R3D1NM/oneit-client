@@ -17,6 +17,7 @@ const BasketInfoCard = ({
     basket,
     ...rest
 }: {basket: Basket} & React.HTMLAttributes<HTMLSpanElement>) => {
+
     const [requestedFriends, setRequestedFriends] = useState<Set<number>>(
         new Set(),
     );
@@ -35,6 +36,7 @@ const BasketInfoCard = ({
             setRequestedFriends((prev) => new Set(prev).add(Number(variables)));
         },
     });
+
 
     return (
         <div className="" {...rest}>
