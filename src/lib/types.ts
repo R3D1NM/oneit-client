@@ -88,3 +88,18 @@ export type InquiryChoice = {
     productIdx: number;
     emojiIdx: number;
 };
+
+export type Friend = {
+    idx: number;
+    name: string;
+    nickName: string;
+    profileImg: string;
+    birthDate: Date;
+};
+
+export type SignUpUser = {
+    name: string;
+    nickname: string;
+    gender: 'FEMALE' | 'MALE';
+    birthDate: string;
+};

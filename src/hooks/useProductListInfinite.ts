@@ -1,3 +1,4 @@
+import {fetchProductList} from '@/api/product';
 import axios from '@/lib/axios';
 import {Product} from '@/lib/types';
 import {useInfiniteQuery} from '@tanstack/react-query';
@@ -8,20 +9,7 @@ const fetchInfiniteProductList = async (
 ): Promise<Product[]> => {
     try {
         // console.log(lastProductIdx);
-        const endpoint =
-            lastProductIdx !== null
-                ? `/v1/products?LastProductIdx=${lastProductIdx}&pageSize=${pageSize}`
-                : `/v1/products?pageSize=${pageSize}`;
-        console.log(lastProductIdx, endpoint);
-
-        const res = await axios.get(endpoint);
-        if (res.status === 200 && res.data.isSuccess) {
-            console.log(res.data.result);
-
-            return res.data.result;
-        } else {
-            throw new Error(res.data.message);
-        }
+        return fetchProductList(lastProductIdx, pageSize);
     } catch (err) {
         console.error(err);
         throw err;

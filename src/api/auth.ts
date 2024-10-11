@@ -1,4 +1,4 @@
-import {User} from '@/lib/types';
+import {SignUpUser, User} from '@/lib/types';
 import axios from '@/lib/axios';
 import {atom} from 'jotai';
 import {atomWithDefault} from 'jotai/utils';
@@ -75,7 +75,7 @@ export const login = async (token: string) => {
         .then((res) => {
             const accessToken = res.data.accessToken;
             localStorage.setItem('token', accessToken);
-            return Promise.resolve();
+            return Promise.resolve(res.data.isSignedUp);
         })
         .catch((err) => {
             console.log(err);
@@ -90,6 +90,28 @@ export const logout = async () => {
 };
 
 export const redirectURI = atom('/');
+
+export const signUp = async (user: SignUpUser) => {
+    return axios
+        .post('/v2/signup', user)
+        .then((res) => {
+            return Promise.resolve();
+        })
+        .catch((err) => {
+            return Promise.reject(err);
+        });
+};
+
+export const nicknameCheck = async (nickname: string) => {
+    return axios
+        .get(`/v2/nickname/check?nickname=${nickname}`)
+        .then((res) => {
+            return Promise.resolve(res.data);
+        })
+        .catch((err) => {
+            return Promise.reject(err);
+        });
+};
 
 // const getRefreshToken = async (): Promise<string> => {
 //     return axios.get("/auth/refresh", {

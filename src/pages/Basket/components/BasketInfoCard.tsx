@@ -1,18 +1,42 @@
 import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover';
-import {Basket, Participant} from '@/lib/types';
-import React from 'react';
+import {Basket, Friend, Participant} from '@/lib/types';
+import React, {useState} from 'react';
 import ParticipantAvatar from './ParticipantAvatar';
 import {Avatar, AvatarImage} from '@/components/ui/avatar';
 import {cn} from '@/lib/utils';
-import {CalendarCheck, Crown, Plus, PlusCircle} from 'lucide-react';
+import {CalendarCheck, Crown, Plus, PlusCircle, UserPlus2} from 'lucide-react';
 import {AspectRatio} from '@/components/ui/aspect-ratio';
 import {Button} from '@/components/ui/button';
+import {useMutation, useQuery} from '@tanstack/react-query';
+import {toast} from 'sonner';
+import {fetchFriendList, requestFriend} from '@/api/friend';
+import {useAtomValue} from 'jotai';
+import {authAtom} from '@/api/auth';
 
 const BasketInfoCard = ({
     basket,
     ...rest
 }: {basket: Basket} & React.HTMLAttributes<HTMLSpanElement>) => {
-    console.log(basket.idx, basket.deadline);
+
+    const [requestedFriends, setRequestedFriends] = useState<Set<number>>(
+        new Set(),
+    );
+
+    const user = useAtomValue(authAtom);
+    const friendAPI = useQuery({
+        queryKey: ['friendList'],
+        queryFn: () => fetchFriendList(),
+        enabled: !!user,
+    });
+
+    const requestFriendAPI = useMutation({
+        mutationFn: (friend: string) => requestFriend(friend),
+        onSuccess: (data, variables) => {
+            toast.success('친구 요청을 보냈습니다.');
+            setRequestedFriends((prev) => new Set(prev).add(Number(variables)));
+        },
+    });
+
 
     return (
         <div className="" {...rest}>
@@ -101,6 +125,32 @@ const BasketInfoCard = ({
                                                     <Crown className="inline-block ml-1 text-oneit-pink" />
                                                 )}
                                             </span>
+                                            {user?.idx !==
+                                                participant.userIdx &&
+                                                !friendAPI?.data?.some(
+                                                    (friend: Friend) =>
+                                                        friend.idx ==
+                                                        participant.userIdx,
+                                                ) &&
+                                                participant.userIdx !==
+                                                    undefined &&
+                                                !requestedFriends.has(
+                                                    participant.userIdx,
+                                                ) && (
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                    >
+                                                        <UserPlus2
+                                                            onClick={() => {
+                                                                requestFriendAPI.mutate(
+                                                                    participant?.userIdx?.toString() ||
+                                                                        '',
+                                                                );
+                                                            }}
+                                                        />
+                                                    </Button>
+                                                )}
                                         </div>
                                     ),
                                 )}

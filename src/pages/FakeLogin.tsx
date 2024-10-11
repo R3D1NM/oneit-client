@@ -17,10 +17,20 @@ const FakeLogin = () => {
         localStorage.removeItem('token');
     };
 
+    const handleLogin2 = async () => {
+        localStorage.setItem(
+            'token',
+            `${import.meta.env.VITE_FAKE_LOGIN_TOKEN2}`,
+        );
+        await login();
+        window.location.href = '/';
+    };
+
     return (
         <div>
             <Button onClick={handleLogin}>TESTER로 로그인</Button>
-            <Button onClick={handleLogout}>TESTER 로그아웃</Button>
+            <Button onClick={handleLogin2}>TESTER2로 로그인</Button>
+            <Button onClick={handleLogout}>로그아웃</Button>
         </div>
     );
 };
