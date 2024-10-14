@@ -5,12 +5,28 @@
 @tailwind utilities;  
 
 @font-face {
-  font-family: 'Godo';
-  font-style: normal;
-  font-weight: 300;
-  src: url('//fastly.jsdelivr.net/korean-webfonts/1/corps/godo/Godo/GodoM.woff2') format('woff2'), url('//fastly.jsdelivr.net/korean-webfonts/1/corps/godo/Godo/GodoM.woff') format('woff');
+  font-family: Pretendard;
+  font-weight: 400;
+  src: local("Pretendard Regular"),
+    url("./assets/fonts/Pretendard-Regular.woff") format('woff'),
+    url("./assets/fonts/Pretendard-Regular.woff2") format('woff2');
 }
 
+@font-face {
+  font-family: Pretendard;
+  font-weight: 500;
+  src: local("Pretendard Medium"),
+    url("./assets/fonts/Pretendard-Medium.woff") format('woff'),
+    url("./assets/fonts/Pretendard-Medium.woff2") format('woff2');
+}
+
+@font-face {
+  font-family: Pretendard;
+  font-weight: 700;
+  src: local("Pretendard Bold"),
+    url("./assets/fonts/Pretendard-Bold.woff") format('woff'),
+    url("./assets/fonts/Pretendard-Bold.woff2") format('woff2');
+}
 
 @layer base {
   :root {
@@ -54,7 +70,7 @@
   }
   body {
     @apply bg-background text-foreground scrollbar-hide;
-    font-family: Godo;
+    font-family: Pretendard;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-use-select: none;

@@ -1,5 +1,6 @@
-import kakaoLoginImage from '@/assets/kakao_login_medium_wide.png';
-import {useEffect, useState} from 'react';
+import {useEffect} from 'react';
+import logoColor from '@/assets/logo_color.svg';
+import kakaoIcon from '@/assets/kakao.png';
 
 const kakaoURL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${import.meta.env.VITE_KAKAO_REST_API_KEY}&redirect_uri=${import.meta.env.VITE_KAKAO_LOGIN_REDIRECT_URI}&scope=profile_nickname,profile_image,account_email,talk_message,friends`;
 
@@ -15,11 +16,12 @@ const Login = () => {
         } else {
             //get uri of the page before login page
             const referrer = document.referrer;
-            const uri = referrer ? new URL(referrer).pathname : '/';
+            const uri = referrer ? new URL(referrer).pathname : '/main';
             console.log(uri);
+            console.log(referrer);
 
             // setRedirctURI(uri || '/');
-            localStorage.setItem('redirect', uri || '/');
+            localStorage.setItem('redirect', uri || '/main');
         }
         // console.log(redirect);
         // console.log(showToast,success);
@@ -31,16 +33,19 @@ const Login = () => {
     }, []);
 
     return (
-        <>
-            <div className="flex flex-col content-center mt-3 w-fit justify-center gap-2">
-                ONE!T에 가입하고 더 많은 서비스를 이용하세요!
-                <div className="flex justify-center">
-                    <a href={kakaoURL} className="flex justify-center">
-                        <img src={kakaoLoginImage} alt="카카오 로그인" />
-                    </a>
-                </div>
-            </div>
-        </>
+        <div className="flex h-full flex-col justify-center items-center gap-[1.5625rem] p-4">
+            <div
+                className="w-[11.9375rem] h-[6.5rem] block bg-no-repeat bg-center bg-contain"
+                style={{backgroundImage: `url(${logoColor})`}}
+            ></div>
+            <a
+                href={kakaoURL}
+                className="flex w-full h-[3.125rem] justify-center items-center bg-[#fee500] bg-no-repeat bg-contain bg-center text-[0px] text-transparent"
+                style={{backgroundImage: `url(${kakaoIcon})`}}
+            >
+                카카오로 시작하기
+            </a>
+        </div>
     );
 };
 

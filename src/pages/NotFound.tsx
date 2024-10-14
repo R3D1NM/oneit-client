@@ -27,7 +27,7 @@ const NotFound = () => {
                 <span className="max-w-[90%] text-gray-500 md:text-lg dark:text-gray-400">
                     URL을 확인하고 다시 시도해주세요
                 </span>
-                <a href="/">
+                <a href="/main">
                     <Button>메인으로</Button>
                 </a>
             </div>

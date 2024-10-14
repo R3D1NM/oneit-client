@@ -17,6 +17,7 @@ import {
 } from '@tanstack/react-query';
 import {ReactQueryDevtools} from '@tanstack/react-query-devtools';
 import '@/lib/firebase';
+import Landing from './Landing';
 
 // Custom component to handle dynamic redirect
 const AuthRouterWithRedirect = ({
@@ -31,7 +32,7 @@ const AuthRouterWithRedirect = ({
     const {basketID} = useParams();
     if (basketID === undefined) {
         return (
-            <AuthRouter option={option} redirectTo={'/'}>
+            <AuthRouter option={option} redirectTo={'/main'}>
                 {children}
             </AuthRouter>
         );
@@ -97,207 +98,218 @@ function App() {
     return (
         <>
             <QueryClientProvider client={queryClient}>
-                <div className="App flex flex-col justify-center overflow-hidden scrollbar-hide min-h-screen items-center">
-                    <Header />
-                    <div className="min-h-svh flex flex-col justify-between max-w-sm items-center w-full scrollbar-hide pt-[5svh] pb-[5svh]">
-                        <main className="flex w-full justify-center mb-3 mt-2 max-w-sm flex-grow">
-                            <div className="flex justify-center w-[90%]">
-                                <Suspense fallback={<Spinner size="large" />}>
-                                    <Router>
-                                        <Routes>
+                <div className="App flex flex-col justify-center items-center min-h-screen w-full">
+                    <div className="w-[360px]">
+                        {/* <Header /> */}
+                        <div className="w-full h-full">
+                            <Suspense fallback={<Spinner size="large" />}>
+                                <Router>
+                                    <Routes>
+                                        <Route
+                                            path="/recommend"
+                                            element={<Recommend />}
+                                        />
+                                        <Route
+                                            path="/recommend/:chatID/:currentDepth"
+                                            element={<Quiz />}
+                                        />
+                                        <Route
+                                            path="/recommend/:chatID/result"
+                                            element={<Results />}
+                                        />
+                                        <Route
+                                            path="/product/:productID"
+                                            element={<Product />}
+                                        />
+                                        {/* <Route
+                                            path="/curation"
+                                            element={<Curation />}
+                                        />
+                                        <Route
+                                            path="/collection"
+                                            element={<Discover />}
+                                        />
+                                        <Route
+                                            path="/collection/:collectionID"
+                                            element={<Collection />}
+                                        />
+                                        <Route
+                                            path="/basket"
+                                            element={
+                                                <AuthRouter
+                                                    option={true}
+                                                    redirectTo="/login?redirect=/basket"
+                                                >
+                                                    <BasketList />
+                                                </AuthRouter>
+                                            }
+                                        />
+                                        <Route
+                                            path="/basket/create"
+                                            element={
+                                                <AuthRouter
+                                                    option={true}
+                                                    redirectTo="/login?redirect=/basket/create"
+                                                >
+                                                    <CreateBasket />
+                                                </AuthRouter>
+                                            }
+                                        />
+                                        <Route
+                                            path="/basket/:basketID"
+                                            element={
+                                                <AuthRouterWithRedirect
+                                                    option={true}
+                                                    redirectTo="/login?redirect=/basket/:basketID"
+                                                >
+                                                    <Basket />
+                                                </AuthRouterWithRedirect>
+                                            }
+                                        />
+                                        <Route
+                                            path="/basket/edit/:basketID"
+                                            element={
+                                                <AuthRouterWithRedirect
+                                                    option={true}
+                                                    redirectTo="/login?redirect=/basket/edit/:basketID"
+                                                >
+                                                    <EditBasket />
+                                                </AuthRouterWithRedirect>
+                                            }
+                                        />
+                                        <Route
+                                            path="/basket/add/:basketID"
+                                            element={
+                                                <AuthRouterWithRedirect
+                                                    option={true}
+                                                    redirectTo="/login?redirect=/basket/add/:basketID"
+                                                >
+                                                    <AddToBasket />
+                                                </AuthRouterWithRedirect>
+                                            }
+                                        />
+                                        <Route
+                                            path="/basket/share/:basketID"
+                                            element={<SharedBasket />}
+                                        />
+                                        <Route
+                                            path="/basket/:basketID/invite/:inviteID"
+                                            element={<BasketInvitation />}
+                                        />
+                                        <Route
+                                            path="/inquiry/:inquiryID"
+                                            element={<Inquiry />}
+                                        />
+                                        <Route
+                                            path="/inquiry/:inquiryID/choice"
+                                            element={<InquiryChoice />}
+                                        />
+                                        <Route
+                                            path="/inquiry/:inquiryID/result"
+                                            element={<InquiryResult />}
+                                        />
+                                        <Route
+                                            path="/inquiry/after"
+                                            element={<AfterInquiry />}
+                                        /> */}
+                                        {/* <Route
+                                            path="/about"
+                                            element={<About />}
+                                        /> */}
+                                        <Route
+                                            path="/login"
+                                            element={
+                                                <AuthRouter
+                                                    option={false}
+                                                    redirectTo="/main"
+                                                >
+                                                    <Login />
+                                                </AuthRouter>
+                                            }
+                                        />
+                                        <Route
+                                            path="/oauth"
+                                            element={
+                                                <AuthRouter
+                                                    option={false}
+                                                    redirectTo="/main"
+                                                >
+                                                    <Auth />
+                                                </AuthRouter>
+                                            }
+                                        />
+                                        <Route
+                                            path="/signup"
+                                            element={
+                                                <AuthRouter
+                                                    option={true}
+                                                    redirectTo="/main"
+                                                >
+                                                    <SignUp />
+                                                </AuthRouter>
+                                            }
+                                        />
+                                        <Route
+                                            path="/mypage"
+                                            element={
+                                                <AuthRouter
+                                                    option={true}
+                                                    redirectTo="/login?redirect=/mypage"
+                                                >
+                                                    <Mypage />
+                                                </AuthRouter>
+                                            }
+                                        />
+                                        {/* <Route
+                                            path="/friends"
+                                            element={
+                                                <AuthRouter
+                                                    option={true}
+                                                    redirectTo="/login?redirect=/friends"
+                                                >
+                                                    <Friends />
+                                                </AuthRouter>
+                                            }
+                                        /> */}
+                                        {import.meta.env.DEV && (
                                             <Route
-                                                path="/recommend"
-                                                element={<Recommend />}
+                                                path="/fakeLogin"
+                                                element={<FakeLogin />}
                                             />
-                                            <Route
-                                                path="/recommend/:chatID/:currentDepth"
-                                                element={<Quiz />}
-                                            />
-                                            <Route
-                                                path="/recommend/:chatID/result"
-                                                element={<Results />}
-                                            />
-                                            <Route
-                                                path="/product/:productID"
-                                                element={<Product />}
-                                            />
-                                            <Route
-                                                path="/curation"
-                                                element={<Curation />}
-                                            />
-                                            <Route
-                                                path="/collection"
-                                                element={<Discover />}
-                                            />
-                                            <Route
-                                                path="/collection/:collectionID"
-                                                element={<Collection />}
-                                            />
-                                            <Route
-                                                path="/basket"
-                                                element={
-                                                    <AuthRouter
-                                                        option={true}
-                                                        redirectTo="/login?redirect=/basket"
-                                                    >
-                                                        <BasketList />
-                                                    </AuthRouter>
-                                                }
-                                            />
-                                            <Route
-                                                path="/basket/create"
-                                                element={
-                                                    <AuthRouter
-                                                        option={true}
-                                                        redirectTo="/login?redirect=/basket/create"
-                                                    >
-                                                        <CreateBasket />
-                                                    </AuthRouter>
-                                                }
-                                            />
-                                            <Route
-                                                path="/basket/:basketID"
-                                                element={
-                                                    <AuthRouterWithRedirect
-                                                        option={true}
-                                                        redirectTo="/login?redirect=/basket/:basketID"
-                                                    >
-                                                        <Basket />
-                                                    </AuthRouterWithRedirect>
-                                                }
-                                            />
-                                            <Route
-                                                path="/basket/edit/:basketID"
-                                                element={
-                                                    <AuthRouterWithRedirect
-                                                        option={true}
-                                                        redirectTo="/login?redirect=/basket/edit/:basketID"
-                                                    >
-                                                        <EditBasket />
-                                                    </AuthRouterWithRedirect>
-                                                }
-                                            />
-                                            <Route
-                                                path="/basket/add/:basketID"
-                                                element={
-                                                    <AuthRouterWithRedirect
-                                                        option={true}
-                                                        redirectTo="/login?redirect=/basket/add/:basketID"
-                                                    >
-                                                        <AddToBasket />
-                                                    </AuthRouterWithRedirect>
-                                                }
-                                            />
-                                            <Route
-                                                path="/basket/share/:basketID"
-                                                element={<SharedBasket />}
-                                            />
-                                            <Route
-                                                path="/basket/:basketID/invite/:inviteID"
-                                                element={<BasketInvitation />}
-                                            />
-                                            <Route
-                                                path="/inquiry/:inquiryID"
-                                                element={<Inquiry />}
-                                            />
-                                            <Route
-                                                path="/inquiry/:inquiryID/choice"
-                                                element={<InquiryChoice />}
-                                            />
-                                            <Route
-                                                path="/inquiry/:inquiryID/result"
-                                                element={<InquiryResult />}
-                                            />
-                                            <Route
-                                                path="/inquiry/after"
-                                                element={<AfterInquiry />}
-                                            />
-                                            <Route
-                                                path="/about"
-                                                element={<About />}
-                                            />
-                                            <Route
-                                                path="/login"
-                                                element={
-                                                    <AuthRouter
-                                                        option={false}
-                                                        redirectTo="/"
-                                                    >
-                                                        <Login />
-                                                    </AuthRouter>
-                                                }
-                                            />
-                                            <Route
-                                                path="/oauth"
-                                                element={
-                                                    <AuthRouter
-                                                        option={false}
-                                                        redirectTo="/"
-                                                    >
-                                                        <Auth />
-                                                    </AuthRouter>
-                                                }
-                                            />
-                                            <Route
-                                                path="/signup"
-                                                element={
-                                                    <AuthRouter
-                                                        option={true}
-                                                        redirectTo="/"
-                                                    >
-                                                        <SignUp />
-                                                    </AuthRouter>
-                                                }
-                                            />
-                                            <Route
-                                                path="/mypage"
-                                                element={
-                                                    <AuthRouter
-                                                        option={true}
-                                                        redirectTo="/login?redirect=/mypage"
-                                                    >
-                                                        <Mypage />
-                                                    </AuthRouter>
-                                                }
-                                            />
-                                            <Route
-                                                path="/friends"
-                                                element={
-                                                    <AuthRouter
-                                                        option={true}
-                                                        redirectTo="/login?redirect=/friends"
-                                                    >
-                                                        <Friends />
-                                                    </AuthRouter>
-                                                }
-                                            />
-                                            {import.meta.env.DEV && (
-                                                <Route
-                                                    path="/fakeLogin"
-                                                    element={<FakeLogin />}
-                                                />
-                                            )}
-                                            <Route
-                                                path="/"
-                                                element={<Main />}
-                                            />
-                                            <Route
-                                                path="/404"
-                                                element={<NotFound />}
-                                            />
-                                            <Route
-                                                path="*"
-                                                element={<NotFound />}
-                                            />
-                                        </Routes>
-                                    </Router>
-                                </Suspense>
-                            </div>
-                        </main>
-                        <Navbar />
-                        <Toaster position="bottom-center" />
+                                        )}
+                                        <Route
+                                            path="/main"
+                                            element={<Main />}
+                                        />
+                                        <Route path="/" element={<Landing />} />
+                                        <Route
+                                            path="/404"
+                                            element={<NotFound />}
+                                        />
+                                        <Route
+                                            path="*"
+                                            element={<NotFound />}
+                                        />
+                                    </Routes>
+                                </Router>
+                            </Suspense>
+                        </div>
                     </div>
                 </div>
+                <footer className="bg-gray-100 p-4">
+                    <div className="text-sm text-gray-500">
+                        <strong>워닛(ONEIT)</strong>
+                        <br />
+                        <strong>대표자</strong> 정세연 |{' '}
+                        <strong>사업자등록번호</strong>
+                        113-30-01641
+                        <br />
+                        <strong>대표전화</strong> 010-2175-3973 <br />
+                        경기도 성남시 분당구 정자일로 1 B동 3503호 <br />
+                        <strong>고객 문의</strong> clov3r.gift@gmail.com
+                    </div>
+                </footer>
+                <Toaster position="bottom-center" />
                 <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>
         </>
