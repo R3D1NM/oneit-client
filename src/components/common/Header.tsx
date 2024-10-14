@@ -1,8 +1,7 @@
-import {Button} from '@/components/ui/button';
-import {User2} from 'lucide-react';
 import {useAtomValue} from 'jotai';
 import {isLoginAtom} from '@/api/auth';
-
+import logoImage from '@/assets/logo.svg';
+import mypageIcon from '@/assets/icon_mypage.svg';
 const Header = () => {
     const isLogin = useAtomValue(isLoginAtom);
 
@@ -14,17 +13,20 @@ const Header = () => {
         }
     };
     return (
-        <header className="fixed top-0 bg-white flex min-h-[5svh] items-center w-full max-w-sm left-1/2 transform -translate-x-1/2 justify-between px-4 md:px-6 shadow-md py-1 z-50">
-            <div className="flex">
-                <a href="/" className="flex items-center justify-center">
-                    <span className="text-black text-3xl font-Bayon">
-                        One!t
-                    </span>
+        <header className="fixed top-0 left-0 right-0 bg-white flex h-14 items-center justify-between px-4 md:px-6 shadow-md z-50">
+            <div className="flex items-center">
+                <a href="/main" className="flex items-center">
+                    <div
+                        className="w-[4.75rem] h-[2.125rem] bg-no-repeat bg-center bg-contain"
+                        style={{backgroundImage: `url(${logoImage})`}}
+                    />
                 </a>
             </div>
-            <Button variant="ghost" onClick={toMypage} size="icon">
-                <User2 className="h-6 w-6" />
-            </Button>
+            <button
+                onClick={toMypage}
+                className="w-9 h-9 bg-no-repeat bg-center bg-contain"
+                style={{backgroundImage: `url(${mypageIcon})`}}
+            />
         </header>
     );
 };

@@ -51,7 +51,7 @@ const Auth = () => {
                             const redirect = localStorage.getItem('redirect');
                             console.log(`[AUTH] Redirect to ${redirect}`);
 
-                            navigate(redirect || '/', {replace: true});
+                            navigate(redirect || '/main', {replace: true});
                         } else {
                             console.log('[AUTH] Redirect to signup');
                             navigate('/signup', {replace: true});

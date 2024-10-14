@@ -86,10 +86,10 @@ export const login = async (token: string) => {
 export const logout = async () => {
     localStorage.removeItem('token');
     //redirect to main page
-    window.location.href = '/';
+    window.location.href = '/main';
 };
 
-export const redirectURI = atom('/');
+export const redirectURI = atom('/main');
 
 export const signUp = async (user: SignUpUser) => {
     return axios

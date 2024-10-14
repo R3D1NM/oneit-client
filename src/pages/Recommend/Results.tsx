@@ -122,7 +122,7 @@ const Results = () => {
                                 <div className="grid grid-cols-3 gap-2 h-32">
                                     <Button
                                         className="h-full bg-oneit-blue hover:bg-oneit-blue/90"
-                                        onClick={() => navigate('/discover')}
+                                        onClick={() => navigate('/collection')}
                                     >
                                         <span className="break-keep whitespace-normal">
                                             주제별 컬렉션 탐색하기

@@ -68,6 +68,7 @@ export default{
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
+        pre: ["Pretendard"],
         Bayon:["Bayon"],
         Yangjin:["Yangjin"],
         Godo : ["Godo"],
