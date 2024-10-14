@@ -1,9 +1,10 @@
 import {Button} from '@/components/ui/button';
 import {useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 
 const NotFound = () => {
     const [isRendered, setIsRendered] = useState(false);
-
+    const navigate = useNavigate();
     useEffect(() => {
         const timer = setTimeout(() => {
             setIsRendered(true);
@@ -27,9 +28,13 @@ const NotFound = () => {
                 <span className="max-w-[90%] text-gray-500 md:text-lg dark:text-gray-400">
                     URL을 확인하고 다시 시도해주세요
                 </span>
-                <a href="/main">
-                    <Button>메인으로</Button>
-                </a>
+                <Button
+                    className="w-full"
+                    variant="primary"
+                    onClick={() => navigate('/main')}
+                >
+                    메인으로
+                </Button>
             </div>
         </div>
     );

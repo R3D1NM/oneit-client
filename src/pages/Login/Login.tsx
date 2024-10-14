@@ -33,7 +33,7 @@ const Login = () => {
     }, []);
 
     return (
-        <div className="flex h-full flex-col justify-center items-center gap-[1.5625rem] p-4">
+        <div className="flex min-h-screen flex-col justify-center items-center gap-[1.5625rem] p-4">
             <div
                 className="w-[11.9375rem] h-[6.5rem] block bg-no-repeat bg-center bg-contain"
                 style={{backgroundImage: `url(${logoColor})`}}

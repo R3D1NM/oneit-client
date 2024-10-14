@@ -17,7 +17,7 @@ export const occasion = atom('생일');
 occasion.debugLabel = 'occasion';
 export const priceRange = atom([30000, 100000]);
 priceRange.debugLabel = 'priceRange';
-export const gender = atom('MALE');
+export const gender = atom<'MALE' | 'FEMALE'>('FEMALE');
 gender.debugLabel = 'gender';
 
 export const loading = atom(false);

@@ -1,173 +1,444 @@
-import {Button} from '@/components/ui/button';
-import {Input} from '@/components/ui/input';
-import {Slider} from '@/components/ui/slider';
-import {Spinner} from '@/components/ui/spinner';
+import {useForm, Controller, useWatch} from 'react-hook-form';
+import {useAtom} from 'jotai';
 import {gender, name, priceRange, recipient} from '@/atoms/recommend';
-import {useAtom, useSetAtom} from 'jotai';
-import {useState} from 'react';
+import {Button} from '@/components/ui/button';
+
+import {startRecommend} from '@/api/chat';
+import Header from '@/components/common/Header';
+import {useEffect, useRef, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {nanoid} from 'nanoid';
-import {Card, CardContent, CardFooter} from '@/components/ui/card';
-import {
-    Select,
-    SelectGroup,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-    SelectContent,
-} from '@/components/ui/select';
-import {startRecommend} from '@/api/chat';
+
+type FormData = {
+    name: string;
+    gender: 'MALE' | 'FEMALE';
+    recipient: string;
+    priceRange: number[];
+};
 
 const Recommend = () => {
     const navigate = useNavigate();
-    const [userName, setUserName] = useAtom(name);
-    const [price, setPrice] = useAtom<number[]>(priceRange);
-    const [userRecipient, setUserRecipient] = useAtom(recipient);
-    const [userGender, setUserGender] = useAtom(gender);
-
+    const [step, setStep] = useState(0);
+    const [nameAtom, setNameAtom] = useAtom(name);
+    const [genderAtom, setGenderAtom] = useAtom(gender);
+    const [recipientAtom, setRecipientAtom] = useAtom(recipient);
+    const [priceRangeAtom, setPriceRangeAtom] = useAtom(priceRange);
     const [{mutate}] = useAtom(startRecommend);
 
-    const handleStart = async () => {
+    const handleGoBack = () => {
+        if (step > 0) {
+            setStep((prevStep) => prevStep - 1);
+            window.history.pushState(null, '', window.location.href);
+        } else {
+            navigate('/main');
+        }
+    };
+    useEffect(() => {
+        window.history.pushState({step}, '', window.location.href);
+    }, [step]);
+    useEffect(() => {
+        const handlePopState = (event: PopStateEvent) => {
+            event.preventDefault();
+            handleGoBack();
+        };
+
+        window.history.pushState(null, '', window.location.href);
+        window.addEventListener('popstate', handlePopState);
+
+        return () => {
+            window.removeEventListener('popstate', handlePopState);
+        };
+    }, [step]);
+
+    const {control, handleSubmit, watch} = useForm<FormData>({
+        defaultValues: {
+            name: nameAtom,
+            gender: genderAtom,
+            recipient: recipientAtom,
+            priceRange: priceRangeAtom.length ? priceRangeAtom : [0, 300000], // Set default values if priceRangeAtom is empty
+        },
+    });
+
+    const onSubmit = async (data: FormData) => {
+        setNameAtom(data.name);
+        setGenderAtom(data.gender);
+        setRecipientAtom(data.recipient);
+        setPriceRangeAtom(data.priceRange);
+
         const chatID = nanoid(10);
         mutate({chatID});
         navigate(`/recommend/${chatID}/0`);
     };
 
-    return (
-        <div className="flex flex-col content-center w-full gap-2 justify-center">
-            <div className="flex flex-col gap-2">
-                <h1 className="text-2xl rounded-lg px-3 py-1 w-fit bg-oneit-pink">
-                    선물 뭐 주지?
-                </h1>
-                <span className="px-1 text-oneit-gray">
-                    내 소중한 사람은 어떤 선물을 받고 싶어할까요? <br /> ONE!T와
-                    함께 어울리는 선물을 찾아봐요!
-                </span>
-            </div>
-            <Card className="py-4 px-2">
-                <CardContent className="pb-0 px-2">
-                    <div className="flex flex-col pb-2">
-                        <p className="text-xl mb-2 pb-0">
-                            누구에게 줄 선물인가요?
-                        </p>
-                        <Input
-                            placeholder="이름 또는 별명 (없어도 괜찮아요)"
-                            value={userName}
-                            onChange={(e) => setUserName(e.target.value)}
-                            className="w-full"
-                        />
-                        <div className="flex items-start gap-2 my-2">
-                            <div className="flex flex-col w-full">
-                                {/* <Label htmlFor='gender' className="my-2">성별</Label> */}
-                                <Select
-                                    onValueChange={setUserGender}
-                                    value={userGender}
-                                >
-                                    <SelectTrigger className="w-full">
-                                        <SelectValue placeholder={'성별'} />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectGroup>
-                                            <SelectItem value="MALE">
-                                                남성
-                                            </SelectItem>
-                                            <SelectItem value="FEMALE">
-                                                여성
-                                            </SelectItem>
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            <div className="flex flex-col w-full">
-                                {/* <Label htmlFor='recipient' className="my-2">관계</Label> */}
-                                <Select
-                                    onValueChange={setUserRecipient}
-                                    value={userRecipient}
-                                >
-                                    <SelectTrigger className="w-full">
-                                        <SelectValue placeholder={'관계'} />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectGroup>
-                                            <SelectItem value="친구">
-                                                친구
-                                            </SelectItem>
-                                            <SelectItem value="애인">
-                                                애인
-                                            </SelectItem>
-                                            <SelectItem value="지인">
-                                                지인
-                                            </SelectItem>
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                        </div>
-                        <p className="text-xl mt-1">예산이 어떻게 되나요?</p>
-                        <div className=" w-full border-[#FFDDD5] my-2">
-                            <Slider
-                                id="gift-price"
-                                min={0}
-                                max={300000}
-                                step={10000}
-                                value={price}
-                                onValueChange={setPrice}
-                                className="w-full my-2 pb-2 "
+    const nextStep = () => {
+        console.log('nextStep', step);
+        setStep(step + 1);
+    };
+    const prevStep = () => {
+        console.log('prevStep', step);
+        setStep(step - 1);
+    };
+
+    const NameGenderPage = () => {
+        const watchedName = useWatch({control, name: 'name'});
+        const watchedGender = useWatch({control, name: 'gender'});
+
+        return (
+            <>
+                <div className="flex flex-col ">
+                    <p className="text-sm text-[#5d5d5d] text-center mt-7 mb-1">
+                        선물받는 분의 성함을 알려주세요
+                    </p>
+                    <Controller
+                        name="name"
+                        control={control}
+                        rules={{required: true}}
+                        render={({field}) => (
+                            <input
+                                {...field}
+                                placeholder="선물 받는 분의 성함을 입력하세요"
+                                className="mt-6 px-3 h-12 border border-[#d1d1d1] rounded-lg flex items-center placeholder:text-sm placeholder:text-[#d1d1d1]"
                             />
-                            <div className="flex justify-end align-middle w-full">
-                                <div className="flex justify-around text-sm ">
-                                    <Input
-                                        value={price[0].toLocaleString()}
-                                        onChange={(e) => {
-                                            const value = Number(
-                                                e.target.value.replace(
-                                                    /,/g,
-                                                    '',
-                                                ),
-                                            );
-                                            if (!isNaN(value))
-                                                setPrice([
-                                                    value <= 500000
-                                                        ? value
-                                                        : 500000,
-                                                    price[1],
-                                                ]);
-                                        }}
-                                        className="w-[30%]"
+                        )}
+                    />
+                </div>
+                <div className="flex flex-col mt-12 mb-24">
+                    <p className="text-sm text-[#5d5d5d] text-center mt-[4.125rem] mb-6">
+                        선물받는 분의 성별을 알려주세요
+                    </p>
+                    <Controller
+                        name="gender"
+                        control={control}
+                        rules={{required: true}}
+                        render={({field}) => (
+                            <div className="w-full flex gap-4">
+                                {['MALE', 'FEMALE'].map((option) => (
+                                    <label
+                                        key={option}
+                                        className={`flex-1 flex justify-center items-center cursor-pointer h-[2.625rem] border rounded-full bg-white ${
+                                            field.value === option
+                                                ? 'text-[#ff4bc1] border-2 border-[#ff4bc1]'
+                                                : 'text-[#3d3d3d] border-[#b1b1b1]'
+                                        }`}
+                                    >
+                                        <input
+                                            type="radio"
+                                            {...field}
+                                            value={option}
+                                            checked={field.value === option}
+                                            className="hidden"
+                                        />
+                                        {option === 'MALE' ? '남성' : '여성'}
+                                    </label>
+                                ))}
+                            </div>
+                        )}
+                    />
+                </div>
+                <Button
+                    onClick={nextStep}
+                    disabled={!watchedName || !watchedGender}
+                    className="w-full mt-4"
+                    variant={
+                        !watchedName || !watchedGender ? 'disabled' : 'primary'
+                    }
+                >
+                    다음
+                </Button>
+            </>
+        );
+    };
+
+    const RecipientPage = () => (
+        <div className="flex flex-col items-center">
+            <p className="text-sm text-[#5d5d5d] text-center mt-7 mb-1">
+                선물받는 분과의 관계가 어떻게 되세요?
+            </p>
+            <Controller
+                name="recipient"
+                control={control}
+                rules={{required: true}}
+                render={({field}) => (
+                    <div className="flex flex-col w-60 gap-3">
+                        {['친구', '부모님', '선생님', '동료', '기타'].map(
+                            (option) => (
+                                <label
+                                    key={option}
+                                    className={`flex justify-center items-center cursor-pointer h-[2.625rem] border rounded-full bg-white ${
+                                        field.value === option
+                                            ? 'text-[#ff4bc1] border-2 border-[#ff4bc1]'
+                                            : 'text-[#3d3d3d] border-[#b1b1b1]'
+                                    }`}
+                                >
+                                    <input
+                                        type="radio"
+                                        {...field}
+                                        value={option}
+                                        checked={field.value === option}
+                                        className="hidden"
                                     />
-                                    <p className="content-center">원부터</p>
-                                    <Input
-                                        value={price[1].toLocaleString()}
-                                        onChange={(e) => {
-                                            const value = Number(
-                                                e.target.value.replace(
-                                                    /,/g,
-                                                    '',
-                                                ),
-                                            );
-                                            if (!isNaN(value))
-                                                setPrice([
-                                                    price[0],
-                                                    value <= 500000
-                                                        ? value
-                                                        : 500000,
-                                                ]);
-                                        }}
-                                        className="w-[30%]"
+                                    {option}
+                                </label>
+                            ),
+                        )}
+                    </div>
+                )}
+            />
+            <div className="flex mt-24 gap-4 w-full">
+                <Button onClick={prevStep} className="w-full" variant="border">
+                    이전
+                </Button>
+                <Button
+                    onClick={nextStep}
+                    disabled={!watch('recipient')}
+                    className="w-full"
+                    variant={!watch('recipient') ? 'border' : 'primary'}
+                >
+                    다음
+                </Button>
+            </div>
+        </div>
+    );
+
+    const PricePage = () => {
+        const minInputRef = useRef<HTMLInputElement>(null);
+        const maxInputRef = useRef<HTMLInputElement>(null);
+        const minRangeRef = useRef<HTMLInputElement>(null);
+        const maxRangeRef = useRef<HTMLInputElement>(null);
+        const priceSliderRef = useRef<HTMLDivElement>(null);
+
+        const priceGap = 10000;
+
+        const watchedPriceRange = useWatch({control, name: 'priceRange'});
+
+        useEffect(() => {
+            const updateSlider = () => {
+                if (
+                    minRangeRef.current &&
+                    maxRangeRef.current &&
+                    priceSliderRef.current
+                ) {
+                    const [minVal, maxVal] = watchedPriceRange || [0, 300000];
+                    const minPercent = (minVal / 300000) * 100;
+                    const maxPercent = 100 - (maxVal / 300000) * 100;
+                    priceSliderRef.current.style.left = `${minPercent}%`;
+                    priceSliderRef.current.style.right = `${maxPercent}%`;
+                }
+            };
+
+            updateSlider();
+        }, [watchedPriceRange]);
+
+        useEffect(() => {
+            const handleRangeInput = (e: Event) => {
+                const minVal = parseInt(minRangeRef.current!.value);
+                const maxVal = parseInt(maxRangeRef.current!.value);
+
+                if (maxVal - minVal < priceGap) {
+                    if (
+                        (e.target as HTMLInputElement).className === 'min-range'
+                    ) {
+                        minRangeRef.current!.value = (
+                            maxVal - priceGap
+                        ).toString();
+                    } else {
+                        maxRangeRef.current!.value = (
+                            minVal + priceGap
+                        ).toString();
+                    }
+                } else {
+                    minInputRef.current!.value = minVal.toString();
+                    maxInputRef.current!.value = maxVal.toString();
+                }
+            };
+
+            const handlePriceInput = (e: Event) => {
+                let minPrice = parseInt(minInputRef.current!.value);
+                let maxPrice = parseInt(maxInputRef.current!.value);
+
+                if (minPrice < 0) {
+                    minInputRef.current!.value = '0';
+                    minPrice = 0;
+                }
+                if (maxPrice > 300000) {
+                    maxInputRef.current!.value = '300000';
+                    maxPrice = 300000;
+                }
+                if (
+                    maxPrice - minPrice >= priceGap &&
+                    maxPrice <= parseInt(maxRangeRef.current!.max)
+                ) {
+                    if (
+                        (e.target as HTMLInputElement).className === 'min-input'
+                    ) {
+                        minRangeRef.current!.value = minPrice.toString();
+                    } else {
+                        maxRangeRef.current!.value = maxPrice.toString();
+                    }
+                }
+            };
+
+            minRangeRef.current?.addEventListener('input', handleRangeInput);
+            maxRangeRef.current?.addEventListener('input', handleRangeInput);
+            minInputRef.current?.addEventListener('input', handlePriceInput);
+            maxInputRef.current?.addEventListener('input', handlePriceInput);
+
+            return () => {
+                minRangeRef.current?.removeEventListener(
+                    'input',
+                    handleRangeInput,
+                );
+                maxRangeRef.current?.removeEventListener(
+                    'input',
+                    handleRangeInput,
+                );
+                minInputRef.current?.removeEventListener(
+                    'input',
+                    handlePriceInput,
+                );
+                maxInputRef.current?.removeEventListener(
+                    'input',
+                    handlePriceInput,
+                );
+            };
+        }, []);
+
+        return (
+            <div className="flex flex-col">
+                <p className="text-sm text-[#5d5d5d] text-center mt-[4.125rem] mb-6">
+                    선물의 가격대를 입력해주세요.
+                </p>
+                <Controller
+                    name="priceRange"
+                    control={control}
+                    rules={{required: true}}
+                    render={({field}) => (
+                        <div className="flex flex-col mt-6 w-full">
+                            <div className="slider-container relative h-1.5 bg-[#e7e7e7] rounded-md">
+                                <div
+                                    className="price-slider absolute h-full left-[1/30] right-[1/10] rounded-md bg-gradient-to-b from-[#ff4bc1] to-[#ff4341]"
+                                    ref={priceSliderRef}
+                                ></div>
+                            </div>
+                            <div className="range-input relative mt-4">
+                                <input
+                                    type="range"
+                                    className="absolute w-full h-1.5 bg-transparent appearance-none pointer-events-none cursor-pointer top-[-22px]"
+                                    min="0"
+                                    max="300000"
+                                    value={field.value[0]}
+                                    step="10000"
+                                    ref={minRangeRef}
+                                    onChange={(e) =>
+                                        field.onChange([
+                                            e.target.value,
+                                            field.value[1],
+                                        ])
+                                    }
+                                />
+                                <input
+                                    type="range"
+                                    className="absolute w-full h-1.5 bg-transparent appearance-none pointer-events-none cursor-pointer top-[-22px]"
+                                    min="0"
+                                    max="300000"
+                                    value={field.value[1]}
+                                    step="10000"
+                                    ref={maxRangeRef}
+                                    onChange={(e) =>
+                                        field.onChange([
+                                            field.value[0],
+                                            e.target.value,
+                                        ])
+                                    }
+                                />
+                            </div>
+                            <div className="price-input flex items-center justify-center gap-3 mt-4">
+                                <div className="price-field flex-1 relative">
+                                    <input
+                                        type="number"
+                                        className="w-full h-[2.625rem] rounded-lg border border-[#d1d1d1] text-[#6d6d6d] text-center bg-white px-6"
+                                        value={field.value[0]}
+                                        ref={minInputRef}
+                                        onChange={(e) =>
+                                            field.onChange([
+                                                e.target.value,
+                                                field.value[1],
+                                            ])
+                                        }
                                     />
-                                    <p className="content-center">원까지</p>
+                                    <span className="won absolute top-1/2 right-6 transform -translate-y-1/2 text-[#3d3d3d]">
+                                        원
+                                    </span>
+                                </div>
+                                <div>~</div>
+                                <div className="price-field flex-1 relative">
+                                    <input
+                                        type="number"
+                                        className="w-full h-[2.625rem] rounded-lg border border-[#d1d1d1] text-[#6d6d6d] text-center bg-white px-6"
+                                        value={field.value[1]}
+                                        ref={maxInputRef}
+                                        onChange={(e) =>
+                                            field.onChange([
+                                                field.value[0],
+                                                e.target.value,
+                                            ])
+                                        }
+                                    />
+                                    <span className="won absolute top-1/2 right-6 transform -translate-y-1/2 text-[#3d3d3d]">
+                                        원
+                                    </span>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <CardFooter className="flex justify-end gap-2 mx-0 px-0 mb-0 pb-0">
-                        <Button onClick={handleStart} className="w-full mt-2">
-                            시작하기
-                        </Button>
-                    </CardFooter>
-                </CardContent>
-            </Card>
-        </div>
+                    )}
+                />
+                <div className="flex mt-48 gap-4 w-full">
+                    <Button
+                        onClick={prevStep}
+                        className="w-full"
+                        variant="border"
+                    >
+                        이전
+                    </Button>
+                    <Button
+                        onClick={handleSubmit(onSubmit)}
+                        className="w-full"
+                        disabled={
+                            !watchedPriceRange || watchedPriceRange.length !== 2
+                        }
+                        variant={
+                            !watchedPriceRange || watchedPriceRange.length !== 2
+                                ? 'border'
+                                : 'primary'
+                        }
+                    >
+                        다음
+                    </Button>
+                </div>
+            </div>
+        );
+    };
+
+    return (
+        <>
+            <Header variant="back" />
+            <main className="pt-14 px-4" role="main">
+                <div className="mt-2.5">
+                    <p className="text-sm">
+                        선물하고 싶은 분의 정보를 알려주세요.
+                    </p>
+                    <p className="text-2xl font-bold">
+                        딱 맞는 선물을 추천해드릴게요 !
+                    </p>
+                </div>
+
+                <form onSubmit={handleSubmit(onSubmit)} className="mt-8">
+                    {step === 0 && <NameGenderPage />}
+                    {step === 1 && <RecipientPage />}
+                    {step === 2 && <PricePage />}
+                </form>
+            </main>
+        </>
     );
 };
 

@@ -58,12 +58,7 @@ const KakaoShare = (props: KakaoShareProps) => {
     };
 
     return (
-        <Button
-            variant={null}
-            size="icon"
-            onClick={handleShare}
-            disabled={title === undefined}
-        >
+        <Button onClick={handleShare} disabled={title === undefined}>
             <Share2Icon />
         </Button>
     );
