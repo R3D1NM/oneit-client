@@ -314,7 +314,7 @@ function App() {
                     </div>
                 </footer>
                 <Toaster position="bottom-center" />
-                <ReactQueryDevtools initialIsOpen={false} />
+                {/* <ReactQueryDevtools initialIsOpen={false} /> */}
             </QueryClientProvider>
         </>
     );

@@ -23,6 +23,7 @@ import {
     DrawerTrigger,
 } from '@/components/ui/drawer';
 import {rateResult} from '@/api/chat';
+import {Gift} from 'lucide-react';
 const {Kakao} = window;
 
 const rateStyles = `
@@ -118,6 +119,7 @@ const Results = () => {
         console.log(payload);
 
         Kakao.Share.sendDefault(payload);
+        setIsOpen(true);
     };
 
     if (recommendedAPI.isLoading) {
@@ -318,6 +320,12 @@ const Results = () => {
                 </DrawerContent>
             </Drawer>
             <style>{rateStyles}</style>
+            <Button
+                className="fixed bottom-1 right-1 px-3 py-6 rounded-full shadow-lg m-1 "
+                onClick={() => setIsOpen(true)}
+            >
+                <Gift />
+            </Button>
         </>
     );
 };
