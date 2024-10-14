@@ -1,7 +1,7 @@
 import {useForm, Controller, useWatch} from 'react-hook-form';
 import {useAtom} from 'jotai';
 import {gender, name, priceRange, recipient} from '@/atoms/recommend';
-import {Button} from '@/components/ui/button';
+import {Button} from '@/components/common/Button';
 
 import {startRecommend} from '@/api/chat';
 import Header from '@/components/common/Header';

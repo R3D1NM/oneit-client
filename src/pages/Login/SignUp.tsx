@@ -8,7 +8,7 @@ import {authAtom, nicknameCheck, signUp} from '@/api/auth';
 import {useNavigate} from 'react-router-dom';
 import {useAtomValue} from 'jotai';
 import {toast} from 'sonner';
-import {Button} from '@/components/ui/button';
+import {Button} from '@/components/common/Button';
 
 const SignUp = () => {
     const navigate = useNavigate();

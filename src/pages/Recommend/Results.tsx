@@ -13,7 +13,7 @@ import {useQuery} from '@tanstack/react-query';
 import {Product} from '@/lib/types';
 import React, {useEffect, useState} from 'react';
 import giftIcon from '@/assets/tabler_gift.svg';
-import {Button} from '@/components/ui/button';
+import {Button} from '@/components/common/Button';
 const NotFound = React.lazy(() => import('../NotFound'));
 import {
     Drawer,

@@ -10,7 +10,7 @@ import {
     DialogTitle,
     DialogHeader,
 } from '@/components/ui/dialog';
-import {Button} from '@/components/ui/button';
+import {Button} from '@/components/common/Button';
 import {finishRecommend, next} from '@/api/chat';
 import {parse} from 'cox-postposition';
 import Header from '@/components/common/Header';
