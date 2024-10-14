@@ -30,24 +30,27 @@ const Header: React.FC<HeaderProps> = ({variant}) => {
             <div className="flex items-center">
                 {variant === 'logo' ? (
                     <a href="/main" className="flex items-center">
-                        <div
-                            className="w-[4.75rem] h-[2.125rem] bg-no-repeat bg-center bg-contain"
-                            style={{backgroundImage: `url(${logoImage})`}}
+                        <img
+                            src={logoImage}
+                            alt="Logo"
+                            className="w-[4.75rem] h-[2.125rem] object-contain"
                         />
                     </a>
                 ) : (
                     <button onClick={handleBack} className="flex items-center">
-                        <div
-                            className="w-6 h-6 bg-no-repeat bg-center bg-contain"
-                            style={{backgroundImage: `url(${backIcon})`}}
+                        <img
+                            src={backIcon}
+                            alt="Back"
+                            className="w-6 h-6 object-contain"
                         />
                     </button>
                 )}
             </div>
             <button onClick={toMypage} className="w-9 h-9">
-                <div
-                    className="w-full h-full bg-no-repeat bg-center bg-contain"
-                    style={{backgroundImage: `url(${mypageIcon})`}}
+                <img
+                    src={mypageIcon}
+                    alt="My Page"
+                    className="w-full h-full object-contain"
                 />
             </button>
         </header>
