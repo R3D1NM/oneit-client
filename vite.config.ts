@@ -9,8 +9,7 @@ import mkcert from 'vite-plugin-mkcert';
 export default ({mode}: {mode: string}) => {
     // Load environment variables based on the current mode
     const env = loadEnv(mode, process.cwd());
-    const isProduction =
-        process.env.VITE_CURRENT_DOMAIN == 'https://www.oneit.gift';
+    const isProduction = env.VITE_CURRENT_DOMAIN == 'https://www.oneit.gift';
 
     return defineConfig({
         esbuild: {

@@ -20,10 +20,12 @@ import {
     DrawerClose,
     DrawerContent,
     DrawerFooter,
+    DrawerTitle,
     DrawerTrigger,
 } from '@/components/ui/drawer';
 import {rateResult} from '@/api/chat';
 import {Gift} from 'lucide-react';
+
 const {Kakao} = window;
 
 const rateStyles = `
@@ -63,8 +65,8 @@ const Results = () => {
     const navigate = useNavigate();
     const {chatID} = useParams();
     const [{mutate, mutateAsync}] = useAtom(rateResult);
-    const [rating, setRating] = useState<number | null>(null);
-    const [isOpen, setIsOpen] = useState(true);
+    const [rating, setRating] = useState<number>(5);
+    const [isOpen, setIsOpen] = useState(false);
 
     const recommendedAPI = useQuery({
         queryKey: ['fetchRecommendedProducts', chatID],
@@ -83,6 +85,14 @@ const Results = () => {
             navigate('/recommend');
         }
     }, [chatID, navigate]);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            if (!isOpen) setIsOpen(true);
+        }, 5000);
+
+        return () => clearTimeout(timer);
+    }, []);
 
     const handleShare = ({
         title,
@@ -143,7 +153,7 @@ const Results = () => {
                     </div>
                     <div className="slider flex flex-col flex-1 mt-2.5">
                         <Carousel
-                            className="w-full"
+                            className="w-full mt-0"
                             opts={{loop: true}}
                             autoplay={true}
                             autoplayInterval={2500}
@@ -191,21 +201,21 @@ const Results = () => {
                                                     />
                                                 </div>
                                                 <div className="price_info mt-[1.125rem]">
-                                                    <h3 className="text-lg text-[#3d3d3d] font-bold">
+                                                    <h3 className="text-lg text-[#3d3d3d] font-bold max-w-full max-h-6  mb-2 text-overflow">
                                                         {item.name}
                                                     </h3>
                                                     <p className="price mt-1.5 text-[#6d6d6d] font-bold before:content-['₩'] before:text-[#b0b0b0] before:font-bold before:inline-block">
                                                         {item.originalPrice.toLocaleString()}
                                                     </p>
-                                                    <div className="desc mt-1.5 text-xs text-[#3d3d3d] mb-1.5">
+                                                    <div className="desc mt-1.5 mb-1.5 w-full  max-h-12 text-overflow">
                                                         {item.description}
                                                     </div>
-                                                    <a
+                                                    {/* <a
                                                         href={item.productUrl}
                                                         className="btn_underline text-[#ff4bc1] underline"
                                                     >
                                                         제품 자세히 보기
-                                                    </a>
+                                                    </a> */}
                                                 </div>
                                             </div>
                                             <div className="btns flex gap-3 items-center w-full mt-[1.125rem]">
@@ -214,18 +224,13 @@ const Results = () => {
                                                     variant="border"
                                                     onClick={() =>
                                                         handleShare({
-                                                            title:
+                                                            title: '🎁 ONE!T 선물 추천 테스트 결과',
+                                                            description:
                                                                 recommendedAPI
                                                                     .data
                                                                     ?.resultType
                                                                     .title ||
                                                                 'ONE!T - 선물 추천 플랫폼',
-                                                            description:
-                                                                recommendedAPI
-                                                                    .data
-                                                                    ?.resultType
-                                                                    .comment ||
-                                                                '',
                                                             image: item.thumbnailUrl,
                                                             url: `${import.meta.env.VITE_CURRENT_DOMAIN}/recommend/${chatID}/result`,
                                                         })
@@ -259,19 +264,17 @@ const Results = () => {
                     </div>
                 </div>
             </main>
-            <Drawer
-                // handleOnly={true}
-                open={isOpen}
-                onDrag={() => setIsOpen(!isOpen)}
-                onClose={() => setIsOpen(false)}
-                onRelease={() => setIsOpen(false)}
-            >
+            <Drawer open={isOpen} dismissible={true} onOpenChange={setIsOpen}>
                 <DrawerTrigger asChild>
-                    <Button className="w-full bg-oneit-blue hover:bg-oneit-blue/90 my-2 hidden">
-                        결과 평가하기
+                    <Button
+                        className="fixed bottom-1 right-1 px-3 py-6 rounded-full shadow-lg m-1 "
+                        onClick={() => setIsOpen(true)}
+                    >
+                        <Gift />
                     </Button>
                 </DrawerTrigger>
                 <DrawerContent>
+                    <DrawerTitle className="hidden">결과 평가하기</DrawerTitle>
                     <div className="bottom_sheet p-4">
                         <div className="contents text-center">
                             <p className="text-lg font-semibold mb-4">
@@ -304,7 +307,7 @@ const Results = () => {
                             <Button
                                 className="w-full bg-[#ff4bc1] hover:bg-[#ff4bc1]/90 text-white"
                                 onClick={() => {
-                                    console.log('Rating:', rating);
+                                    // console.log('Rating:', rating);
                                     mutateAsync({
                                         chatID: chatID || '',
                                         rating: rating || 0,
@@ -320,12 +323,6 @@ const Results = () => {
                 </DrawerContent>
             </Drawer>
             <style>{rateStyles}</style>
-            <Button
-                className="fixed bottom-1 right-1 px-3 py-6 rounded-full shadow-lg m-1 "
-                onClick={() => setIsOpen(true)}
-            >
-                <Gift />
-            </Button>
         </>
     );
 };

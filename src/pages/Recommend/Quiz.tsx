@@ -31,7 +31,7 @@ const Quiz = () => {
     const currentDepth = Number(params.currentDepth);
 
     const [error, setError] = useState(false);
-    const [selected, setSelected] = useState(0);
+    const [selected, setSelected] = useState(-1);
     const [optionSizes, setOptionSizes] = useState<string[]>([]);
 
     const [{mutate, mutateAsync}] = useAtom(finishRecommend);
@@ -39,6 +39,7 @@ const Quiz = () => {
     const handlNext = async (index: number) => {
         if (currentDepth < MAXDEPTH - 1) {
             await setAnswers(index, currentDepth);
+            setSelected(-1);
             navigate(`/recommend/${chatID}/${currentDepth + 1}`);
         } else if (currentDepth === MAXDEPTH - 1) {
             await setAnswers(index, currentDepth);
@@ -127,7 +128,10 @@ const Quiz = () => {
                                             id={`select${index + 1}`}
                                             name="relation"
                                             checked={selected === index}
-                                            onChange={() => setSelected(index)}
+                                            onChange={() => {
+                                                setSelected(index);
+                                                handlNext(index);
+                                            }}
                                             className="hidden"
                                         />
                                         <label
@@ -167,7 +171,7 @@ const Quiz = () => {
                     </div>
                 </div>
             </main>
-            <div className="bottom fixed bottom-0 left-0 right-0 p-4">
+            {/* <div className="bottom fixed bottom-0 left-0 right-0 p-4">
                 <div className="btn_wrap">
                     <Button
                         onClick={() => handlNext(selected)}
@@ -179,7 +183,7 @@ const Quiz = () => {
                             : '다음'}
                     </Button>
                 </div>
-            </div>
+            </div> */}
 
             {/* Keep the existing error Dialog */}
             {error && (
