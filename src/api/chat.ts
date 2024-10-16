@@ -1,4 +1,10 @@
-import {update, ref, set as write, serverTimestamp} from 'firebase/database';
+import {
+    update,
+    ref,
+    set as write,
+    serverTimestamp,
+    push,
+} from 'firebase/database';
 import {db} from '@/lib/firebase';
 import {atom} from 'jotai';
 import {
@@ -109,7 +115,7 @@ export const finishRecommend = atomWithMutation<
 >((get) => ({
     mutationKey: ['finishRecommend'],
     mutationFn: async ({chatID}: {chatID: string}) => {
-        await update(ref(db, `/recommendRecord/${chatID}`), {
+        await update(ref(db, `recommendRecord/${chatID}`), {
             answers: get(answers),
             modifiedAt: serverTimestamp(),
         });
@@ -143,7 +149,7 @@ export const finishRecommend = atomWithMutation<
         const result = resultList.find((result) =>
             result.tags.every((tag) => tags.includes(tag)),
         );
-        update(ref(db, `/recommendRecord/${variables.chatID}`), {
+        update(ref(db, `recommendRecord/${variables.chatID}`), {
             answers: get(answers),
             modifiedAt: serverTimestamp(),
             result: data,
@@ -161,6 +167,29 @@ export const finishRecommend = atomWithMutation<
         });
     },
 }));
+interface rateResultVariables {
+    chatID: string;
+    rating: number;
+}
+export const rateResult = atomWithMutation<unknown, rateResultVariables>(
+    (get) => ({
+        mutationKey: ['rateResult'],
+        mutationFn: async ({
+            chatID,
+            rating,
+        }: {
+            chatID: string;
+            rating: number;
+        }) => {
+            await push(ref(db, `recommendRecord/${chatID}/ratings`), {
+                rating: {
+                    rating,
+                    modifiedAt: serverTimestamp(),
+                },
+            });
+        },
+    }),
+);
 
 // export const finishChat = atom(
 //     null,

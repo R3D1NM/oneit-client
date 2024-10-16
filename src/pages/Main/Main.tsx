@@ -20,7 +20,7 @@ const Main = () => {
 
     return (
         <>
-            <Header />
+            <Header variant="logo" />
             <main className="pt-14">
                 <div className="flex flex-col gap-6 p-4">
                     <button
@@ -97,7 +97,7 @@ const Main = () => {
                     />
                     <div className="absolute inset-0 flex flex-col justify-center items-start p-6 text-white">
                         <h2 className="text-lg font-bold">
-                            ONE!T 10월 00일 정식 출시 예정
+                            ONE!T 10월 21일 정식 출시 예정
                             <br />
                             {isLogin
                                 ? '인스타그램 둘러보고 출시 소식 받기'
@@ -120,7 +120,7 @@ const Main = () => {
                             아직 공사 중이에요!
                         </p>
                         <div className="text-lg font-bold mt-2 mb-5 text-left">
-                            10월 00일 출시를 목표로
+                            10월 21일 출시를 목표로
                             <br />
                             열심히 개발하고 있어요!
                         </div>

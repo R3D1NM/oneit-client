@@ -98,10 +98,10 @@ function App() {
     return (
         <>
             <QueryClientProvider client={queryClient}>
-                <div className="App flex flex-col justify-center items-center min-h-screen w-full">
-                    <div className="w-[360px]">
+                <div className="App flex flex-col  items-center min-h-screen w-full">
+                    <div className="w-[360px] h-full flex-grow flex-shrink flex flex-col">
                         {/* <Header /> */}
-                        <div className="w-full h-full">
+                        <>
                             <Suspense fallback={<Spinner size="large" />}>
                                 <Router>
                                     <Routes>
@@ -271,12 +271,12 @@ function App() {
                                                 </AuthRouter>
                                             }
                                         /> */}
-                                        {import.meta.env.DEV && (
+                                        {/* {import.meta.env.DEV && (
                                             <Route
                                                 path="/fakeLogin"
                                                 element={<FakeLogin />}
                                             />
-                                        )}
+                                        )} */}
                                         <Route
                                             path="/main"
                                             element={<Main />}
@@ -290,10 +290,14 @@ function App() {
                                             path="*"
                                             element={<NotFound />}
                                         />
+                                        <Route
+                                            path="/test"
+                                            element={<SignUp />}
+                                        />
                                     </Routes>
                                 </Router>
                             </Suspense>
-                        </div>
+                        </>
                     </div>
                 </div>
                 <footer className="bg-gray-100 p-4">
@@ -310,7 +314,7 @@ function App() {
                     </div>
                 </footer>
                 <Toaster position="bottom-center" />
-                <ReactQueryDevtools initialIsOpen={false} />
+                {/* <ReactQueryDevtools initialIsOpen={false} /> */}
             </QueryClientProvider>
         </>
     );

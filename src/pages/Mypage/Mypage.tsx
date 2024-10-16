@@ -1,10 +1,12 @@
 import {authAtom, logout} from '@/api/auth';
-import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar';
-import {Button} from '@/components/ui/button';
+
+import {Button} from '@/components/common/Button';
 import {useAtomValue} from 'jotai';
 import {User2Icon, UserIcon} from 'lucide-react';
 import {useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
+import profileButtonSvg from '@/assets/profile_button.svg';
+import Header from '@/components/common/Header';
 
 const Mypage = () => {
     const navigate = useNavigate();
@@ -14,38 +16,49 @@ const Mypage = () => {
     };
 
     return (
-        <div className="py-3 w-full flex flex-col gap-2">
-            <div className="flex w-full">
-                <div className="flex w-full align-middle justify-between items-center border-[0.5px] rounded-md p-2">
-                    <div className="flex items-center">
-                        <Avatar className="w-16 border-2 h-16">
-                            <AvatarImage
-                                src={user?.profileImgFromKakao}
-                                className="object-cover"
+        <>
+            <Header variant="back" />
+            <main className="pt-14" role="main">
+                <div className="profile px-4">
+                    <div className="round_box h-[5.5rem] px-3 flex items-center border border-[#e7e7e7] rounded-[1.5rem] shadow-[0px_0px_6px_0px_rgba(0,0,0,0.15)]">
+                        <div className="img w-16 h-16 rounded-full overflow-hidden relative">
+                            <img
+                                src={
+                                    user?.profileImgFromKakao ||
+                                    profileButtonSvg
+                                }
+                                alt="Profile"
+                                className="absolute w-full h-full object-cover"
                             />
-                            <AvatarFallback className="bg-secondary">
-                                <User2Icon className="w-16 h-16" />
-                            </AvatarFallback>
-                        </Avatar>
-                        <div className="flex">
-                            <UserIcon className="inline" />
-                            <span>{user?.nickname}</span>
                         </div>
+                        <div className="nickname font-bold ml-3">
+                            {user?.nickname || '닉네임'}
+                        </div>
+                        <button
+                            className="btn_logout ml-auto w-[5.0625rem] h-[2.125rem] flex justify-center items-center bg-[#f01299] text-white text-sm font-bold rounded-lg"
+                            onClick={handleLogout}
+                        >
+                            로그아웃
+                        </button>
                     </div>
-                    <Button onClick={handleLogout}>Logout</Button>
                 </div>
-            </div>
-
-            <div className="flex flex-col w-full justify-center items-center">
+            </main>
+        </>
+    );
+    {
+        /* <div className="flex flex-col w-full justify-center items-center">
                 <div
                     className="border-y-[1px] w-full text-start p-2 cursor-pointer hover:bg-oneit-gray/10"
                     onClick={() => navigate('/friends')}
                 >
                     친구 목록
                 </div>
-            </div>
-        </div>
-    );
+            </div> */
+    }
+    {
+        /* </div> */
+    }
+    // );
 };
 
 export default Mypage;
