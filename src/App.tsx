@@ -121,11 +121,11 @@ function App() {
                                             path="/product/:productID"
                                             element={<Product />}
                                         />
-                                        {/* <Route
+                                        <Route
                                             path="/curation"
                                             element={<Curation />}
                                         />
-                                        <Route
+                                        {/*<Route
                                             path="/collection"
                                             element={<Discover />}
                                         />
