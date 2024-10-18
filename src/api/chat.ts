@@ -120,17 +120,16 @@ export const finishRecommend = atomWithMutation<
             modifiedAt: serverTimestamp(),
         });
 
+        const price = [
+            parseInt(get(priceRange)[0]),
+            parseInt(get(priceRange)[1]),
+        ];
+
         const payload: Payload = {
             gender: get(gender),
             age: 10,
-            minPrice:
-                get(priceRange)[0] > get(priceRange)[1]
-                    ? get(priceRange)[1]
-                    : get(priceRange)[0],
-            maxPrice:
-                get(priceRange)[1] > get(priceRange)[0]
-                    ? get(priceRange)[1]
-                    : get(priceRange)[0],
+            minPrice: price[0] > price[1] ? price[1] : price[0],
+            maxPrice: price[1] > price[0] ? price[1] : price[0],
             keywords: get(answers),
         };
         return axios

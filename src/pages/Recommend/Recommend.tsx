@@ -13,7 +13,7 @@ type FormData = {
     name: string;
     gender: 'MALE' | 'FEMALE';
     recipient: string;
-    priceRange: number[];
+    priceRange: string[];
 };
 
 const Recommend = () => {
@@ -50,12 +50,14 @@ const Recommend = () => {
         };
     }, [step]);
 
-    const {control, handleSubmit, watch} = useForm<FormData>({
+    const {control, handleSubmit, watch, setValue} = useForm<FormData>({
         defaultValues: {
             name: nameAtom,
             gender: genderAtom,
             recipient: recipientAtom,
-            priceRange: priceRangeAtom.length ? priceRangeAtom : [0, 300000], // Set default values if priceRangeAtom is empty
+            priceRange: priceRangeAtom.length
+                ? priceRangeAtom
+                : ['0', '300000'], // Set default values if priceRangeAtom is empty
         },
     });
 
@@ -63,7 +65,12 @@ const Recommend = () => {
         setNameAtom(data.name);
         setGenderAtom(data.gender);
         setRecipientAtom(data.recipient);
-        setPriceRangeAtom(data.priceRange);
+        setPriceRangeAtom([
+            data.priceRange[0].toString(),
+            data.priceRange[1].toString(),
+        ]);
+
+        console.log('onSubmit', data);
 
         const chatID = nanoid(10);
         mutate({chatID});
@@ -218,14 +225,15 @@ const Recommend = () => {
                     maxRangeRef.current &&
                     priceSliderRef.current
                 ) {
+                    console.log('updateSlider', watchedPriceRange);
+
                     const [minVal, maxVal] = watchedPriceRange || [0, 300000];
-                    const minPercent = (minVal / 300000) * 100;
-                    const maxPercent = 100 - (maxVal / 300000) * 100;
+                    const minPercent = (parseInt(minVal) / 300000) * 100;
+                    const maxPercent = 100 - (parseInt(maxVal) / 300000) * 100;
                     priceSliderRef.current.style.left = `${minPercent}%`;
                     priceSliderRef.current.style.right = `${maxPercent}%`;
                 }
             };
-
             updateSlider();
         }, [watchedPriceRange]);
 
@@ -236,12 +244,16 @@ const Recommend = () => {
 
                 if (maxVal - minVal < priceGap) {
                     if (
-                        (e.target as HTMLInputElement).className === 'min-range'
+                        (e.target as HTMLInputElement).className.startsWith(
+                            'min-range',
+                        )
                     ) {
+                        //moved min
                         minRangeRef.current!.value = (
                             maxVal - priceGap
                         ).toString();
                     } else {
+                        //moved max
                         maxRangeRef.current!.value = (
                             minVal + priceGap
                         ).toString();
@@ -250,11 +262,25 @@ const Recommend = () => {
                     minInputRef.current!.value = minVal.toString();
                     maxInputRef.current!.value = maxVal.toString();
                 }
+                // console.log(minVal, maxVal);
+                // setValue('priceRange', [minVal, maxVal]);
             };
 
             const handlePriceInput = (e: Event) => {
                 let minPrice = parseInt(minInputRef.current!.value);
                 let maxPrice = parseInt(maxInputRef.current!.value);
+
+                if (minPrice > maxPrice) {
+                    [minPrice, maxPrice] = [maxPrice, minPrice];
+                    minInputRef.current!.value = minPrice.toString();
+                    maxInputRef.current!.value = maxPrice.toString();
+                    maxRangeRef.current!.value = maxPrice.toString();
+                    minRangeRef.current!.value = minPrice.toString();
+                    setValue('priceRange', [
+                        minPrice.toString(),
+                        maxPrice.toString(),
+                    ]);
+                }
 
                 if (minPrice < 0) {
                     minInputRef.current!.value = '0';
@@ -269,10 +295,14 @@ const Recommend = () => {
                     maxPrice <= parseInt(maxRangeRef.current!.max)
                 ) {
                     if (
-                        (e.target as HTMLInputElement).className === 'min-input'
+                        (e.target as HTMLInputElement).className.startsWith(
+                            'min-input',
+                        )
                     ) {
+                        //entered min
                         minRangeRef.current!.value = minPrice.toString();
                     } else {
+                        //endtered max
                         maxRangeRef.current!.value = maxPrice.toString();
                     }
                 }
@@ -323,7 +353,7 @@ const Recommend = () => {
                             <div className="range-input relative mt-4">
                                 <input
                                     type="range"
-                                    className="absolute w-full h-1.5 bg-transparent appearance-none pointer-events-none cursor-pointer top-[-22px]"
+                                    className="min-range absolute w-full h-1.5 bg-transparent appearance-none pointer-events-none cursor-pointer top-[-22px]"
                                     min="0"
                                     max="300000"
                                     value={field.value[0]}
@@ -356,7 +386,7 @@ const Recommend = () => {
                                 <div className="price-field flex-1 relative">
                                     <input
                                         type="number"
-                                        className="w-full h-[2.625rem] rounded-lg border border-[#d1d1d1] text-[#6d6d6d] text-center bg-white px-6"
+                                        className="min-input w-full h-[2.625rem] rounded-lg border border-[#d1d1d1] text-[#6d6d6d] text-center bg-white px-6"
                                         value={field.value[0]}
                                         ref={minInputRef}
                                         onChange={(e) =>
