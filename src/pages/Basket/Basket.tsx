@@ -338,6 +338,9 @@ const Basket = () => {
                             basketID={basketID || ''}
                             voteStatus={product.voteStatus || 'NONE'}
                             likeCount={product.likeCount || 0}
+                            purchaseStatus={
+                                product.purchaseStatus || 'NOT_PURCHASED'
+                            }
                         />
                     ))}
                     <div

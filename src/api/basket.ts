@@ -241,3 +241,46 @@ export const basketProductVote = async (
             return Promise.reject(err);
         });
 };
+
+export const fetchBasketProductComments = async (
+    basketIdx: string,
+    productIdx: string,
+) => {
+    return axios
+        .get(`v2/giftbox/${basketIdx}/products/${productIdx}/comments`)
+        .then((res) => {
+            return Promise.resolve(res.data);
+        })
+        .catch((err) => {
+            return Promise.reject(err);
+        });
+};
+
+export const addBasketProductComment = async (
+    basketIdx: string,
+    productIdx: string,
+    comment: string,
+) => {
+    const data = {
+        content: comment,
+    };
+    return axios
+        .post(`v2/giftbox/${basketIdx}/products/${productIdx}/comments`, data)
+        .then((res) => {
+            return Promise.resolve(res.data);
+        })
+        .catch((err) => {
+            return Promise.reject(err);
+        });
+};
+
+export const deleteBasketProductComment = async (commentIdx: number) => {
+    return axios
+        .delete(`v2/comments/${commentIdx}`)
+        .then((res) => {
+            return Promise.resolve(res.data);
+        })
+        .catch((err) => {
+            return Promise.reject(err);
+        });
+};

@@ -25,10 +25,12 @@ interface ProductCardProps {
     shared: boolean;
     likeCount: number;
     voteStatus: 'LIKE' | 'DISLIKE' | 'NONE';
+    purchaseStatus: 'PURCHASED' | 'NOT_PURCHASED';
 }
 
 const BasketProductCard = (props: ProductCardProps) => {
-    const {product, basketID, shared, likeCount, voteStatus} = props;
+    const {product, basketID, shared, likeCount, voteStatus, purchaseStatus} =
+        props;
     const [vote, setVote] = useState<'LIKE' | 'DISLIKE' | 'NONE'>(voteStatus);
     const [count, setCount] = useState(likeCount);
     const [isOpen, setIsOpen] = useState(false);
@@ -88,10 +90,14 @@ const BasketProductCard = (props: ProductCardProps) => {
             className={cn(
                 'rounded-lg overflow-hidden shadow-sm flex flex-col',
                 isSelected && 'border-[1px] border-oneit-blue',
+                purchaseStatus === 'PURCHASED' && 'opacity-50',
             )}
         >
             <div className="relative group">
-                <a href={`/product/${product.idx}`} className="block">
+                <a
+                    href={`/basket/${basketID}/product/${product.idx}`}
+                    className="block"
+                >
                     <AspectRatio ratio={1 / 1} className="justify-center flex">
                         <div className="relative w-full h-full flex justify-center">
                             <img

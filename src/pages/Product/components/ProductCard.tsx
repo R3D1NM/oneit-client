@@ -29,7 +29,7 @@ const ProductCard = (props: ProductCardProps) => {
                     </h3>
                     <div className="flex items-center justify-end">
                         <span className="font-bold text-lg">
-                            {product.originalPrice.toLocaleString()}원
+                            {product.originalPrice}원
                         </span>
                     </div>
                 </div>

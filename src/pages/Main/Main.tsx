@@ -43,7 +43,7 @@ const Main = () => {
                     </button>
 
                     <button
-                        onClick={() => setIsModalOpen(true)}
+                        onClick={() => navigate('/basket')}
                         className="h-[7.125rem] rounded-3xl w-full relative flex flex-col justify-center bg-[#fef1fa]"
                     >
                         <div className="pl-6 text-left text-sm text-[#5d5d5d] mb-2">
@@ -62,7 +62,7 @@ const Main = () => {
                     </button>
 
                     <button
-                        onClick={() => setIsModalOpen(true)}
+                        onClick={() => navigate('/curation')}
                         className="h-[7.125rem] rounded-3xl w-full relative flex flex-col justify-center bg-[#eee3ff]"
                     >
                         <div className="pl-6 text-left text-sm text-[#5d5d5d] mb-2">
@@ -106,7 +106,7 @@ const Main = () => {
                     </div>
                 </div>
             </main>
-            {isModalOpen && (
+            {/* {isModalOpen && (
                 <div
                     className="absolute inset-0 flex items-center justify-center"
                     onClick={() => setIsModalOpen(false)}
@@ -141,7 +141,7 @@ const Main = () => {
                         )}
                     </div>
                 </div>
-            )}
+            )} */}
         </>
     );
 };

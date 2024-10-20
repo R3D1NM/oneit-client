@@ -29,7 +29,7 @@ const AuthRouterWithRedirect = ({
     children: React.ReactNode;
     redirectTo: string;
 }) => {
-    const {basketID} = useParams();
+    const {basketID, productID} = useParams();
     if (basketID === undefined) {
         return (
             <AuthRouter option={option} redirectTo={'/main'}>
@@ -38,7 +38,10 @@ const AuthRouterWithRedirect = ({
         );
     }
 
-    const redirect = redirectTo.replace(':basketID', basketID);
+    let redirect = redirectTo.replace(':basketID', basketID);
+    if (productID !== undefined) {
+        redirect.replace(':productID', productID);
+    }
     return (
         <AuthRouter option={option} redirectTo={redirect}>
             {children}
@@ -63,6 +66,7 @@ const Friends = React.lazy(() => import('./pages/Mypage/Friends'));
 
 const BasketList = React.lazy(() => import('./pages/Basket/BasketList'));
 const Basket = React.lazy(() => import('./pages/Basket/Basket'));
+const BasketProduct = React.lazy(() => import('./pages/Basket/BasketProduct'));
 const CreateBasket = React.lazy(() => import('./pages/Basket/CreateBasket'));
 const EditBasket = React.lazy(() => import('./pages/Basket/EditBasket'));
 const SharedBasket = React.lazy(() => import('./pages/Basket/SharedBasket'));
@@ -125,14 +129,14 @@ function App() {
                                             path="/curation"
                                             element={<Curation />}
                                         />
-                                        {/*<Route
+                                        {/* <Route
                                             path="/collection"
                                             element={<Discover />}
                                         />
                                         <Route
                                             path="/collection/:collectionID"
                                             element={<Collection />}
-                                        />
+                                        /> */}
                                         <Route
                                             path="/basket"
                                             element={
@@ -188,6 +192,18 @@ function App() {
                                                 </AuthRouterWithRedirect>
                                             }
                                         />
+                                        <Route
+                                            path="/basket/:basketID/product/:productID"
+                                            element={
+                                                <AuthRouterWithRedirect
+                                                    option={true}
+                                                    redirectTo="/login?redirect=/basket/:basketID/product/:productID"
+                                                >
+                                                    <BasketProduct />
+                                                </AuthRouterWithRedirect>
+                                            }
+                                        />
+                                        {/* 
                                         <Route
                                             path="/basket/share/:basketID"
                                             element={<SharedBasket />}
