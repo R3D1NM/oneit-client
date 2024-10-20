@@ -4,6 +4,7 @@ import {getAnalytics} from 'firebase/analytics';
 import {getDatabase} from 'firebase/database';
 import {getMessaging, getToken, onMessage} from 'firebase/messaging';
 import {sendInfoToSlack} from './slack';
+import {toast} from 'sonner';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -23,17 +24,19 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const messaging = getMessaging(app);
-export const firebaseMessagingConfig = async (): Promise<string | null> => {
+export const firebaseMessagingConfig = async (): Promise<string> => {
     // Check if the browser supports notifications
     if (!('Notification' in window)) {
         console.log('This browser does not support notifications.');
-        return null;
+        return Promise.reject('This browser does not support notifications.');
     }
 
     // Check if the browser supports Firebase messaging
     if (!messaging) {
         console.log('Firebase messaging is not supported in this browser.');
-        return null;
+        return Promise.reject(
+            'Firebase messaging is not supported in this browser.',
+        );
     }
 
     try {
@@ -49,15 +52,17 @@ export const firebaseMessagingConfig = async (): Promise<string | null> => {
             const token = await getToken(messaging, {
                 vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY,
             });
-            console.log(token);
-            return token;
+            // console.log(token);
+            return Promise.resolve(token);
         } else {
             console.log('Notification permission not granted.');
-            return null;
+            return Promise.reject('Notification permission not granted.');
         }
     } catch (err) {
         console.error('An error occurred while setting up notifications:', err);
-        return null;
+        return Promise.reject(
+            'An error occurred while setting up notifications.',
+        );
     }
 };
 
@@ -65,6 +70,11 @@ if (messaging) {
     onMessage(messaging, (payload) => {
         console.log(payload.notification?.title);
         console.log(payload.notification?.body);
+        toast(payload.notification?.title, {
+            description: payload.notification?.body,
+            duration: 5000,
+            position: 'top-center',
+        });
     });
 }
 const analytics = getAnalytics(app);

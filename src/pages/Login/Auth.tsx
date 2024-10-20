@@ -1,8 +1,10 @@
 import {login, redirectURI, updateAuthAtom} from '@/api/auth';
+import {sendFCMToken} from '@/api/notification';
 import {Spinner} from '@/components/ui/spinner';
+import {firebaseMessagingConfig} from '@/lib/firebase';
 import axios from 'axios';
 import {useAtomValue, useSetAtom} from 'jotai';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {redirect, useNavigate} from 'react-router-dom';
 
 const {Kakao} = window;
@@ -10,10 +12,11 @@ const {Kakao} = window;
 const Auth = () => {
     const navigate = useNavigate();
     const useUpdateAuth = useSetAtom(updateAuthAtom);
+    const [tokenFetched, setTokenFetched] = useState(false);
 
     const getToken = async () => {
         const token = new URL(window.location.href).searchParams.get('code');
-        const res = axios.post(
+        const res = await axios.post(
             'https://kauth.kakao.com/oauth/token',
             {
                 grant_type: 'authorization_code',
@@ -35,45 +38,64 @@ const Auth = () => {
         if (!Kakao.isInitialized()) {
             Kakao.init(import.meta.env.VITE_KAKAO_API_KEY);
         }
-        getToken()
-            .then(async (res) => {
-                // console.log(res);
-                const kakaoToken = res.data.access_token;
-                // console.log(Kakao);
-                Kakao.Auth.setAccessToken(kakaoToken);
 
-                login(kakaoToken)
-                    .then((isSignedUp: boolean) => {
-                        //go back to the page before login page
-                        useUpdateAuth();
-                        console.log('[AUTH] login success');
-                        if (isSignedUp) {
-                            const redirect = localStorage.getItem('redirect');
-                            console.log(`[AUTH] Redirect to ${redirect}`);
+        if (!tokenFetched) {
+            setTokenFetched(true);
+            getToken()
+                .then(async (res) => {
+                    const kakaoToken = res.data.access_token;
+                    Kakao.Auth.setAccessToken(kakaoToken);
 
-                            navigate(redirect || '/main', {replace: true});
-                        } else {
-                            console.log('[AUTH] Redirect to signup');
-                            navigate('/signup', {replace: true});
-                        }
-                    })
-                    .catch((err) => {
-                        // console.log(err);
-                        navigate(
-                            '/login?redirect=' +
-                                localStorage.getItem('redirect'),
-                            {replace: true},
-                        );
-                    });
-            })
-            .catch((err) => {
-                // console.log(err);
-                navigate(
-                    '/login?redirect=' + localStorage.getItem('redirect'),
-                    {replace: true},
-                );
-            });
-    }, []);
+                    login(kakaoToken)
+                        .then((isSignedUp: boolean) => {
+                            useUpdateAuth();
+                            console.log('[AUTH] login success');
+                            if (isSignedUp) {
+                                firebaseMessagingConfig().then((token) => {
+                                    console.log(
+                                        `[AUTH] Firebase token: ${token}`,
+                                    );
+                                    sendFCMToken(token)
+                                        .then((res) => {
+                                            const redirect =
+                                                localStorage.getItem(
+                                                    'redirect',
+                                                );
+                                            console.log(
+                                                `[AUTH] Redirect to ${redirect}`,
+                                            );
+
+                                            navigate(redirect || '/main', {
+                                                replace: true,
+                                            });
+                                        })
+                                        .catch((err) => {
+                                            console.log(
+                                                '[AUTH] Error sending FCM token',
+                                            );
+                                        });
+                                });
+                            } else {
+                                console.log('[AUTH] Redirect to signup');
+                                navigate('/signup', {replace: true});
+                            }
+                        })
+                        .catch((err) => {
+                            navigate(
+                                '/login?redirect=' +
+                                    localStorage.getItem('redirect'),
+                                {replace: true},
+                            );
+                        });
+                })
+                .catch((err) => {
+                    navigate(
+                        '/login?redirect=' + localStorage.getItem('redirect'),
+                        {replace: true},
+                    );
+                });
+        }
+    }, [tokenFetched]);
 
     return <Spinner />;
 };

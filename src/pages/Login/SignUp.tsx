@@ -9,6 +9,8 @@ import {useNavigate} from 'react-router-dom';
 import {useAtomValue} from 'jotai';
 import {toast} from 'sonner';
 import {Button} from '@/components/common/Button';
+import {firebaseMessagingConfig} from '@/lib/firebase';
+import {sendFCMToken} from '@/api/notification';
 
 const SignUp = () => {
     const navigate = useNavigate();
@@ -16,7 +18,10 @@ const SignUp = () => {
     const [isNicknameChecked, setIsNicknameChecked] = useState(false);
 
     const formSchema = z.object({
-        name: z.string().min(2, {message: '이름은 2자 이상이어야 합니다.'}),
+        name: z
+            .string()
+            .min(2, {message: '2자 이상이어야 합니다.'})
+            .regex(/^[가-힣]+$/, {message: '한글 이름만 가능합니다.'}),
         nickname: z
             .string()
             .min(2, {message: '닉네임은 2자 이상이어야 합니다.'}),
@@ -84,8 +89,23 @@ const SignUp = () => {
             return await signUp(user);
         },
         onSuccess: () => {
-            const redirect = localStorage.getItem('redirect');
-            navigate(redirect || '/');
+            firebaseMessagingConfig().then((token) => {
+                console.log(`[AUTH] Firebase token: ${token}`);
+                sendFCMToken(token)
+                    .then((res) => {
+                        const redirect = localStorage.getItem('redirect');
+                        console.log(`[AUTH] Redirect to ${redirect}`);
+
+                        navigate(redirect || '/main', {
+                            replace: true,
+                        });
+                    })
+                    .catch((err) => {
+                        console.log('[AUTH] Error sending FCM token');
+                    });
+            });
+            // const redirect = localStorage.getItem('redirect');
+            // navigate(redirect || '/');
         },
         onError: () => {
             toast.error('회원가입에 실패했습니다.');
@@ -94,7 +114,7 @@ const SignUp = () => {
 
     const onSubmit = (data: z.infer<typeof formSchema>) => {
         console.log(data);
-        if (!isNicknameChecked) {
+        if (!isNicknameChecked && data.nickname !== user?.nickname) {
             setError('nickname', {
                 type: 'manual',
                 message: '닉네임 중복 검사를 먼저 진행해주세요.',
@@ -106,7 +126,13 @@ const SignUp = () => {
     };
 
     const checkNickname = (nickname: string) => {
-        nicknameCheckAPI.mutate(nickname);
+        if (nickname === user?.nickname && nickname !== '') {
+            toast.success('사용 가능한 닉네임입니다.');
+            setIsNicknameChecked(true);
+            clearErrors('nickname');
+        } else {
+            nicknameCheckAPI.mutate(nickname);
+        }
     };
 
     return (

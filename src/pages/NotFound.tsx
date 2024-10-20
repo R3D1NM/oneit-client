@@ -17,25 +17,22 @@ const NotFound = () => {
         // return <Spinner/>; // or return a loading spinner, etc.
         return null;
     }
-
     return (
-        <div className="w-full max-h-[75%] px-2 pt-4">
-            <div className="flex flex-col items-center gap-4 text-center">
-                <TriangleAlertIcon className="h-12 w-12 text-gray-500 dark:text-gray-400" />
-                <h1 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-4xl text-oneit-pink">
-                    Page Not Found
-                </h1>
-                <span className="max-w-[90%] text-gray-500 md:text-lg dark:text-gray-400">
-                    URL을 확인하고 다시 시도해주세요
-                </span>
-                <Button
-                    className="w-full"
-                    variant="primary"
-                    onClick={() => navigate('/main')}
-                >
-                    메인으로
-                </Button>
-            </div>
+        <div className="flex flex-col items-center justify-center min-h-screen gap-4 text-center p-3">
+            <TriangleAlertIcon className="h-12 w-12 text-gray-500 dark:text-gray-400" />
+            <h1 className="text-2xl font-bold tracking-tighter sm:text-4xl md:text-4xl text-oneit-pink">
+                Page Not Found
+            </h1>
+            <span className="max-w-[90%] text-gray-500 md:text-lg dark:text-gray-400">
+                URL을 확인하고 다시 시도해주세요
+            </span>
+            <Button
+                className="w-full"
+                variant="primary"
+                onClick={() => navigate('/main')}
+            >
+                메인으로
+            </Button>
         </div>
     );
 };
