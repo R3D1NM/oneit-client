@@ -2048,12 +2048,12 @@ header {
     color: #fff;
   }
 
-/*   .basket {
+  .basket {
     width: 2.25rem;
     height: 2.25rem;
-    background: url("../images/icon_basket.svg") no-repeat center/contain;
+    background: url("/src/assets/images/icon_basket.svg") no-repeat center/contain;
     display: block;
-  } */
+  }
 }
 
 .btn_pink2 {
