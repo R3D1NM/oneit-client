@@ -44,7 +44,8 @@ const BasketProductCard = (props: ProductCardProps) => {
     const selectedCount = useAtomValue(selctedProductCount);
 
     const deleteAPI = useMutation({
-        mutationFn: () => deleteBasketProduct(basketID || '', product.idx),
+        mutationFn: () =>
+            deleteBasketProduct(basketID || '', product.idx.toString()),
         onSuccess: () => window.location.reload(),
     });
 

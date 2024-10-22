@@ -130,11 +130,11 @@ function App() {
                                         {/* <Route
                                             path="/collection"
                                             element={<Discover />}
-                                        />
+                                        /> */}
                                         <Route
                                             path="/collection/:collectionID"
                                             element={<Collection />}
-                                        /> */}
+                                        />
                                         <Route
                                             path="/basket"
                                             element={

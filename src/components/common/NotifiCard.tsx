@@ -54,7 +54,7 @@ const NotifiCard = (props: {notif: Notif}) => {
             >
                 {notif.title}
             </h3>
-            <p className="text-overflow">{notif.body}</p>
+            <p className="text-overflow-one">{notif.body}</p>
             <span className="text-xs text-[#818181]">
                 {notif.createdAt.toString().replace('T', ' ')}
             </span>

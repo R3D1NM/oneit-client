@@ -88,7 +88,7 @@ const Header = ({
                                 className="w-6 h-6 object-contain"
                             />
                         </button>
-                        <h2 className="text-overflow h-6 w-36">{title}</h2>
+                        <h2 className="text-overflow-one h-6 w-36">{title}</h2>
                     </>
                 )}
             </div>
