@@ -34,37 +34,37 @@ header {
   }
 
   .btn_back {
-    background: url("../images/icon_bak.svg") no-repeat center/contain;
+    background: url("/src/assets/images/icon_bak.svg") no-repeat center/contain;
     width: 1.5rem;
     height: 1.5rem;
     display: block;
   }
   .btn_back_white {
-    background: url("../images/back_white.svg") no-repeat center/contain;
+    background: url("/src/assets/images/back_white.svg") no-repeat center/contain;
     width: 1.5rem;
     height: 1.5rem;
     display: block;
   }
   .btn_setting {
-    background: url("../images/icon_setting.svg") no-repeat center/contain;
+    background: url("/src/assets/images/icon_setting.svg") no-repeat center/contain;
     width: 1.5rem;
     height: 1.5rem;
     display: block;
   }
   .btn_bell {
-    background: url("../images/icon_bell.svg") no-repeat center/contain;
+    background: url("/src/assets/images/icon_bell.svg") no-repeat center/contain;
     width: 1.5rem;
     height: 1.5rem;
     display: block;
   }
   .btn_bell_active {
-    background: url("../images/icon_bell_active.svg") no-repeat center/contain;
+    background: url("/src/assets/images/icon_bell_active.svg") no-repeat center/contain;
     width: 1.5rem;
     height: 1.5rem;
     display: block;
   }
   .btn_profile {
-    background: url("../images/icon_profile.svg") no-repeat center/1.5rem;
+    background: url("/src/assets/images/icon_profile.svg") no-repeat center/1.5rem;
     width: 2.25rem;
     height: 2.25rem;
     display: block;
@@ -279,7 +279,7 @@ header {
           align-items: flex-start;
 
           .btn_pencil {
-            background: url("../images/icon_pencil.svg") no-repeat
+            background: url("/src/assets/images/icon_pencil.svg") no-repeat
               center/contain;
             width: 1.5rem;
             height: 1.5rem;
@@ -396,7 +396,7 @@ header {
               }
 
               i {
-                background: url("../images/profile_button.svg") no-repeat
+                background: url("/src/assets/images/profile_button.svg") no-repeat
                   center/contain;
                 width: 1.5rem;
                 height: 1.5rem;
@@ -406,13 +406,13 @@ header {
             }
             .profile {
               i {
-                background: url("../images/profile_button.svg") no-repeat
+                background: url("/src/assets/images/profile_button.svg") no-repeat
                   center/contain;
               }
             }
             .profile2 {
               i {
-                background: url("../images/profile_button2.svg") no-repeat
+                background: url("/src/assets/images/profile_button2.svg") no-repeat
                   center/contain;
               }
             }
@@ -557,7 +557,7 @@ header {
                 width: 1rem;
                 height: 1rem;
                 display: block;
-                background: url("../images/close.svg") no-repeat center/contain;
+                background: url("/src/assets/images/close.svg") no-repeat center/contain;
               }
             }
           }
@@ -627,7 +627,7 @@ header {
     width: 1.5rem;
     height: 1.5rem;
     display: block;
-    background: url("../images/btn_send.svg") no-repeat center/contain;
+    background: url("/src/assets/images/btn_send.svg") no-repeat center/contain;
   }
 }
 
@@ -674,7 +674,7 @@ header {
         width: 2.25rem;
         height: 2.25rem;
         display: block;
-        background: url("../images/giftBox.svg") no-repeat center/contain;
+        background: url("/src/assets/images/giftBox.svg") no-repeat center/contain;
         position: absolute;
         right: 0;
         top: 50%;
@@ -687,7 +687,7 @@ header {
     width: 5rem;
     height: 5rem;
     display: block;
-    /* background: url("../images/gift_messege.svg") no-repeat center/contain; */
+    /* background: url("/src/assets/images/gift_messege.svg") no-repeat center/contain; */
   }
 }
 
@@ -727,13 +727,13 @@ header {
       width: 1.5rem;
       height: 1.5rem;
       display: block;
-      background: url("../images/icon_zoomer.svg") no-repeat center/contain;
+      background: url("/src/assets/images/icon_zoomer.svg") no-repeat center/contain;
     }
     .btn_filter {
       width: 1.5rem;
       height: 1.5rem;
       display: block;
-      background: url("../images/icon_filter.svg") no-repeat center/contain;
+      background: url("/src/assets/images/icon_filter.svg") no-repeat center/contain;
     }
   }
 }
@@ -827,7 +827,7 @@ header {
                 width: 1.75rem;
                 height: 1.75rem;
                 margin-right: 0.125rem;
-                background: url("../images/mage_heart.svg") no-repeat
+                background: url("/src/assets/images/mage_heart.svg") no-repeat
                   center/contain;
                 display: block;
               }
@@ -927,7 +927,7 @@ header {
       }
     }
     .btn_right_more {
-      background: url("../images/icon_arrow_right.svg") no-repeat center/contain;
+      background: url("/src/assets/images/icon_arrow_right.svg") no-repeat center/contain;
       width: 2.25rem;
       height: 2.25rem;
       display: block;
@@ -942,13 +942,13 @@ header {
         width: 1.5rem;
         height: 1.5rem;
         display: block;
-        background: url("../images/icon_filter2.svg") no-repeat center/contain;
+        background: url("/src/assets/images/icon_filter2.svg") no-repeat center/contain;
       }
       .search {
         width: 1.5rem;
         height: 1.5rem;
         display: block;
-        background: url("../images/icon_search2.svg") no-repeat center/contain;
+        background: url("/src/assets/images/icon_search2.svg") no-repeat center/contain;
       }
     }
   }
@@ -1126,7 +1126,7 @@ header {
               i {
                 width: 1rem;
                 height: 1rem;
-                background: url("../images/icon_tabler_gift.svg") no-repeat
+                background: url("/src/assets/images/icon_tabler_gift.svg") no-repeat
                   center/contain;
                 display: block;
                 margin-right: 0.25rem;
@@ -1196,7 +1196,7 @@ header {
         width: 1.5rem;
         height: 1.5rem;
         display: block;
-        background: url("../images/icon_pencil2.svg") no-repeat center/contain;
+        background: url("/src/assets/images/icon_pencil2.svg") no-repeat center/contain;
       }
     }
 
@@ -1348,7 +1348,7 @@ header {
             width: 1rem;
             height: 1rem;
             display: block;
-            background: url("../images/icon_cake.svg") no-repeat center/contain;
+            background: url("/src/assets/images/icon_cake.svg") no-repeat center/contain;
           }
           > span {
             font-size: 0.75rem;
@@ -1410,7 +1410,7 @@ header {
             }
 
             i {
-              background: url("../images/profile_button.svg") no-repeat
+              background: url("/src/assets/images/profile_button.svg") no-repeat
                 center/contain;
               width: 1.5rem;
               height: 1.5rem;
@@ -1420,13 +1420,13 @@ header {
           }
           .profile {
             i {
-              background: url("../images/profile_button.svg") no-repeat
+              background: url("/src/assets/images/profile_button.svg") no-repeat
                 center/contain;
             }
           }
           .trash {
             i {
-              background: url("../images/icon_trash.svg") no-repeat
+              background: url("/src/assets/images/icon_trash.svg") no-repeat
                 center/contain;
             }
           }
@@ -1436,17 +1436,17 @@ header {
           width: 1.5rem;
           height: 1.5rem;
           display: block;
-          background: url("../images/states=Off.svg") no-repeat center/contain;
+          background: url("/src/assets/images/states=Off.svg") no-repeat center/contain;
 
           &.active {
-            background: url("../images/states=On.svg") no-repeat center/contain;
+            background: url("/src/assets/images/states=On.svg") no-repeat center/contain;
           }
         }
         .btn_more {
           width: 1.5rem;
           height: 1.5rem;
           display: block;
-          background: url("../images/icon_more.svg") no-repeat center/contain;
+          background: url("/src/assets/images/icon_more.svg") no-repeat center/contain;
         }
       }
     }
@@ -1505,7 +1505,7 @@ header {
               width: 1rem;
               height: 1rem;
               display: block;
-              background: url("../images/icon_cake.svg") no-repeat
+              background: url("/src/assets/images/icon_cake.svg") no-repeat
                 center/contain;
             }
             > span {
@@ -1540,25 +1540,25 @@ header {
             width: 1rem;
             height: 1rem;
             display: block;
-            background: url("../images/icon_friend_add.svg") no-repeat
+            background: url("/src/assets/images/icon_friend_add.svg") no-repeat
               center/contain;
           }
 
           &.btn_friend_add {
             i {
-              background: url("../images/icon_friend_add.svg") no-repeat
+              background: url("/src/assets/images/icon_friend_add.svg") no-repeat
                 center/contain;
             }
           }
           &.btn_friend_del {
             i {
-              background: url("../images/icon_trash.svg") no-repeat
+              background: url("/src/assets/images/icon_trash.svg") no-repeat
                 center/contain;
             }
           }
           &.btn_friend_with {
             i {
-              background: url("../images/icon_friend+.svg") no-repeat
+              background: url("/src/assets/images/icon_friend+.svg") no-repeat
                 center/contain;
             }
           }
@@ -1588,14 +1588,14 @@ header {
       width: 20.5rem;
       height: 6.0625rem;
       display: block;
-      background: url("../images/visual_ballon.svg") no-repeat center/contain;
+      background: url("/src/assets/images/visual_ballon.svg") no-repeat center/contain;
       position: absolute;
       top: -50px;
       left: 50%;
       transform: translateX(-50%);
     }
     .cart {
-      background: url("../images/visual_cart.png") no-repeat center/contain;
+      background: url("/src/assets/images/visual_cart.png") no-repeat center/contain;
       width: 17.5625rem;
       height: 17.5625rem;
       display: block;
@@ -1688,7 +1688,7 @@ header {
           width: 2.25rem;
           height: 2.25rem;
           display: block;
-          background: url("../images/emoji_like.svg") no-repeat center/contain;
+          background: url("/src/assets/images/emoji_like.svg") no-repeat center/contain;
         }
 
         &.active {
@@ -1702,33 +1702,33 @@ header {
 
         &.like {
           i {
-            background: url("../images/emoji_like.svg") no-repeat center/contain;
+            background: url("/src/assets/images/emoji_like.svg") no-repeat center/contain;
           }
         }
         &.like2 {
           i {
-            background: url("../images/emoji_like2.svg") no-repeat
+            background: url("/src/assets/images/emoji_like2.svg") no-repeat
               center/contain;
           }
         }
         &.need {
           i {
-            background: url("../images/emoji_need.svg") no-repeat center/contain;
+            background: url("/src/assets/images/emoji_need.svg") no-repeat center/contain;
           }
         }
         &.soso {
           i {
-            background: url("../images/emoji_soso.svg") no-repeat center/contain;
+            background: url("/src/assets/images/emoji_soso.svg") no-repeat center/contain;
           }
         }
         &.bad {
           i {
-            background: url("../images/emoji_bad.svg") no-repeat center/contain;
+            background: url("/src/assets/images/emoji_bad.svg") no-repeat center/contain;
           }
         }
         &.had {
           i {
-            background: url("../images/emoji_had.svg") no-repeat center/contain;
+            background: url("/src/assets/images/emoji_had.svg") no-repeat center/contain;
           }
         }
       }
@@ -1805,43 +1805,43 @@ header {
               height: 1.5rem;
               margin-right: 0.2188rem;
               display: block;
-              background: url("../images/emoji_like.svg") no-repeat
+              background: url("/src/assets/images/emoji_like.svg") no-repeat
                 center/contain;
             }
 
             &.like {
               i {
-                background: url("../images/emoji_like.svg") no-repeat
+                background: url("/src/assets/images/emoji_like.svg") no-repeat
                   center/contain;
               }
             }
             &.like2 {
               i {
-                background: url("../images/emoji_like2.svg") no-repeat
+                background: url("/src/assets/images/emoji_like2.svg") no-repeat
                   center/contain;
               }
             }
             &.need {
               i {
-                background: url("../images/emoji_need.svg") no-repeat
+                background: url("/src/assets/images/emoji_need.svg") no-repeat
                   center/contain;
               }
             }
             &.soso {
               i {
-                background: url("../images/emoji_soso.svg") no-repeat
+                background: url("/src/assets/images/emoji_soso.svg") no-repeat
                   center/contain;
               }
             }
             &.bad {
               i {
-                background: url("../images/emoji_bad.svg") no-repeat
+                background: url("/src/assets/images/emoji_bad.svg") no-repeat
                   center/contain;
               }
             }
             &.had {
               i {
-                background: url("../images/emoji_had.svg") no-repeat
+                background: url("/src/assets/images/emoji_had.svg") no-repeat
                   center/contain;
               }
             }
@@ -1942,7 +1942,7 @@ header {
       width: 1.5rem;
       height: 1.5rem;
       display: block;
-      background: url("../images/close_white.svg") no-repeat center/contain;
+      background: url("/src/assets/images/close_white.svg") no-repeat center/contain;
       margin-left: auto;
     }
   }
@@ -1997,7 +1997,7 @@ header {
       width: 1.5rem;
       height: 1.5rem;
       display: block;
-      background: url("../images/icon_arrow_up.svg") no-repeat center/contain;
+      background: url("/src/assets/images/icon_arrow_up.svg") no-repeat center/contain;
       margin: 0 auto;
     }
   }
@@ -2120,13 +2120,13 @@ header {
       display: block;
 
       &.gift {
-        background: url("../images/icon_present.svg") no-repeat center/contain;
+        background: url("/src/assets/images/icon_present.svg") no-repeat center/contain;
       }
       &.zoomer {
-        background: url("../images/icon_search.svg") no-repeat center/contain;
+        background: url("/src/assets/images/icon_search.svg") no-repeat center/contain;
       }
       &.link {
-        background: url("../images/icon_link.svg") no-repeat center/contain;
+        background: url("/src/assets/images/icon_link.svg") no-repeat center/contain;
       }
     }
   }
@@ -2176,7 +2176,7 @@ input[type="number"] {
         width: 1.5rem;
         height: 1.5rem;
         display: block;
-        background: url("../images/close_modal.svg") no-repeat center/contain;
+        background: url("/src/assets/images/close_modal.svg") no-repeat center/contain;
       }
     }
     .edit_area {
@@ -2248,7 +2248,7 @@ input[type="number"] {
           width: 3rem;
           height: 3rem;
           display: block;
-          background: url(../images/kakao.svg) no-repeat center/contain;
+          background: url(/src/assets/images/kakao.svg) no-repeat center/contain;
         }
       }
       .link {
@@ -2265,7 +2265,7 @@ input[type="number"] {
           width: 3rem;
           height: 3rem;
           display: block;
-          background: url(../images/link.svg) no-repeat center/contain;
+          background: url(/src/assets/images/link.svg) no-repeat center/contain;
         }
         &::after {
           content: "";
@@ -2275,7 +2275,7 @@ input[type="number"] {
           top: 0.8125rem;
           left: 50%;
           transform: translateX(-50%);
-          background: url(../images/uil_link.svg) no-repeat center/contain;
+          background: url(/src/assets/images/uil_link.svg) no-repeat center/contain;
         }
       }
     }

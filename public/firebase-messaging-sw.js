@@ -14,10 +14,10 @@ messaging.onBackgroundMessage(function(payload) {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
   
   // Customize notification here
-  const notificationTitle = payload.notification?.title || 'New Message';
+  const notificationTitle = payload.notification?.title || 'ONE!T';
   const notificationOptions = {
-    body: payload.notification?.body || 'You have a new message',
-    icon: '/firebase-logo.png',
+    body: payload.notification?.body || 'ONE!T에서 새로운 메시지가 도착했습니다.',
+    icon: '/oneit.png',
     data: payload.data
   };
 
@@ -25,23 +25,23 @@ messaging.onBackgroundMessage(function(payload) {
 });
 
 // Optional: Handle notification click event
-self.addEventListener('notificationclick', function(event) {
-  console.log('[firebase-messaging-sw.js] Notification click Received.');
+// self.addEventListener('notificationclick', function(event) {
+//   console.log('[firebase-messaging-sw.js] Notification click Received.');
 
-  event.notification.close();
+//   event.notification.close();
 
-  // This looks to see if the current is already open and focuses if it is
-  event.waitUntil(clients.matchAll({
-    type: "window"
-  }).then(function(clientList) {
-    for (var i = 0; i < clientList.length; i++) {
-      var client = clientList[i];
-      if (client.url == '/' && 'focus' in client)
-        return client.focus();
-    }
-    if (clients.openWindow)
-      return clients.openWindow('/');
-  }));
-});
+//   // This looks to see if the current is already open and focuses if it is
+//   event.waitUntil(clients.matchAll({
+//     type: "window"
+//   }).then(function(clientList) {
+//     for (var i = 0; i < clientList.length; i++) {
+//       var client = clientList[i];
+//       if (client.url == '/' && 'focus' in client)
+//         return client.focus();
+//     }
+//     if (clients.openWindow)
+//       return clients.openWindow('/');
+//   }));
+// });
 
 

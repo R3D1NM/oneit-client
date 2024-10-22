@@ -8,26 +8,6 @@ import {Spinner} from '@/components/ui/spinner';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {useNavigate, useParams} from 'react-router-dom';
 import NotFound from '../NotFound';
-import {Button} from '@/components/ui/button';
-import {
-    ArrowUp,
-    ChevronLeft,
-    Edit,
-    LockKeyhole,
-    MailPlusIcon,
-    PlusSquare,
-    Send,
-    Settings,
-    Trash,
-} from 'lucide-react';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import {Participant, Product} from '@/lib/types';
 import BasketProductCard from './components/BasketProductCard';
 import {toast} from 'sonner';
@@ -37,17 +17,7 @@ import {useAtom, useAtomValue} from 'jotai';
 import BasketInfoCard from './components/BasketInfoCard';
 import KakaoShare from '@/components/common/KakaoShare';
 import {selctedProductCount, selectedProduct} from '@/atoms/basket';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
-import {Label} from '@/components/ui/label';
-import {Input} from '@/components/ui/input';
+
 import {useEffect, useState} from 'react';
 import {createInquiry} from '@/api/inquiry';
 import {SwipeableDrawer, Box, Typography} from '@mui/material';
@@ -88,6 +58,21 @@ const Basket = () => {
     const toggleDrawer = (newOpen: boolean) => () => {
         setOpen(newOpen);
     };
+
+    //redirect go back to basket page
+    useEffect(() => {
+        const handlePopState = (event: PopStateEvent) => {
+            event.preventDefault();
+            navigate(`/basket`);
+        };
+
+        window.history.pushState(null, '', window.location.href);
+        window.addEventListener('popstate', handlePopState);
+
+        return () => {
+            window.removeEventListener('popstate', handlePopState);
+        };
+    }, []);
 
     useEffect(() => {
         if (!Kakao.isInitialized()) {
