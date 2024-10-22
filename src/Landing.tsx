@@ -94,7 +94,7 @@ const Landing = () => {
                 </div>
 
                 <ul className="flex flex-row-reverse items-center justify-between">
-                    <li className="text-[0.9375rem] font-bold bg-gradient-to-br from-[#FF4BC1] to-[#FF4341] bg-clip-text text-transparent text-center after:content-[''] after:w-[4.375rem] after:h-[4.625rem] after:block after:bg-[url('@/assets/icon_backet.svg')] after:bg-no-repeat after:bg-center after:bg-contain after:mt-1.5">
+                    <li className="text-[0.9375rem] font-bold bg-gradient-to-br from-[#FF4BC1] to-[#FF4341] bg-clip-text text-transparent text-center after:content-[''] after:w-[4.375rem] after:h-[4.625rem] after:block after:bg-[url('@/assets/images/icon_basket.svg')] after:bg-no-repeat after:bg-center after:bg-contain after:mt-1.5">
                         선물 바구니
                     </li>
                     <li>
