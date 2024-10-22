@@ -38,10 +38,6 @@ const Landing = () => {
                     지금 바로 ONE!T에서 고민을 해결해보세요!
                 </div>
 
-                {/* <div className="text-[0.625rem] text-[#d1d1d1] text-center mt-3.5 after:content-[''] after:w-3 after:h-3 after:block after:bg-[url('@/assets/icon_scroll_down.svg')] after:bg-no-repeat after:bg-center after:bg-contain after:mt-1 after:mx-auto">
-                    Scroll Down
-                </div> */}
-
                 <div className="mt-5 before:content-[''] before:w-[7.5rem] before:h-[7.5rem] before:block before:bg-[url('@/assets/images/icon_giftbox.svg')] before:bg-no-repeat before:bg-center before:bg-contain before:mx-auto before:mb-2.5">
                     <p className="font-bold bg-gradient-to-br from-[#FF4BC1] to-[#FF4341] bg-clip-text text-transparent text-center text-lg">
                         선물을 원하는 당신을 위한,
