@@ -44,6 +44,9 @@ const handler400 = (code: string) => {
         case 'S3_FILE_EXTENSION_ERROR':
             toast.error('잘못된 이미지 요청입니다.');
             break;
+        case 'INVALID_FRIEND_REQUEST':
+            toast.error('이미 친구 요청을 보냈거나 받은 상대입니다.');
+            break;
         default:
             toast.error('입력값이 잘못되었습니다. 확인 후 다시 시도해주세요');
     }

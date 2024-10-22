@@ -54,10 +54,10 @@ export type User = {
 export type Basket = {
     idx: number;
     name: string;
-    description: string;
-    deadline: Date;
+    description?: string;
+    deadline: Date | string;
     createdUserIdx?: number;
-    accessStatus: string;
+    accessStatus?: string;
     imageUrl?: string;
     participants?: Participant[];
 };

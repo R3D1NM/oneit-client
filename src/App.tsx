@@ -5,7 +5,6 @@ import Header from './components/common/Header';
 import NotFound from './pages/NotFound';
 import AuthRouter from './components/common/AuthRouter';
 import Navbar from '@/components/common/Navbar';
-import AddToBasket from './pages/Basket/AddToBasket';
 import {Toaster} from './components/ui/sonner';
 import {useParams} from 'react-router-dom';
 import FakeLogin from './pages/FakeLogin';
@@ -66,10 +65,9 @@ const Friends = React.lazy(() => import('./pages/Mypage/Friends'));
 
 const BasketList = React.lazy(() => import('./pages/Basket/BasketList'));
 const Basket = React.lazy(() => import('./pages/Basket/Basket'));
+const BasketInfo = React.lazy(() => import('./pages/Basket/BasketInfo'));
 const BasketProduct = React.lazy(() => import('./pages/Basket/BasketProduct'));
 const CreateBasket = React.lazy(() => import('./pages/Basket/CreateBasket'));
-const EditBasket = React.lazy(() => import('./pages/Basket/EditBasket'));
-const SharedBasket = React.lazy(() => import('./pages/Basket/SharedBasket'));
 const BasketInvitation = React.lazy(
     () => import('./pages/Basket/BasketInvitation'),
 );
@@ -171,6 +169,17 @@ function App() {
                                             }
                                         />
                                         <Route
+                                            path="/basket/:basketID/info"
+                                            element={
+                                                <AuthRouterWithRedirect
+                                                    option={true}
+                                                    redirectTo="/login?redirect=/basket/:basketID/info"
+                                                >
+                                                    <BasketInfo />
+                                                </AuthRouterWithRedirect>
+                                            }
+                                        />
+                                        {/* <Route
                                             path="/basket/edit/:basketID"
                                             element={
                                                 <AuthRouterWithRedirect
@@ -191,7 +200,7 @@ function App() {
                                                     <AddToBasket />
                                                 </AuthRouterWithRedirect>
                                             }
-                                        />
+                                        /> */}
                                         <Route
                                             path="/basket/:basketID/product/:productID"
                                             element={

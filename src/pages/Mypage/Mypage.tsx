@@ -5,7 +5,7 @@ import {useAtomValue} from 'jotai';
 import {User2Icon, UserIcon} from 'lucide-react';
 import {useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
-import profileButtonSvg from '@/assets/profile_button.svg';
+import profileButtonSvg from '@/assets/images/profile_button.svg';
 import Header from '@/components/common/Header';
 
 const Mypage = () => {

@@ -1,5 +1,5 @@
 import {Button} from '@/components/ui/button';
-import boxImage from '@/assets/giftbox2.png';
+import boxImage from '@/assets/images/giftbox2.png';
 import {useNavigate, useParams} from 'react-router-dom';
 import {useQuery} from '@tanstack/react-query';
 import {getInquiry} from '@/api/inquiry';

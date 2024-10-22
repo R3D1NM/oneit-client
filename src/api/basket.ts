@@ -170,7 +170,7 @@ export const fetchBasketProducts = async (basketIdx: string) => {
 
 export const deleteBasketProduct = async (
     basketIdx: string,
-    productIdx: number,
+    productIdx: string,
 ) => {
     const payload = [Number(productIdx)];
     return axios

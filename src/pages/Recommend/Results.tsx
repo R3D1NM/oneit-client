@@ -12,7 +12,7 @@ import Header from '@/components/common/Header';
 import {useQuery} from '@tanstack/react-query';
 import {Product} from '@/lib/types';
 import React, {useCallback, useEffect, useState} from 'react';
-import giftIcon from '@/assets/tabler_gift.svg';
+import giftIcon from '@/assets/images/tabler_gift.svg';
 import {Button} from '@/components/common/Button';
 const NotFound = React.lazy(() => import('../NotFound'));
 import {
@@ -227,7 +227,7 @@ const Results = () => {
                                                     </a> */}
                                                 </div>
                                             </div>
-                                            <div className="btns flex gap-3 items-center w-full mt-[1.125rem]">
+                                            <div className=" flex gap-3 items-center w-full mt-[1.125rem]">
                                                 <Button
                                                     className="flex-1 justify-center items-center border-[#b0b0b0] text-[#b0b0b0]"
                                                     variant="border"

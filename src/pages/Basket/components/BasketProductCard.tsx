@@ -18,6 +18,10 @@ import {useMutation} from '@tanstack/react-query';
 import {useAtomValue, useSetAtom} from 'jotai';
 import {Heart, MinusSquare} from 'lucide-react';
 import {useEffect, useState} from 'react';
+import likeit from '@/assets/images/icon_likeit.svg';
+import mageHeart from '@/assets/images/mage_heart.svg';
+import mageHeartFill from '@/assets/images/mage_heart_fill.svg';
+import {useNavigate} from 'react-router-dom';
 
 interface ProductCardProps {
     product: Product;
@@ -31,6 +35,7 @@ interface ProductCardProps {
 const BasketProductCard = (props: ProductCardProps) => {
     const {product, basketID, shared, likeCount, voteStatus, purchaseStatus} =
         props;
+    const navigate = useNavigate();
     const [vote, setVote] = useState<'LIKE' | 'DISLIKE' | 'NONE'>(voteStatus);
     const [count, setCount] = useState(likeCount);
     const [isOpen, setIsOpen] = useState(false);
@@ -41,6 +46,11 @@ const BasketProductCard = (props: ProductCardProps) => {
     const deleteAPI = useMutation({
         mutationFn: () => deleteBasketProduct(basketID || '', product.idx),
         onSuccess: () => window.location.reload(),
+    });
+
+    const voteAPI = useMutation({
+        mutationFn: () =>
+            basketProductVote(basketID, product.idx.toString(), 'uuid', vote),
     });
 
     useEffect(() => {
@@ -75,101 +85,75 @@ const BasketProductCard = (props: ProductCardProps) => {
 
         // console.log(basketID, product.idx, 'uuid', newVote);
 
-        basketProductVote(basketID, product.idx.toString(), 'uuid', newVote)
-            .then((res) => {
-                console.log(res);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+        voteAPI.mutate();
     };
 
     return (
-        <div
-            key={product.idx}
-            className={cn(
-                'rounded-lg overflow-hidden shadow-sm flex flex-col',
-                isSelected && 'border-[1px] border-oneit-blue',
-                purchaseStatus === 'PURCHASED' && 'opacity-50',
-            )}
-        >
-            <div className="relative group">
-                <a
-                    href={`/basket/${basketID}/product/${product.idx}`}
-                    className="block"
-                >
-                    <AspectRatio ratio={1 / 1} className="justify-center flex">
-                        <div className="relative w-full h-full flex justify-center">
-                            <img
-                                src={
-                                    product.thumbnailUrl ||
-                                    'https://via.placeholder.com/400'
-                                }
-                                alt={product.name}
-                                className="relative z-[-10] h-full object-cover hover:opacity-80 transition-opacity"
-                            />
-                            <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-20 transition-opacity"></div>
-                        </div>
-                    </AspectRatio>
-                </a>
-                <div className="absolute top-0 right-0  transition-colors w-full justify-between flex">
-                    {!shared && (
-                        <Button
-                            variant={null}
-                            size="icon"
-                            onClick={(e) => setIsOpen(true)}
-                        >
-                            <MinusSquare
-                                stroke="#ffa0a0"
-                                className="group-hover:stroke-red-500 bg-white rounded-sm"
-                            />
-                        </Button>
-                    )}
-                    <Button
-                        variant={null}
-                        className="flex flex-col p-1 m-1 bg-white rounded-sm"
-                        onClick={handleVote}
-                    >
+        <div className={cn('box', purchaseStatus === 'PURCHASED' && 'solid')}>
+            <div className="image">
+                <div className="photo">
+                    <img
+                        onClick={() =>
+                            navigate(
+                                `/basket/${basketID}/product/${product.idx}`,
+                            )
+                        }
+                        src={product.thumbnailUrl}
+                        alt="제품 이미지"
+                    />
+                    <div className="heart" onClick={handleVote}>
                         {vote == 'LIKE' ? (
-                            <Heart className="text-oneit-pink group-hover:text-red-500 fill-oneit-pink group-hover:fill-red-500" />
+                            <i
+                                className="w-7 h-7 mr-0.5 bg-center bg-contain bg-no-repeat block"
+                                style={{
+                                    backgroundImage: `url(${mageHeartFill})`,
+                                }}
+                            ></i>
                         ) : (
-                            <Heart className="text-oneit-pink group-hover:text-red-500" />
+                            <i
+                                className="w-7 h-7 mr-0.5 bg-center bg-contain bg-no-repeat block"
+                                style={{
+                                    backgroundImage: `url(${mageHeart})`,
+                                }}
+                            ></i>
                         )}
-                        <span className="text-xs text-gray-500 text-center">
+                        <span
+                            className={cn(vote == 'LIKE' && 'text-[#FF5757]')}
+                        >
                             {count}
                         </span>
-                    </Button>
-                </div>
-                <AlertDialog open={isOpen}>
-                    <AlertDialogContent>
-                        <AlertDialogHeader>
-                            <AlertDialogTitle>
-                                바구니에서 해당 상품을 삭제할까요?
-                            </AlertDialogTitle>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                            <AlertDialogCancel
-                                onClick={(e) => setIsOpen(false)}
-                            >
-                                취소
-                            </AlertDialogCancel>
-                            <AlertDialogAction onClick={handleDelete}>
-                                삭제하기
-                            </AlertDialogAction>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialog>
-            </div>
-            <div className={cn('p-4 border-t-[0.5px]')} onClick={handleClick}>
-                <h3 className="max-w-full  text-sm font-semibold mb-2 overflow-hidden whitespace-nowrap  overflow-ellipsis">
-                    {product.name}
-                </h3>
-                <div className="flex items-center justify-end">
-                    <span className="font-bold text-lg">
-                        {product.originalPrice.toLocaleString()}원
-                    </span>
+                    </div>
+                    <div
+                        className="desc"
+                        onClick={() =>
+                            navigate(
+                                `/basket/${basketID}/product/${product.idx}`,
+                            )
+                        }
+                    >
+                        {/* todo: get inquiry result */}
+                        <i>
+                            <img src={likeit} alt="좋아요 아이콘" />
+                        </i>
+                        너무 맘에 들어
+                    </div>
                 </div>
             </div>
+            <a
+                onClick={() =>
+                    navigate(`/basket/${basketID}/product/${product.idx}`)
+                }
+            >
+                <p className="title text-overflow h-10 ">{product.name}</p>
+                <p className="price">
+                    ₩ {product.originalPrice.toLocaleString()}
+                </p>
+                <div className="tags">
+                    {product.keywords
+                        ?.splice(0, 3)
+                        .map((tag, idx) => <span key={idx}>#{tag}</span>)}
+                </div>
+            </a>
         </div>
     );
 };
