@@ -26,15 +26,7 @@ try {
     return self.registration.showNotification(notificationTitle, notificationOptions);
   });
 } catch (error) {
-  fetch('https://hooks.slack.com/services/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', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: JSON.stringify({ error: error.message }),
-  }).catch((error) => {
-    console.error(error)
-  })
+  console.log('error', error)
 }
 
 // Optional: Handle notification click event
