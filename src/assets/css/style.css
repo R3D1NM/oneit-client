@@ -1578,25 +1578,28 @@ header {
     padding-left: 1rem;
     padding-right: 1rem;
   }
+
   .visual_banner {
     width: 20.5rem;
-    height: 400px;
+    /* height: 400px; */
     display: block;
     margin: 95px auto 1.3125rem;
 
     position: relative;
+
     .ballon {
       width: 20.5rem;
       height: 6.0625rem;
       display: block;
-      background: url("/src/assets/images/visual_ballon.svg") no-repeat center/contain;
+      background: url("../images/visual_ballon.svg") no-repeat center/contain;
       position: absolute;
       top: -50px;
       left: 50%;
       transform: translateX(-50%);
     }
+
     .cart {
-      background: url("/src/assets/images/visual_cart.png") no-repeat center/contain;
+      background: url("../images/visual_cart.png") no-repeat center/contain;
       width: 17.5625rem;
       height: 17.5625rem;
       display: block;
@@ -1609,7 +1612,7 @@ header {
 
 .question2 {
   .big_title {
-    margin-top: 1.5rem;
+    margin-top: 1rem;
     font-weight: bold;
     color: #4f4f4f;
     line-height: 1.4rem;
@@ -1627,7 +1630,7 @@ header {
 
     .photo {
       border: 1px solid #e7e7e7;
-      height: 18.6875rem;
+      height: 16rem;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -1637,8 +1640,8 @@ header {
       margin-top: 1rem;
 
       > img {
-        width: 11.75rem;
-        height: 11.75rem;
+        width: 8rem;
+        height: 8rem;
         object-fit: contain;
       }
 
@@ -1771,7 +1774,7 @@ header {
           flex: 1 0 auto;
 
           > img {
-            width: 100%;
+            height: 100%;
             object-fit: contain;
           }
         }
@@ -1799,7 +1802,7 @@ header {
             justify-content: center;
             align-items: center;
             width: 100%;
-            opacity: 0.6;
+            /* opacity: 0.6; */
 
             i {
               width: 1.5rem;

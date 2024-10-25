@@ -97,6 +97,16 @@ const handler404 = (code: string) => {
                 },
             });
             break;
+        case 'ALREADY_USED_INQUIRY':
+            toast.error('이미 응답한 물어보기입니다.', {
+                action: {
+                    label: '메인으로',
+                    onClick: () => {
+                        window.location.href = '/';
+                    },
+                },
+            });
+            break;
         default:
             toast.error('요청을 찾을 수 없습니다.', {
                 action: {

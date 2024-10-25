@@ -1,6 +1,6 @@
 import {getInquiry} from '@/api/inquiry';
 import {AspectRatio} from '@/components/ui/aspect-ratio';
-import {Button} from '@/components/ui/button';
+import {Button} from '@/components/common/Button';
 import {
     Tooltip,
     TooltipContent,
@@ -10,13 +10,14 @@ import {
 import {Emoji, InquiryChoice as InquiryChoiceType} from '@/lib/types';
 import {useQuery} from '@tanstack/react-query';
 import {Smile} from 'lucide-react';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import EmojiList from '@/data/emoji.json';
 import {useAtom, useAtomValue, useSetAtom} from 'jotai';
 import {addChoice, choices} from '@/atoms/inquiry';
 import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover';
 import {cn} from '@/lib/utils';
+import Header from '@/components/common/Header';
 
 const InquiryChoice = () => {
     const {inquiryID} = useParams();
@@ -25,7 +26,9 @@ const InquiryChoice = () => {
     const [selectedEmoji, setSelectedEmoji] = useState(0);
     const choiceList = useAtomValue(choices);
     const selectEmoji = useSetAtom(addChoice);
-    const naigate = useNavigate();
+    const navigate = useNavigate();
+
+    // console.log(EmojiList);
 
     const inquiryAPI = useQuery({
         queryKey: ['inquiry', inquiryID],
@@ -49,8 +52,9 @@ const InquiryChoice = () => {
 
     const handleNext = () => {
         if (currentIdx === inquiryAPI.data.selectedProducts.length - 1) {
-            //todo: submit inquiry result to server
-            naigate(`/inquiry/${inquiryID}/result`);
+            // console.log(choiceList);
+
+            navigate(`/inquiry/${inquiryID}/result`);
         } else {
             setSelectedEmoji(0);
             setCurrentIdx((prev) => prev + 1);
@@ -58,68 +62,119 @@ const InquiryChoice = () => {
     };
     // console.log(inquiryAPI.data?.selectedProducts);
 
+    const handleGoBack = () => {
+        if (currentIdx == 0) {
+            navigate(`/inquiry/${inquiryID}`, {replace: true});
+        } else {
+            setCurrentIdx((prevStep) => prevStep - 1);
+            window.history.pushState(null, '', window.location.href);
+        }
+    };
+    useEffect(() => {
+        window.history.pushState({currentIdx}, '', window.location.href);
+    }, [currentIdx]);
+
+    useEffect(() => {
+        const handlePopState = (event: PopStateEvent) => {
+            event.preventDefault();
+            handleGoBack();
+        };
+
+        window.history.pushState(null, '', window.location.href);
+        window.addEventListener('popstate', handlePopState);
+
+        return () => {
+            window.removeEventListener('popstate', handlePopState);
+        };
+    }, [currentIdx]);
+
+    const EmojiButton = ({emoji}: {emoji: Emoji}) => {
+        return (
+            <button
+                className={cn(
+                    `${emoji.name}`,
+                    selectedEmoji === emoji.idx && 'active',
+                )}
+                onClick={() => handleEmoji(emoji)}
+            >
+                <i></i>
+                <p>{emoji.content}</p>
+            </button>
+        );
+    };
+
     return (
-        <div className="flex flex-col content-center w-full gap-2 justify-center items-center">
-            <div className="rounded-lg overflow-hidden shadow-sm border-[1px] w-full p-3">
-                <div className="flex flex-col justify-center">
-                    <AspectRatio ratio={1 / 1} className="justify-center flex">
-                        <div className="relative w-full h-full flex justify-center">
-                            <img
-                                src={
-                                    inquiryAPI.data?.selectedProducts[
-                                        currentIdx
-                                    ].thumbnailUrl ||
-                                    'https://via.placeholder.com/400'
-                                }
-                                alt={
+        <>
+            <Header btn_back variant="back" profile />
+            <div className="question2">
+                <div className="big_title">
+                    친구들이 준비한 선물 리스트 중<br />
+                    <span>
+                        {inquiryAPI?.data?.name ? (
+                            <>
+                                <span>서연</span>님 마음에 드는 선물을
+                                선택해주세요
+                            </>
+                        ) : (
+                            '마음에 드는 선물을 선택해주세요'
+                        )}
+                    </span>
+                </div>
+
+                <div className="select_area">
+                    <div className="photo">
+                        <img
+                            src={
+                                inquiryAPI.data?.selectedProducts[currentIdx]
+                                    .thumbnailUrl ||
+                                'https://via.placeholder.com/400'
+                            }
+                            alt="상품 대표 이미지"
+                        />
+                        <div className="desc">
+                            <div className="title text-overflow-one">
+                                {
                                     inquiryAPI.data?.selectedProducts[
                                         currentIdx
                                     ].name
                                 }
-                                className="relative z-[-10] h-full object-cover hover:opacity-80 transition-opacity"
-                            />
-                            <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-20 transition-opacity"></div>
+                            </div>
+                            <div className="text text-overflow">
+                                {
+                                    inquiryAPI.data?.selectedProducts[
+                                        currentIdx
+                                    ]?.description
+                                }
+                            </div>
                         </div>
-                    </AspectRatio>
-                    <h3 className="max-w-full text-lg font-semibold m-2 overflow-hidden whitespace-nowrap overflow-ellipsis">
-                        {inquiryAPI.data?.selectedProducts[currentIdx].name}
-                    </h3>
-                </div>
-                <div className="w-full flex justify-between px-2">
-                    {EmojiList.map((emoji, idx) => (
-                        <Popover key={idx}>
-                            <PopoverTrigger asChild>
-                                <div
-                                    className="w-5"
-                                    onClick={() => handleEmoji(emoji)}
-                                >
-                                    {/* todo: match with emoji image */}
-                                    {/* <img src={dummyEmoji.emojiImageURL} /> */}
-                                    <Smile
-                                        className={cn(
-                                            ' hover:text-oneit-pink',
-                                            selectedEmoji === emoji.idx
-                                                ? 'text-oneit-pink'
-                                                : 'text-oneit-gray',
-                                        )}
-                                    />
-                                </div>
-                            </PopoverTrigger>
-                            <PopoverContent side="top" className="w-fit">
-                                <p className="text-sm">{emoji.content}</p>
-                            </PopoverContent>
-                        </Popover>
-                    ))}
+                    </div>
+
+                    <div className="emoji_area">
+                        <div className="area_one">
+                            {EmojiList?.slice(0, 3)?.map((emoji, idx) => (
+                                <EmojiButton emoji={emoji} key={idx} />
+                            ))}
+                        </div>
+                        <div className="area_two">
+                            {EmojiList?.slice(3, 6)?.map((emoji, idx) => (
+                                <EmojiButton emoji={emoji} key={idx} />
+                            ))}
+                        </div>
+                    </div>
+                    <Button
+                        className="w-full mt-2"
+                        onClick={handleNext}
+                        variant={isSelected ? 'primary' : 'disabled'}
+                        disabled={!isSelected}
+                    >
+                        {currentIdx ===
+                        inquiryAPI.data?.selectedProducts.length - 1
+                            ? '결과 확인하기'
+                            : '다음 상품 보기'}
+                    </Button>
                 </div>
             </div>
-            {isSelected && (
-                <Button className="w-[50%]" onClick={handleNext}>
-                    {currentIdx === inquiryAPI.data?.selectedProducts.length - 1
-                        ? '결과 확인하기'
-                        : '다음 상품 보기'}
-                </Button>
-            )}
-        </div>
+        </>
     );
 };
 

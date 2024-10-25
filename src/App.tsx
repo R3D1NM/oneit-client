@@ -202,12 +202,6 @@ function App() {
                                             path="/basket/:basketID/invite/:inviteID"
                                             element={<BasketInvitation />}
                                         />
-                                        {/* 
-                                        <Route
-                                            path="/basket/share/:basketID"
-                                            element={<SharedBasket />}
-                                        />
-                                        
                                         <Route
                                             path="/inquiry/:inquiryID"
                                             element={<Inquiry />}
@@ -223,7 +217,13 @@ function App() {
                                         <Route
                                             path="/inquiry/after"
                                             element={<AfterInquiry />}
-                                        /> */}
+                                        />
+                                        {/* 
+                                        <Route
+                                            path="/basket/share/:basketID"
+                                            element={<SharedBasket />}
+                                        />
+                                        
                                         {/* <Route
                                             path="/about"
                                             element={<About />}

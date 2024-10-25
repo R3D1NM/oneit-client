@@ -1,8 +1,9 @@
-import {Button} from '@/components/ui/button';
 import boxImage from '@/assets/images/giftbox2.png';
 import {useNavigate, useParams} from 'react-router-dom';
 import {useQuery} from '@tanstack/react-query';
 import {getInquiry} from '@/api/inquiry';
+import Header from '@/components/common/Header';
+import {Button} from '@/components/common/Button';
 
 const Inquiry = () => {
     const {inquiryID} = useParams();
@@ -16,24 +17,44 @@ const Inquiry = () => {
     const handleStart = () => {
         navigate(`/inquiry/${inquiryID}/choice`);
     };
-    return (
-        <div className="flex flex-col content-center w-full gap-2 justify-center">
-            <div className="rounded-lg overflow-hidden shadow-sm border-[1px] w-full p-3">
-                <div className="flex flex-col gap-2 w-full justify-center">
-                    <h2 className="flex text-3xl">
-                        {inquiryAPI.data?.target
-                            ? inquiryAPI.data.target + '님을 위한'
-                            : '친구들이 고른'}{' '}
-                        <br /> 선물이 준비되었어요!
-                    </h2>
-                    <img src={boxImage} className="w-full p-3" />
 
-                    <p className="text-center">어떤 선물이 있는지 살펴보고</p>
-                    <p className="text-center">이모지로 반응을 남겨주세요</p>
-                    <Button onClick={handleStart}>시작하기</Button>
+    return (
+        <>
+            <Header btn_back variant="logo" profile />
+            <div className="question1">
+                <div className="big_title">
+                    {inquiryAPI.data?.name ? (
+                        <>
+                            <span>{inquiryAPI.data?.name}</span>님을 위한 <br />
+                        </>
+                    ) : (
+                        <>
+                            <span>친구들이 만든</span>
+                            <br />
+                        </>
+                    )}
+                    선물바구니가 도착했어요!
+                </div>
+                <div className="visual_banner">
+                    <div className="ballon"></div>
+                    <div className="cart"></div>
                 </div>
             </div>
-        </div>
+            <div className="bottom_btn">
+                <p className="text">내 취향을 저격한선물은?</p>
+                {inquiryAPI?.error ? (
+                    <>
+                        <Button className="w-full" variant="disabled" disabled>
+                            이미 응답 완료했어요
+                        </Button>
+                    </>
+                ) : (
+                    <button className="btn_pink2" onClick={handleStart}>
+                        선물 바구니 확인하러 가기
+                    </button>
+                )}
+            </div>
+        </>
     );
 };
 
