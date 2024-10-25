@@ -33,6 +33,8 @@ import {
     AlertDialogHeader,
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import {toast} from 'sonner';
+import {cn} from '@/lib/utils';
 
 const ParticipantThumbnail = ({participant}: {participant: Participant}) => {
     const user = useAtomValue(authAtom);
@@ -57,6 +59,7 @@ const ParticipantThumbnail = ({participant}: {participant: Participant}) => {
                     birthDate: new Date(),
                 },
             ]);
+            toast.success('친구 요청을 보냈습니다.');
         },
     });
 
@@ -357,7 +360,7 @@ const BasketInfo = () => {
             <Header variant="back" btn_back profile />
             <div className="cardInfo">
                 <div className="list_rounding">
-                    <div className="writing">
+                    <div className="writing gap-2">
                         <div>
                             <img
                                 src={basketInfoAPI?.data?.imageUrl || Logo}
@@ -376,7 +379,18 @@ const BasketInfo = () => {
                                     {-dDay}일 지남
                                 </div>
                             )}
-                            <div className="title min-w-44">
+                            <div
+                                className={cn(
+                                    'title text-overflow-one',
+                                    basketInfoAPI.data?.participants.some(
+                                        (parti: Participant) =>
+                                            parti.userRole == 'MANAGER' &&
+                                            parti.userIdx == user?.idx,
+                                    )
+                                        ? 'min-w-44'
+                                        : 'min-w-60',
+                                )}
+                            >
                                 {basketInfoAPI?.data?.name}
                             </div>
                         </div>
@@ -491,7 +505,9 @@ const BasketInfo = () => {
                         </div>
                         <button
                             className="btn_text"
-                            onClick={() => navigate('/friends')}
+                            onClick={() =>
+                                navigate(`/basket/${basketID}/invite`)
+                            }
                         >
                             친구목록에서 초대하기
                         </button>

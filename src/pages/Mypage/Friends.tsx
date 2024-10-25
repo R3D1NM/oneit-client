@@ -16,6 +16,13 @@ import {authAtom} from '@/api/auth';
 import RequestedFriendCard from './Components/RequestToMe';
 import RequestToMe from './Components/RequestToMe';
 import RequestFromMe from './Components/RequestFromMe';
+import Header from '@/components/common/Header';
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from '@/components/ui/accordion';
 const {Kakao} = window;
 interface SelectedUser {
     uuid: string;
@@ -81,56 +88,75 @@ const Friends = () => {
     };
 
     return (
-        <div className="flex w-full flex-col gap-2">
-            <div className="flex flex-col w-full items-center border-[1px] mt-3 p-2 rounded-md">
-                <div className="flex flex-col w-full py-1">
-                    <h3>전체 친구 수: {friendListAPI?.data?.length || 0}</h3>
-                    <div className="flex gap-2">
-                        <span className="text-oneit-gray text-sm">
-                            나에게 온 친구 요청:{' '}
-                            {friendRequestToMeListAPI?.data?.length || 0}
-                        </span>
-                        <span className="text-oneit-gray text-sm">
-                            대기 중인 내 요청:{' '}
-                            {friendRequestFromMeListAPI?.data?.length || 0}
-                        </span>
-                    </div>
-                </div>
-                {/* <Button onClick={kakaoFriendList}>친구 찾아보기</Button> */}
-                <Button className="w-full" onClick={inviteFriends}>
-                    카카오톡 친구 초대하기
-                </Button>
-            </div>
-            {friendRequestToMeListAPI?.data?.length !== 0 && (
-                <div className="gap-2 flex w-full border-[1px] rounded-md p-2 flex-col items-center">
-                    <h3 className="">나에게 온 친구 요청</h3>
-                    {friendRequestToMeListAPI.data?.map(
-                        (friend: RequestedFriend, idx: number) => (
-                            <RequestToMe friend={friend} key={idx} />
-                        ),
-                    )}
-                </div>
-            )}
-            {friendRequestFromMeListAPI?.data?.length !== 0 && (
-                <div className="gap-2 flex w-full border-[1px] rounded-md p-2 flex-col items-center">
-                    <h3 className="">대기 중인 내 요청</h3>
-                    {friendRequestFromMeListAPI.data?.map(
-                        (friend: RequestedFriend, idx: number) => (
-                            <RequestFromMe friend={friend} key={idx} />
-                        ),
-                    )}
-                </div>
-            )}
-
-            {friendListAPI?.data?.length !== 0 && (
-                <div className="gap-2 flex w-full border-[1px] rounded-md p-2 flex-col items-center">
-                    <h3 className="">친구 목록</h3>
-                    {friendListAPI.data?.map((friend: Friend, idx: number) => (
-                        <FriendCard friend={friend} key={idx} />
+        <>
+            <Header
+                btn_back
+                variant="back"
+                profile
+                title={`친구 목록 ${friendListAPI?.data?.length || 0}`}
+            />
+            <div className="friendList">
+                <ul>
+                    <h3 className=""></h3>
+                </ul>
+                <ul className="scrollbar-hide">
+                    {friendListAPI?.data?.map((friend: Friend, idx: number) => (
+                        <li key={friend.idx}>
+                            <FriendCard friend={friend} />
+                        </li>
                     ))}
-                </div>
-            )}
-        </div>
+                </ul>
+                <Accordion
+                    type="single"
+                    collapsible
+                    className="absolute bottom-0 right-0 w-full"
+                >
+                    <AccordionItem value="item-1">
+                        <AccordionTrigger className="px-4 border-t-[1px]">
+                            나에게 온 친구 요청{' '}
+                            {friendRequestToMeListAPI?.data?.length || 0}
+                        </AccordionTrigger>
+                        <AccordionContent className="friendList scrollbar-hide">
+                            <ul>
+                                {friendRequestToMeListAPI.data?.map(
+                                    (friend: RequestedFriend, idx: number) => (
+                                        <li
+                                            key={friend.requestIdx}
+                                            className="border-b-0"
+                                        >
+                                            <RequestToMe
+                                                friend={friend}
+                                                key={idx}
+                                            />
+                                        </li>
+                                    ),
+                                )}
+                            </ul>
+                        </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="item-2">
+                        <AccordionTrigger className="px-4">
+                            대기 중인 내 요청{' '}
+                            {friendRequestFromMeListAPI?.data?.length || 0}
+                        </AccordionTrigger>
+                        <AccordionContent className="friendList scrollbar-hide">
+                            <ul>
+                                {friendRequestFromMeListAPI.data?.map(
+                                    (friend: RequestedFriend, idx: number) => (
+                                        <li key={friend.requestIdx}>
+                                            <RequestFromMe
+                                                friend={friend}
+                                                key={idx}
+                                            />
+                                        </li>
+                                    ),
+                                )}
+                            </ul>
+                        </AccordionContent>
+                    </AccordionItem>
+                </Accordion>
+            </div>
+        </>
     );
 };
 

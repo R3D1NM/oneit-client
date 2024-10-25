@@ -1,28 +1,41 @@
 importScripts('https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js')
 importScripts('https://www.gstatic.com/firebasejs/8.10.0/firebase-messaging.js')
 
-const firebaseApp = firebase.initializeApp({
-  apiKey: 'AIzaSyDq7NJnUTjJYrpwWgYk0y1pKX_QaFqBZ6M',
-  projectId: 'oneit-gpt',
-  messagingSenderId: '937146027892',
-  appId: '1:937146027892:web:130b51a23773b896d22621',
-})
-const messaging = firebase.messaging()
-
-// Background message handler
-messaging.onBackgroundMessage(function(payload) {
-  console.log('[firebase-messaging-sw.js] Received background message ', payload);
+try {
   
-  // Customize notification here
-  const notificationTitle = payload.notification?.title || 'ONE!T';
-  const notificationOptions = {
-    body: payload.notification?.body || 'ONE!T에서 새로운 메시지가 도착했습니다.',
-    icon: '/oneit.png',
-    data: payload.data
-  };
-
-  return self.registration.showNotification(notificationTitle, notificationOptions);
-});
+  const firebaseApp = firebase.initializeApp({
+    apiKey: 'AIzaSyDq7NJnUTjJYrpwWgYk0y1pKX_QaFqBZ6M',
+    projectId: 'oneit-gpt',
+    messagingSenderId: '937146027892',
+    appId: '1:937146027892:web:130b51a23773b896d22621',
+  })
+  const messaging = firebase.messaging()
+  
+  // Background message handler
+  messaging.onBackgroundMessage(function(payload) {
+    console.log('[firebase-messaging-sw.js] Received background message ', payload);
+    
+    // Customize notification here
+    const notificationTitle = payload.notification?.title || 'ONE!T';
+    const notificationOptions = {
+      body: payload.notification?.body || 'ONE!T에서 새로운 메시지가 도착했습니다.',
+      icon: '/oneit.png',
+      data: payload.data
+    };
+  
+    return self.registration.showNotification(notificationTitle, notificationOptions);
+  });
+} catch (error) {
+  fetch('https://hooks.slack.com/services/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', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: JSON.stringify({ error: error.message }),
+  }).catch((error) => {
+    console.error(error)
+  })
+}
 
 // Optional: Handle notification click event
 // self.addEventListener('notificationclick', function(event) {

@@ -1,12 +1,23 @@
 import {acceptFriend, rejectFriend} from '@/api/friend';
-import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar';
-import {Button} from '@/components/ui/button';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import {Friend} from '@/lib/types';
-import {useMutation} from '@tanstack/react-query';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {UserCircle2} from 'lucide-react';
 import React, {useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {toast} from 'sonner';
+import logo from '@/assets/images/oneit.png';
+import {Button} from '@/components/common/Button';
 interface RequestedFriend {
     requestIdx: number;
     fromUser: Friend;
@@ -16,7 +27,9 @@ interface RequestedFriend {
 const RequestToMe = (props: {friend: RequestedFriend}) => {
     const {friend} = props;
     const [isDone, setisDone] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
     const requestAcceptAPI = useMutation({
         mutationFn: () =>
@@ -38,44 +51,99 @@ const RequestToMe = (props: {friend: RequestedFriend}) => {
         requestAcceptAPI.mutate();
         setisDone(true);
         toast.success('친구 요청을 수락했습니다.');
-        window.location.reload();
+        queryClient.setQueryData(
+            ['friendRequestListToMe'],
+            (old: RequestedFriend[]) =>
+                old.filter((item) => item.fromUser.idx !== friend.fromUser.idx),
+        );
+        queryClient.setQueryData(['friendList'], (old: Friend[]) => [
+            ...old,
+            friend.fromUser,
+        ]);
     };
 
     const handleDeny = async () => {
         rejectFriendAPI.mutate();
         setisDone(true);
         toast.success('친구 요청을 거절했습니다.');
-        window.location.reload();
+        queryClient.setQueryData(
+            ['friendRequestListToMe'],
+            (old: RequestedFriend[]) =>
+                old.filter((item) => item.fromUser.idx !== friend.fromUser.idx),
+        );
     };
 
     return (
-        <div className="py-3 w-full border-t-[1px] flex gap-1 justify-between items-center">
-            <div className="flex gap-2 items-center">
-                <Avatar className="w-14 h-14">
-                    <AvatarImage src={friend.fromUser.profileImg} />
-                    <AvatarFallback>
-                        <UserCircle2 />
-                    </AvatarFallback>
-                </Avatar>
-                <div className="flex flex-col">
-                    <h5>{friend.fromUser.nickName}</h5>
-                    {/* <span className="text-sm text-oneit-gray">
-                        요청일: {friend.requestDate.toLocaleDateString()}
-                    </span> */}
+        <>
+            <div className="picture">
+                <img
+                    src={friend.fromUser.profileImg || logo}
+                    alt="프로필 이미지"
+                    className="w-ful h-full object-cover rounded-full"
+                />
+            </div>
+            <div className="info">
+                <div className="name">{friend?.fromUser?.nickName}</div>
+                <div className="birth">
+                    <i></i>
+                    <span>생일</span>
+                    <span>{friend?.fromUser?.birthDate?.toString()}</span>
                 </div>
             </div>
-            {isDone == false && (
-                <div className="flex gap-2">
-                    <Button
-                        className="bg-oneit-blue hover:bg-oneit-blue/90"
-                        onClick={handleAccept}
-                    >
-                        수락하기
-                    </Button>
-                    <Button onClick={handleDeny}>거절하기</Button>
-                </div>
-            )}
-        </div>
+            <div className="flex gap-2 ml-16 w-16">
+                <Button className="w-full h-8" onClick={() => handleAccept()}>
+                    수락
+                </Button>
+            </div>
+            <div className="icons">
+                {/* <button className="btn_timer active"></button> */}
+                <button
+                    className="btn_more"
+                    onClick={() => {
+                        setIsOpen(!isOpen);
+                    }}
+                ></button>
+                {isOpen && (
+                    <div className="overlay">
+                        <button
+                            className="profile"
+                            onClick={() =>
+                                navigate('/user/' + friend.fromUser.idx)
+                            }
+                        >
+                            <i></i>프로필보기
+                        </button>
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <button className="trash">
+                                    <i></i>거절하기
+                                </button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogTitle className="hidden" />
+                                <AlertDialogHeader>
+                                    친구 신청을 거절할까요?
+                                </AlertDialogHeader>
+                                <AlertDialogDescription className="text-center">
+                                    나중에 다시 친구 요청을 보낼 수 있어요.
+                                </AlertDialogDescription>
+                                <AlertDialogFooter className="flex w-full flex-row gap-2 items-center">
+                                    <AlertDialogCancel className="w-full mt-0">
+                                        취소
+                                    </AlertDialogCancel>
+                                    <AlertDialogAction
+                                        onClick={handleDeny}
+                                        className="w-full bg-[#ff4bc1] text-white hover:bg-[#ff4bc1]/90"
+                                    >
+                                        거절
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                    </div>
+                )}
+            </div>
+        </>
     );
 };
 

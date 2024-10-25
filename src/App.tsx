@@ -61,6 +61,7 @@ const Login = React.lazy(() => import('./pages/Login/Login'));
 const Auth = React.lazy(() => import('./pages/Login/Auth'));
 const SignUp = React.lazy(() => import('./pages/Login/SignUp'));
 const Mypage = React.lazy(() => import('./pages/Mypage/Mypage'));
+const EditInfo = React.lazy(() => import('./pages/Mypage/EditInfo'));
 const Friends = React.lazy(() => import('./pages/Mypage/Friends'));
 
 const BasketList = React.lazy(() => import('./pages/Basket/BasketList'));
@@ -68,6 +69,9 @@ const Basket = React.lazy(() => import('./pages/Basket/Basket'));
 const BasketInfo = React.lazy(() => import('./pages/Basket/BasketInfo'));
 const BasketProduct = React.lazy(() => import('./pages/Basket/BasketProduct'));
 const CreateBasket = React.lazy(() => import('./pages/Basket/CreateBasket'));
+const BasketAddFriend = React.lazy(
+    () => import('./pages/Basket/BasketAddFriend'),
+);
 const BasketInvitation = React.lazy(
     () => import('./pages/Basket/BasketInvitation'),
 );
@@ -179,28 +183,6 @@ function App() {
                                                 </AuthRouterWithRedirect>
                                             }
                                         />
-                                        {/* <Route
-                                            path="/basket/edit/:basketID"
-                                            element={
-                                                <AuthRouterWithRedirect
-                                                    option={true}
-                                                    redirectTo="/login?redirect=/basket/edit/:basketID"
-                                                >
-                                                    <EditBasket />
-                                                </AuthRouterWithRedirect>
-                                            }
-                                        />
-                                        <Route
-                                            path="/basket/add/:basketID"
-                                            element={
-                                                <AuthRouterWithRedirect
-                                                    option={true}
-                                                    redirectTo="/login?redirect=/basket/add/:basketID"
-                                                >
-                                                    <AddToBasket />
-                                                </AuthRouterWithRedirect>
-                                            }
-                                        /> */}
                                         <Route
                                             path="/basket/:basketID/product/:productID"
                                             element={
@@ -212,15 +194,20 @@ function App() {
                                                 </AuthRouterWithRedirect>
                                             }
                                         />
-                                        {/* 
                                         <Route
-                                            path="/basket/share/:basketID"
-                                            element={<SharedBasket />}
+                                            path="/basket/:basketID/invite"
+                                            element={<BasketAddFriend />}
                                         />
                                         <Route
                                             path="/basket/:basketID/invite/:inviteID"
                                             element={<BasketInvitation />}
                                         />
+                                        {/* 
+                                        <Route
+                                            path="/basket/share/:basketID"
+                                            element={<SharedBasket />}
+                                        />
+                                        
                                         <Route
                                             path="/inquiry/:inquiryID"
                                             element={<Inquiry />}
@@ -285,7 +272,18 @@ function App() {
                                                 </AuthRouter>
                                             }
                                         />
-                                        {/* <Route
+                                        <Route
+                                            path="/mypage/edit"
+                                            element={
+                                                <AuthRouter
+                                                    option={true}
+                                                    redirectTo="/login?redirect=/mypage/edit"
+                                                >
+                                                    <EditInfo />
+                                                </AuthRouter>
+                                            }
+                                        />
+                                        <Route
                                             path="/friends"
                                             element={
                                                 <AuthRouter
@@ -295,7 +293,7 @@ function App() {
                                                     <Friends />
                                                 </AuthRouter>
                                             }
-                                        /> */}
+                                        />
                                         {import.meta.env.DEV && (
                                             <Route
                                                 path="/fakeLogin"

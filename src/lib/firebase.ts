@@ -3,7 +3,7 @@ import {initializeApp} from 'firebase/app';
 import {getAnalytics} from 'firebase/analytics';
 import {getDatabase} from 'firebase/database';
 import {getMessaging, getToken, onMessage} from 'firebase/messaging';
-import {sendInfoToSlack} from './slack';
+import {sendErrorToSlack, sendInfoToSlack} from './slack';
 import {toast} from 'sonner';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -66,15 +66,22 @@ export const firebaseMessagingConfig = async (): Promise<string> => {
     }
 };
 
-if (messaging) {
-    onMessage(messaging, (payload) => {
-        console.log(payload.notification?.title);
-        console.log(payload.notification?.body);
-        toast(payload.notification?.title, {
-            description: payload.notification?.body,
-            duration: 5000,
-            position: 'top-center',
+try {
+    if (messaging) {
+        onMessage(messaging, (payload) => {
+            console.log(payload.notification?.title);
+            console.log(payload.notification?.body);
+            toast(payload.notification?.title, {
+                description: payload.notification?.body,
+                duration: 5000,
+                position: 'top-center',
+            });
         });
+    }
+} catch (error) {
+    sendErrorToSlack({
+        message: `[FCM] foreground message error: ${error}`,
+        errorPoint: 'FCM',
     });
 }
 const analytics = getAnalytics(app);

@@ -9,7 +9,7 @@ import banner from '@/assets/images/banner.png';
 
 import banner1 from '@/assets/images/banner_1.gif';
 import banner2 from '@/assets/images/banner_2.gif';
-import banner3 from '@/assets/images/banner_3.svg';
+import banner3 from '@/assets/images/banner_3.gif';
 
 const Main = () => {
     const isLogin = useAtomValue(isLoginAtom);

@@ -1219,8 +1219,8 @@ header {
 
         li {
           width: 5rem;
-          height: 5rem;
-          background-color: #d9d9d9;
+          height: 6.75rem;
+          background-color: #fff;
           border-radius: 1rem;
           overflow: hidden;
           flex: 1 0 auto;
@@ -1358,7 +1358,7 @@ header {
               font-weight: 500;
               margin-right: 0.25rem;
             }
-            &:nth-child(2) {
+            &:nth-child(3) {
               color: #888;
             }
           }

@@ -7,8 +7,16 @@ import {atomWithQuery} from 'jotai-tanstack-query';
 import {isLoginAtom} from './auth';
 
 export const sendFCMToken = async (token: string) => {
+    const userAgent = window.navigator.userAgent;
+    console.log(userAgent);
+
+    const data = {
+        deviceToken: token,
+        deviceType: 'string',
+    };
+
     return axios
-        .get(`/v2/notification/token?token=${token}`)
+        .post(`/v2/notification/token`, data)
         .then((res) => {
             return Promise.resolve(res.data);
         })
