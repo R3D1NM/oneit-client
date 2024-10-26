@@ -53,8 +53,12 @@ const Auth = () => {
                             const isIOS = /iPad|iPhone|iPod/.test(
                                 navigator.userAgent,
                             );
+                            const isInAppBrowser =
+                                /FBAN|FBAV|Instagram|Daum|KAKAOTALK|NAVER/.test(
+                                    navigator.userAgent,
+                                );
                             if (isSignedUp) {
-                                if (isIOS) {
+                                if (isIOS || isInAppBrowser) {
                                     const redirect =
                                         localStorage.getItem('redirect');
                                     console.log(

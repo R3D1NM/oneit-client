@@ -14,6 +14,10 @@ import {toast} from 'sonner';
 //Check if the user agent is using IOS
 let messaging: Messaging;
 const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+//filter out in-app browsers
+const isInAppBrowser = /FBAN|FBAV|Instagram|Daum|KAKAOTALK|NAVER/.test(
+    navigator.userAgent,
+);
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
     authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -27,7 +31,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-if (!isIOS) {
+if (!isIOS && !isInAppBrowser) {
     messaging = getMessaging(app);
     try {
         if (messaging) {
@@ -50,8 +54,7 @@ if (!isIOS) {
 }
 
 export const firebaseMessagingConfig = async (): Promise<string> => {
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    if (isIOS) {
+    if (isIOS || isInAppBrowser) {
         return Promise.resolve('ios');
     }
     // Check if the browser supports notifications
