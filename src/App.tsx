@@ -325,6 +325,13 @@ function App() {
                 </div>
                 <footer className="bg-gray-100 p-4">
                     <div className="text-sm text-gray-500">
+                        <button
+                            onClick={() => {
+                                throw new Error('에러 발생');
+                            }}
+                        >
+                            에러
+                        </button>
                         <strong>워닛(ONEIT)</strong>
                         <br />
                         <strong>대표자</strong> 정세연 |{' '}
