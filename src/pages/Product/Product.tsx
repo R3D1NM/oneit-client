@@ -1,26 +1,15 @@
 import {useNavigate, useParams} from 'react-router-dom';
 import {useQuery} from '@tanstack/react-query';
-import Gift from '@/assets/giftbox.png';
-import {Button} from '@/components/ui/button';
-import KakaoShare from '@/components/common/KakaoShare';
-import {CalendarCheck, ChevronLeft, Heart, MoveRight} from 'lucide-react';
 import {Spinner} from '@/components/ui/spinner';
 import NotFound from '../NotFound';
-import {Separator} from '@/components/ui/separator';
 import {fetchProduct} from '@/api/product';
-import {
-    Drawer,
-    DrawerClose,
-    DrawerContent,
-    DrawerFooter,
-    DrawerTrigger,
-} from '@/components/ui/drawer';
 import {addToBasket, fetchBasketList} from '@/api/basket';
 import {Basket} from '@/lib/types';
 import {useAtom, useAtomValue} from 'jotai';
-import {ScrollArea} from '@/components/ui/scroll-area';
 import {cn} from '@/lib/utils';
 import {isLoginAtom} from '@/api/auth';
+import Header from '@/components/common/Header';
+import logo from '@/assets/images/oneit.png';
 
 const Product = () => {
     const {productID} = useParams();
@@ -56,192 +45,110 @@ const Product = () => {
     if (productAPI.isError) return <NotFound />;
 
     return (
-        <div className={cn('w-full', loggedIn ? 'pb-20' : 'pb-16')}>
-            <div className="flex py-3 flex-wrap items-center justify-between">
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className=""
-                    onClick={handleGoBack}
-                >
-                    <ChevronLeft className="" />
-                </Button>
-                {/* <p>{data?.brandName}</p> */}
-                <div className="flex">
-                    <Button variant="ghost" size="icon">
-                        <Heart />
-                    </Button>
-                    <KakaoShare
-                        title="ONE!T - 선물 추천"
-                        description={productAPI.data?.name || 'ONE!T'}
-                        url={`/product/${productAPI.data?.idx}`}
-                        image={
-                            productAPI.data?.thumbnailUrl ||
-                            'https://www.oneit.gift/oneit.png'
-                        }
-                    />
-                </div>
-            </div>
+        <>
+            <Header variant="back" btn_back={false} />
+            <div className="giftRecommDetail scrollbar-hide">
+                <div className="prd_area">
+                    <div className="photo">
+                        <img
+                            src={productAPI.data?.thumbnailUrl}
+                            alt="제품 대표 이미지"
+                        />
+                    </div>
 
-            <div className="flex justify-center w-full">
-                <img
-                    src={productAPI.data?.thumbnailUrl || Gift}
-                    alt="recommended product"
-                    // width={200}
-                    // height={200}
-                    className="object-cover group-hover:opacity-50 transition-opacity"
-                />
-            </div>
-            <div className="py-2 bg-white dark:bg-gray-950">
-                <p className="text-oneit-gray text-sm mb-2 overflow-hidden whitespace-nowrap  overflow-ellipsis">
-                    {productAPI.data?.categoryDisplayName}
-                </p>
-                <a
-                    href={productAPI.data?.productUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                >
-                    <h3 className="text-xl font-bold md:text-xl">
-                        {productAPI.data?.name}
-                    </h3>
-                </a>
-                <div className="flex items-center justify-between mt-2">
-                    <p>{productAPI.data?.brandName}</p>
-                    <h4 className="text-base font-semibold md:text-lg text-onei">
-                        {productAPI.data?.originalPrice.toLocaleString()}원
-                    </h4>
-                </div>
-            </div>
-            <Separator className="mb-2" />
-            <div className="flex flex-col">
-                <div className="flex w-full overflow-hidden whitespace-nowrap overflow-ellipsis">
-                    <p className="text-oneit-pink text-sm inline-block">
-                        {productAPI.data?.keywords?.map((keyword, idx) => (
-                            <span
-                                key={idx}
-                                className="mr-1"
-                            >{`#${keyword}`}</span>
-                        ))}
-                    </p>
-                </div>
-                <div className="flex">
-                    <p className="break-words  whitespace-normal">
-                        {productAPI.data?.description}
-                    </p>
-                </div>
-                <div className="flex items-center gap-2"></div>
-            </div>
+                    <div className="info">
+                        <div className="brand">
+                            {productAPI.data?.brandName || '상품정보없음'}
+                        </div>
+                        <div className="name">
+                            {productAPI.data?.name || '상품정보없음'}
+                        </div>
+                        <div className="price">
+                            ₩{' '}
+                            {productAPI.data?.originalPrice?.toLocaleString() ||
+                                0}
+                        </div>
+                        <div className="options">
+                            <p className="title">옵션</p>
+                            <span>옵션내용</span>
+                            <span>옵션내용</span>
+                            <span>옵션내용</span>
+                            <span>옵션내용</span>
+                        </div>
+                        <div className="essense">제품요약</div>
+                        <div className="contents">
+                            {productAPI.data?.description}
+                        </div>
+                        <div className="tags">
+                            {productAPI.data?.keywords?.map((tag, idx) => (
+                                <span key={idx}>#{tag}</span>
+                            ))}
+                        </div>
+                    </div>
 
-            {loggedIn && (
-                <div className="fixed  mx-auto bottom-12 inset-x-0 flex justify-center gap-2 max-w-sm  h-15 w-full bg-white rounded-t-md py-1 px-2 mb-3 items-center border-t-[1px]">
-                    <Drawer>
-                        <DrawerTrigger asChild>
-                            <Button className="w-full bg-oneit-blue hover:bg-oneit-blue/90 my-2">
-                                추가하기
-                            </Button>
-                        </DrawerTrigger>
-                        <DrawerContent>
-                            <div className="mx-auto w-full max-w-sm">
-                                <div className="p-2 pb-0">
-                                    {/* My basket List */}
-                                    {basketAPI.isLoading ? (
-                                        <Spinner />
-                                    ) : basketAPI.data?.length !== 0 ? (
-                                        <ScrollArea
-                                            className={cn(
-                                                'flex items-center justify-between w-full',
-                                                basketAPI.data?.length > 3
-                                                    ? 'h-28'
-                                                    : 'max-h-fit',
-                                            )}
+                    <div className="cart_prd scrollbar-hide">
+                        <ul className="scrollbar-hide">
+                            {basketAPI.data?.map((basket: Basket) => {
+                                const today = new Date();
+                                const dday = new Date(basket.deadline);
+                                const gap = dday.getTime() - today.getTime();
+                                const dDay = Math.ceil(
+                                    gap / (1000 * 60 * 60 * 24),
+                                );
+                                return (
+                                    <li>
+                                        <div
+                                            className="photo"
+                                            onClick={() =>
+                                                navigate(
+                                                    `/basket/${basket.idx}`,
+                                                )
+                                            }
                                         >
-                                            {basketAPI.data?.map(
-                                                (
-                                                    basket: Basket,
-                                                    idx: number,
-                                                ) => {
-                                                    return (
-                                                        <DrawerClose
-                                                            asChild
-                                                            key={idx}
-                                                        >
-                                                            <Button
-                                                                variant="ghost"
-                                                                className="flex w-full items-center justify-between rounded-lg border-oneit-blue border-2 p-1 mt-1"
-                                                                onClick={() =>
-                                                                    handleAddToBasket(
-                                                                        basket.idx.toString(),
-                                                                    )
-                                                                }
-                                                            >
-                                                                <p className="ml-2">
-                                                                    {
-                                                                        basket.name
-                                                                    }
-                                                                </p>
-                                                                <div className="flex text-muted-foreground text-sm items-center">
-                                                                    <CalendarCheck className="mr-2" />
-                                                                    {
-                                                                        basket.deadline
-                                                                            .toString()
-                                                                            .split(
-                                                                                'T',
-                                                                            )[0]
-                                                                    }
-                                                                </div>
-                                                            </Button>
-                                                        </DrawerClose>
-                                                    );
-                                                },
+                                            <img
+                                                src={basket.imageUrl || logo}
+                                                alt=""
+                                            />
+                                            {dDay >= 0 ? (
+                                                <div className="capsule_pink">
+                                                    D-
+                                                    {dDay}
+                                                </div>
+                                            ) : (
+                                                <div className="capsule_pink">
+                                                    마감
+                                                </div>
                                             )}
-                                        </ScrollArea>
-                                    ) : (
-                                        <a
-                                            href="/basket/add"
-                                            className="w-full"
-                                        >
-                                            <Button
-                                                variant="ghost"
-                                                className="w-full"
+                                        </div>
+                                        <div className="name text-overflow">
+                                            {basket.name || '바구니 이름'}
+                                        </div>
+                                        <div className="btn_add_cart_area">
+                                            <button
+                                                className="btn_add_cart"
+                                                onClick={() =>
+                                                    handleAddToBasket(
+                                                        basket.idx.toString(),
+                                                    )
+                                                }
                                             >
-                                                새로운 선물 바구니 만들기
-                                            </Button>
-                                        </a>
-                                    )}
-                                </div>
-                                <DrawerFooter className="flex">
-                                    <DrawerClose asChild>
-                                        <Button variant="outline">취소</Button>
-                                    </DrawerClose>
-                                </DrawerFooter>
-                            </div>
-                        </DrawerContent>
-                    </Drawer>
-                    <a
-                        href={productAPI.data?.productUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                    >
-                        <Button className="my-2 w-full">
-                            {productAPI.data?.mallName}
-                            <MoveRight className="pl-2 inline" />
-                        </Button>
-                    </a>
+                                                <i></i>바구니에 추가하기
+                                            </button>
+                                        </div>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </div>
+
+                    <div className="desc">
+                        <div className="title">제품 설명</div>
+                        {/* todo: product detail images */}
+                        <div className="texts"></div>
+                    </div>
                 </div>
-            )}
-            {!loggedIn && (
-                <div className="fixed  mx-auto bottom-12 inset-x-0 flex justify-center gap-3 max-w-sm  h-15 w-full bg-white rounded-t-md p-1 mb-3 items-center">
-                    <Button
-                        className="w-full bg-kakao-yellow hover:bg-kakao-yellow/90"
-                        onClick={() =>
-                            navigate(`/login?redirect=/product/${productID}`)
-                        }
-                    >
-                        카카오 로그인하고 바구니에 담기
-                    </Button>
-                </div>
-            )}
-        </div>
+            </div>
+        </>
     );
 };
 

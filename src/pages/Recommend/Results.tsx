@@ -11,8 +11,8 @@ import Header from '@/components/common/Header';
 // import {isLoginAtom} from '@/api/auth';
 import {useQuery} from '@tanstack/react-query';
 import {Product} from '@/lib/types';
-import React, {useEffect, useState} from 'react';
-import giftIcon from '@/assets/tabler_gift.svg';
+import React, {useCallback, useEffect, useState} from 'react';
+import giftIcon from '@/assets/images/tabler_gift.svg';
 import {Button} from '@/components/common/Button';
 const NotFound = React.lazy(() => import('../NotFound'));
 import {
@@ -67,6 +67,11 @@ const Results = () => {
     const [{mutate, mutateAsync}] = useAtom(rateResult);
     const [rating, setRating] = useState<number>(5);
     const [isOpen, setIsOpen] = useState(false);
+    const [api, setApi] = useState<any>();
+    const [autoPlay, setAutoPlay] = useState(true);
+
+    const handleInteractionStart = useCallback(() => setAutoPlay(false), []);
+    const handleInteractionEnd = useCallback(() => setAutoPlay(true), []);
 
     const recommendedAPI = useQuery({
         queryKey: ['fetchRecommendedProducts', chatID],
@@ -155,8 +160,12 @@ const Results = () => {
                         <Carousel
                             className="w-full mt-0"
                             opts={{loop: true}}
-                            autoplay={true}
+                            autoplay={autoPlay}
                             autoplayInterval={2500}
+                            onMouseDown={handleInteractionStart}
+                            onMouseUp={handleInteractionEnd}
+                            onTouchStart={handleInteractionStart}
+                            onTouchEnd={handleInteractionEnd}
                         >
                             <CarouselContent className="w-full m-0">
                                 {recommendedAPI.data?.result.map(
@@ -218,7 +227,7 @@ const Results = () => {
                                                     </a> */}
                                                 </div>
                                             </div>
-                                            <div className="btns flex gap-3 items-center w-full mt-[1.125rem]">
+                                            <div className=" flex gap-3 items-center w-full mt-[1.125rem]">
                                                 <Button
                                                     className="flex-1 justify-center items-center border-[#b0b0b0] text-[#b0b0b0]"
                                                     variant="border"

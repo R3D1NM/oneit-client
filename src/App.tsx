@@ -5,7 +5,6 @@ import Header from './components/common/Header';
 import NotFound from './pages/NotFound';
 import AuthRouter from './components/common/AuthRouter';
 import Navbar from '@/components/common/Navbar';
-import AddToBasket from './pages/Basket/AddToBasket';
 import {Toaster} from './components/ui/sonner';
 import {useParams} from 'react-router-dom';
 import FakeLogin from './pages/FakeLogin';
@@ -29,7 +28,7 @@ const AuthRouterWithRedirect = ({
     children: React.ReactNode;
     redirectTo: string;
 }) => {
-    const {basketID} = useParams();
+    const {basketID, productID} = useParams();
     if (basketID === undefined) {
         return (
             <AuthRouter option={option} redirectTo={'/main'}>
@@ -38,7 +37,10 @@ const AuthRouterWithRedirect = ({
         );
     }
 
-    const redirect = redirectTo.replace(':basketID', basketID);
+    let redirect = redirectTo.replace(':basketID', basketID);
+    if (productID !== undefined) {
+        redirect.replace(':productID', productID);
+    }
     return (
         <AuthRouter option={option} redirectTo={redirect}>
             {children}
@@ -59,13 +61,17 @@ const Login = React.lazy(() => import('./pages/Login/Login'));
 const Auth = React.lazy(() => import('./pages/Login/Auth'));
 const SignUp = React.lazy(() => import('./pages/Login/SignUp'));
 const Mypage = React.lazy(() => import('./pages/Mypage/Mypage'));
+const EditInfo = React.lazy(() => import('./pages/Mypage/EditInfo'));
 const Friends = React.lazy(() => import('./pages/Mypage/Friends'));
 
 const BasketList = React.lazy(() => import('./pages/Basket/BasketList'));
 const Basket = React.lazy(() => import('./pages/Basket/Basket'));
+const BasketInfo = React.lazy(() => import('./pages/Basket/BasketInfo'));
+const BasketProduct = React.lazy(() => import('./pages/Basket/BasketProduct'));
 const CreateBasket = React.lazy(() => import('./pages/Basket/CreateBasket'));
-const EditBasket = React.lazy(() => import('./pages/Basket/EditBasket'));
-const SharedBasket = React.lazy(() => import('./pages/Basket/SharedBasket'));
+const BasketAddFriend = React.lazy(
+    () => import('./pages/Basket/BasketAddFriend'),
+);
 const BasketInvitation = React.lazy(
     () => import('./pages/Basket/BasketInvitation'),
 );
@@ -121,14 +127,14 @@ function App() {
                                             path="/product/:productID"
                                             element={<Product />}
                                         />
-                                        {/* <Route
+                                        <Route
                                             path="/curation"
                                             element={<Curation />}
                                         />
-                                        <Route
+                                        {/* <Route
                                             path="/collection"
                                             element={<Discover />}
-                                        />
+                                        /> */}
                                         <Route
                                             path="/collection/:collectionID"
                                             element={<Collection />}
@@ -167,30 +173,30 @@ function App() {
                                             }
                                         />
                                         <Route
-                                            path="/basket/edit/:basketID"
+                                            path="/basket/:basketID/info"
                                             element={
                                                 <AuthRouterWithRedirect
                                                     option={true}
-                                                    redirectTo="/login?redirect=/basket/edit/:basketID"
+                                                    redirectTo="/login?redirect=/basket/:basketID/info"
                                                 >
-                                                    <EditBasket />
+                                                    <BasketInfo />
                                                 </AuthRouterWithRedirect>
                                             }
                                         />
                                         <Route
-                                            path="/basket/add/:basketID"
+                                            path="/basket/:basketID/product/:productID"
                                             element={
                                                 <AuthRouterWithRedirect
                                                     option={true}
-                                                    redirectTo="/login?redirect=/basket/add/:basketID"
+                                                    redirectTo="/login?redirect=/basket/:basketID/product/:productID"
                                                 >
-                                                    <AddToBasket />
+                                                    <BasketProduct />
                                                 </AuthRouterWithRedirect>
                                             }
                                         />
                                         <Route
-                                            path="/basket/share/:basketID"
-                                            element={<SharedBasket />}
+                                            path="/basket/:basketID/invite"
+                                            element={<BasketAddFriend />}
                                         />
                                         <Route
                                             path="/basket/:basketID/invite/:inviteID"
@@ -211,7 +217,13 @@ function App() {
                                         <Route
                                             path="/inquiry/after"
                                             element={<AfterInquiry />}
-                                        /> */}
+                                        />
+                                        {/* 
+                                        <Route
+                                            path="/basket/share/:basketID"
+                                            element={<SharedBasket />}
+                                        />
+                                        
                                         {/* <Route
                                             path="/about"
                                             element={<About />}
@@ -260,7 +272,18 @@ function App() {
                                                 </AuthRouter>
                                             }
                                         />
-                                        {/* <Route
+                                        <Route
+                                            path="/mypage/edit"
+                                            element={
+                                                <AuthRouter
+                                                    option={true}
+                                                    redirectTo="/login?redirect=/mypage/edit"
+                                                >
+                                                    <EditInfo />
+                                                </AuthRouter>
+                                            }
+                                        />
+                                        <Route
                                             path="/friends"
                                             element={
                                                 <AuthRouter
@@ -270,13 +293,13 @@ function App() {
                                                     <Friends />
                                                 </AuthRouter>
                                             }
-                                        /> */}
-                                        {/* {import.meta.env.DEV && (
+                                        />
+                                        {import.meta.env.DEV && (
                                             <Route
                                                 path="/fakeLogin"
                                                 element={<FakeLogin />}
                                             />
-                                        )} */}
+                                        )}
                                         <Route
                                             path="/main"
                                             element={<Main />}
@@ -302,6 +325,13 @@ function App() {
                 </div>
                 <footer className="bg-gray-100 p-4">
                     <div className="text-sm text-gray-500">
+                        <button
+                            onClick={() => {
+                                throw new Error('에러 발생');
+                            }}
+                        >
+                            에러
+                        </button>
                         <strong>워닛(ONEIT)</strong>
                         <br />
                         <strong>대표자</strong> 정세연 |{' '}

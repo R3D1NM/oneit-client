@@ -1,6 +1,7 @@
 import {AspectRatio} from '@/components/ui/aspect-ratio';
 import {Product} from '@/lib/types';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
+import logo from '@/assets/images/oneit.png';
 
 interface ProductCardProps {
     product: Product;
@@ -8,32 +9,30 @@ interface ProductCardProps {
 
 const ProductCard = (props: ProductCardProps) => {
     const {product} = props;
+    const navigate = useNavigate();
     return (
-        <div className="rounded-lg overflow-hidden shadow-sm ">
-            <Link to={`/product/${product.idx}`} className="block">
-                <div className="w-full items-center">
-                    <AspectRatio ratio={1 / 1} className="justify-center flex">
-                        <img
-                            src={
-                                product.thumbnailUrl ||
-                                'https://via.placeholder.com/400'
-                            }
-                            alt={product.name}
-                            className="relative z-[-10] h-full object-cover hover:opacity-80 transition-opacity"
-                        />
-                    </AspectRatio>
+        <div
+            className="box"
+            onClick={() => navigate(`/product/${product.idx}`)}
+        >
+            <div className="image">
+                <div className="photo">
+                    <img src={product.thumbnailUrl || logo} alt="제품 이미지" />
                 </div>
-                <div className="p-4">
-                    <h3 className="max-w-full  text-sm font-semibold mb-2 overflow-hidden whitespace-nowrap  overflow-ellipsis">
-                        {product.name}
-                    </h3>
-                    <div className="flex items-center justify-end">
-                        <span className="font-bold text-lg">
-                            {product.originalPrice.toLocaleString()}원
-                        </span>
-                    </div>
+            </div>
+            <a>
+                <p className="title text-overflow h-10 ">
+                    {product.name || '상품정보없음'}
+                </p>
+                <p className="price">
+                    ₩ {product.originalPrice?.toLocaleString() || 0}
+                </p>
+                <div className="tags">
+                    {product.keywords
+                        ?.splice(0, 3)
+                        .map((tag, idx) => <span key={idx}>#{tag}</span>)}
                 </div>
-            </Link>
+            </a>
         </div>
     );
 };

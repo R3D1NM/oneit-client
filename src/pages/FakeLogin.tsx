@@ -10,7 +10,7 @@ const FakeLogin = () => {
             `${import.meta.env.VITE_FAKE_LOGIN_TOKEN}`,
         );
         await login();
-        window.location.href = '/';
+        window.location.href = '/main';
     };
 
     const handleLogout = () => {
@@ -23,7 +23,7 @@ const FakeLogin = () => {
             `${import.meta.env.VITE_FAKE_LOGIN_TOKEN2}`,
         );
         await login();
-        window.location.href = '/';
+        window.location.href = '/main';
     };
 
     return (

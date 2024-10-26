@@ -170,7 +170,7 @@ export const fetchBasketProducts = async (basketIdx: string) => {
 
 export const deleteBasketProduct = async (
     basketIdx: string,
-    productIdx: number,
+    productIdx: string,
 ) => {
     const payload = [Number(productIdx)];
     return axios
@@ -234,6 +234,49 @@ export const basketProductVote = async (
             browserUuid,
             vote,
         })
+        .then((res) => {
+            return Promise.resolve(res.data);
+        })
+        .catch((err) => {
+            return Promise.reject(err);
+        });
+};
+
+export const fetchBasketProductComments = async (
+    basketIdx: string,
+    productIdx: string,
+) => {
+    return axios
+        .get(`v2/giftbox/${basketIdx}/products/${productIdx}/comments`)
+        .then((res) => {
+            return Promise.resolve(res.data);
+        })
+        .catch((err) => {
+            return Promise.reject(err);
+        });
+};
+
+export const addBasketProductComment = async (
+    basketIdx: string,
+    productIdx: string,
+    comment: string,
+) => {
+    const data = {
+        content: comment,
+    };
+    return axios
+        .post(`v2/giftbox/${basketIdx}/products/${productIdx}/comments`, data)
+        .then((res) => {
+            return Promise.resolve(res.data);
+        })
+        .catch((err) => {
+            return Promise.reject(err);
+        });
+};
+
+export const deleteBasketProductComment = async (commentIdx: number) => {
+    return axios
+        .delete(`v2/comments/${commentIdx}`)
         .then((res) => {
             return Promise.resolve(res.data);
         })

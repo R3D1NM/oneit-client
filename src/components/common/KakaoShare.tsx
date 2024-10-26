@@ -1,6 +1,6 @@
 import {Product} from '@/lib/types';
 import {useEffect} from 'react';
-import Logo from '@/assets/oneit.png';
+import Logo from '@/assets/images/oneit.png';
 // import KakaoLogo from '@/assets/kakao.png'
 import {Button} from '@/components/ui/button';
 import {Share2Icon} from 'lucide-react';

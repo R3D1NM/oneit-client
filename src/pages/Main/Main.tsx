@@ -5,11 +5,11 @@ import BasketInfoCard from '../Basket/components/BasketInfoCard';
 import {Link, useNavigate} from 'react-router-dom';
 
 import Header from '@/components/common/Header';
-import banner from '@/assets/banner.png';
+import banner from '@/assets/images/banner.png';
 
-import banner1 from '@/assets/banner_1.gif';
-import banner2 from '@/assets/banner_2.gif';
-import banner3 from '@/assets/banner_3.svg';
+import banner1 from '@/assets/images/banner_1.gif';
+import banner2 from '@/assets/images/banner_2.gif';
+import banner3 from '@/assets/images/banner_3.gif';
 
 const Main = () => {
     const isLogin = useAtomValue(isLoginAtom);
@@ -43,7 +43,7 @@ const Main = () => {
                     </button>
 
                     <button
-                        onClick={() => setIsModalOpen(true)}
+                        onClick={() => navigate('/basket')}
                         className="h-[7.125rem] rounded-3xl w-full relative flex flex-col justify-center bg-[#fef1fa]"
                     >
                         <div className="pl-6 text-left text-sm text-[#5d5d5d] mb-2">
@@ -62,7 +62,7 @@ const Main = () => {
                     </button>
 
                     <button
-                        onClick={() => setIsModalOpen(true)}
+                        onClick={() => navigate('/curation')}
                         className="h-[7.125rem] rounded-3xl w-full relative flex flex-col justify-center bg-[#eee3ff]"
                     >
                         <div className="pl-6 text-left text-sm text-[#5d5d5d] mb-2">
@@ -96,7 +96,9 @@ const Main = () => {
                         className="w-full object-contain"
                     />
                     <div className="absolute inset-0 flex flex-col justify-center items-start p-6 text-white">
-                        <h2 className="text-lg font-bold">
+
+                        <h2 className="text-lg font-bold text-white">
+
                             ONE!T 10월 31일 정식 출시 예정
                             <br />
                             {isLogin
@@ -106,7 +108,7 @@ const Main = () => {
                     </div>
                 </div>
             </main>
-            {isModalOpen && (
+            {/* {isModalOpen && (
                 <div
                     className="absolute inset-0 flex items-center justify-center"
                     onClick={() => setIsModalOpen(false)}
@@ -141,7 +143,7 @@ const Main = () => {
                         )}
                     </div>
                 </div>
-            )}
+            )} */}
         </>
     );
 };

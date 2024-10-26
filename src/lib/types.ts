@@ -13,8 +13,6 @@ export type Product = {
     idx: number;
     name: string;
     originalPrice: number;
-    currentPrice?: number;
-    discountRate?: number;
     brandName?: string;
     mallName?: string;
     productUrl?: string;
@@ -26,6 +24,7 @@ export type Product = {
     description: string;
     likeCount?: number;
     voteStatus?: 'LIKE' | 'DISLIKE' | 'NONE';
+    purchaseStatus?: 'PURCHASED' | 'NOT_PURCHASED';
 };
 
 export type Question = {
@@ -55,10 +54,10 @@ export type User = {
 export type Basket = {
     idx: number;
     name: string;
-    description: string;
-    deadline: Date;
+    description?: string;
+    deadline: Date | string;
     createdUserIdx?: number;
-    accessStatus: string;
+    accessStatus?: string;
     imageUrl?: string;
     participants?: Participant[];
 };
@@ -81,7 +80,6 @@ export type Emoji = {
     idx: number;
     name: string;
     content: string;
-    emojiImageName: string;
 };
 
 export type InquiryChoice = {
@@ -102,4 +100,23 @@ export type SignUpUser = {
     nickname: string;
     gender: 'FEMALE' | 'MALE';
     birthDate: string;
+};
+
+export type Notif = {
+    idx: number;
+    title: string;
+    body: string;
+    receiverIdx: number;
+    createdAt: Date;
+    notiStatus: 'CREATED' | 'SENT' | 'READ';
+    actionType: string;
+};
+
+export type Comment = {
+    idx: number;
+    giftboxProductIdx: number;
+    writerIdx: number;
+    writerNickName: string;
+    content: string;
+    createdAt: Date;
 };

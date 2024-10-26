@@ -8,26 +8,6 @@ import {Spinner} from '@/components/ui/spinner';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {useNavigate, useParams} from 'react-router-dom';
 import NotFound from '../NotFound';
-import {Button} from '@/components/ui/button';
-import {
-    ArrowUp,
-    ChevronLeft,
-    Edit,
-    LockKeyhole,
-    MailPlusIcon,
-    PlusSquare,
-    Send,
-    Settings,
-    Trash,
-} from 'lucide-react';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import {Participant, Product} from '@/lib/types';
 import BasketProductCard from './components/BasketProductCard';
 import {toast} from 'sonner';
@@ -37,21 +17,19 @@ import {useAtom, useAtomValue} from 'jotai';
 import BasketInfoCard from './components/BasketInfoCard';
 import KakaoShare from '@/components/common/KakaoShare';
 import {selctedProductCount, selectedProduct} from '@/atoms/basket';
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
-import {Label} from '@/components/ui/label';
-import {Input} from '@/components/ui/input';
+
 import {useEffect, useState} from 'react';
 import {createInquiry} from '@/api/inquiry';
-const {Kakao} = window;
+import {SwipeableDrawer, Box, Typography} from '@mui/material';
+import {Global} from '@emotion/react';
+import Header from '@/components/common/Header';
+import giftBox2 from '@/assets/images/giftBox2.svg';
+import giftMessage from '@/assets/images/gift_messege.svg';
+import giftMessageFill from '@/assets/images/gift_messege_fill.svg';
+import {cn} from '@/lib/utils';
 
+const {Kakao} = window;
+const drawerBleeding = 48;
 interface SelectedUser {
     uuid: string;
     id: string;
@@ -72,6 +50,29 @@ const Basket = () => {
     const [selected, setSelected] = useAtom(selectedProduct);
     const [target, setTarget] = useState('');
     const [{mutate}] = useAtom(createInquiry);
+    const [open, setOpen] = useState(false);
+    const [searchOpen, setSearchOpen] = useState(false);
+    const [dDay, setDDay] = useState(0);
+    const [mode, setMode] = useState(false);
+
+    const toggleDrawer = (newOpen: boolean) => () => {
+        setOpen(newOpen);
+    };
+
+    //redirect go back to basket page
+    // useEffect(() => {
+    //     const handlePopState = (event: PopStateEvent) => {
+    //         event.preventDefault();
+    //         navigate(`/basket`);
+    //     };
+
+    //     window.history.pushState(null, '', window.location.href);
+    //     window.addEventListener('popstate', handlePopState);
+
+    //     return () => {
+    //         window.removeEventListener('popstate', handlePopState);
+    //     };
+    // }, []);
 
     useEffect(() => {
         if (!Kakao.isInitialized()) {
@@ -81,7 +82,17 @@ const Basket = () => {
 
     const basketInfoAPI = useQuery({
         queryKey: ['basket', basketID],
-        queryFn: () => fetchBasketInfo(basketID || ''),
+        queryFn: () =>
+            fetchBasketInfo(basketID || '').then((data) => {
+                const dDay =
+                    Math.ceil(
+                        (new Date(data?.deadline).getTime() -
+                            new Date().getTime()) /
+                            (1000 * 60 * 60 * 24),
+                    ) || 0;
+                setDDay(dDay);
+                return data;
+            }),
     });
 
     const basketProductAPI = useQuery({
@@ -137,80 +148,29 @@ const Basket = () => {
         console.log(basketInfoAPI.error);
     }
 
-    const handleGoBack = () => {
-        navigate(-1);
-    };
     const handleDelete = async () => {
         deleteAPI.mutate();
     };
-
-    const handleEdit = () => {
-        navigate(`/basket/edit/${basketID}`);
-    };
-    // const handleSend = async () => {
-    //     Kakao.Picker.selectFriends({
-    //         title: '친구 선택',
-    //         maxPickableCount: 1,
-    //         minPickableCount: 1,
-    //     })
-    //         .then((res: FriendPickerResponse) => {
-    //             console.log(res);
-    //             const uuid = res.users[0].uuid;
-    //             Kakao.API.request({
-    //                 url: '/v1/api/talk/friends/message/default/send',
-    //                 data: {
-    //                     receiver_uuids: [uuid],
-    //                     template_object: {
-    //                         object_type: 'feed',
-    //                         content: {
-    //                             title: `${user?.nickname}님이 선물 바구니를 보냈습니다.`,
-    //                             description: 'ONE!T에서 확인해보세요!',
-    //                             image_url:
-    //                                 basketInfoAPI.data?.imageUrl ||
-    //                                 'https://via.placeholder.com/200',
-    //                             link: {
-    //                                 web_url: `https://www.oneit.gift/basket/${basketID}`,
-    //                                 mobile_web_url: `https://www.oneit.gift/basket/${basketID}`,
-    //                             },
-    //                         },
-    //                         buttons: [
-    //                             {
-    //                                 title: '웹으로 보기',
-    //                                 link: {
-    //                                     mobile_web_url: `https://www.oneit.gift/basket/${basketID}`,
-    //                                     web_url: `https://www.oneit.gift/basket/${basketID}`,
-    //                                 },
-    //                             },
-    //                         ],
-    //                     },
-    //                 },
-    //             })
-    //                 .then((response: any) => {
-    //                     console.log(response);
-    //                     toast.success('선물 바구니 전달 완료');
-    //                 })
-    //                 .catch((error: any) => {
-    //                     console.log(error);
-    //                     toast.error('선물 바구니 전달 실패');
-    //                 });
-    //         })
-    //         .catch((err: any) => {
-    //             console.log(err);
-    //         });
-    // };
 
     const handleInquiry = () => {
         mutate({basketIdx: basketID || '', selected, target});
         setSelected([]);
     };
 
-    const handleInvite = async () => {
-        console.log(import.meta.env.BASE_URL);
-        inviteAPI.mutate();
-    };
-
     const scrollToTop = () => {
         window.scrollTo({top: 0, behavior: 'smooth'});
+    };
+
+    //todo: search product by keyword & filtering
+    const handleSearch = () => {
+        setSearchOpen(!searchOpen);
+    };
+
+    const handleModeChange = () => {
+        if (basketProductAPI.data?.length === 0) return;
+        console.log('mode change', mode);
+
+        setMode(!mode);
     };
 
     if (basketInfoAPI.isLoading) return <Spinner />;
@@ -218,196 +178,191 @@ const Basket = () => {
 
     return (
         <>
-            <div className="w-full pb-5">
-                <div className="flex py-3 flex-wrap items-center justify-between">
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        className=""
-                        onClick={handleGoBack}
-                    >
-                        <ChevronLeft className="" />
-                    </Button>
-                    {/* <p>{data?.brandName}</p> */}
-                    <div className="flex">
-                        {/* <Button variant="ghost" size="icon">
-                            <Heart />
-                        </Button> */}
-                        {basketInfoAPI.data?.accessStatus === 'PUBLIC' ? (
-                            <KakaoShare
-                                title={
-                                    'ONE!T 선물 바구니 - ' +
-                                    basketInfoAPI.data?.name
-                                }
-                                description={
-                                    basketInfoAPI.data?.description || 'ONE!T'
-                                }
-                                image={
-                                    basketInfoAPI.data?.imageUrl ||
-                                    'https://www.oneit.gift/oneit.png'
-                                }
-                                url={`/basket/share/${basketID}`}
-                            />
+            <Header
+                btn_back
+                setting
+                variant="back"
+                profile
+                title={basketInfoAPI.data?.name}
+            />
+            <div className="p-4 cardList scrollbar-hide">
+                <div className="Dday_wrap">
+                    <div className="graph">
+                        {dDay >= 0 ? (
+                            <div className="count">
+                                D-
+                                {dDay}
+                            </div>
                         ) : (
-                            <Button variant="ghost" size="icon" disabled>
-                                <LockKeyhole />
-                            </Button>
+                            <div className="count">{-dDay}일 지남</div>
                         )}
-                        {basketInfoAPI.data.participants?.some(
-                            (participant: Participant) =>
-                                participant.userIdx == user?.idx,
-                        ) && (
-                            <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" size="icon">
-                                        <Settings />
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    className="w-30"
-                                    side="bottom"
-                                    align="end"
-                                >
-                                    <DropdownMenuLabel>
-                                        바구니 설정
-                                    </DropdownMenuLabel>
-                                    <DropdownMenuGroup>
-                                        <DropdownMenuItem
-                                            onSelect={(e) => {
-                                                navigate(
-                                                    `/basket/add/${basketID}`,
-                                                );
-                                            }}
-                                        >
-                                            <PlusSquare className="mr-2" />
-                                            <span>상품추가</span>
-                                        </DropdownMenuItem>
+                        {dDay < 3 && dDay >= 0 && (
+                            <p>마감일이 얼마 남지 않았어요 빨리 골라주세요</p>
+                        )}
+                        {dDay < 0 && <p>이미 마감된 선물 바구니입니다.</p>}
 
-                                        <DropdownMenuItem
-                                            onSelect={handleInvite}
-                                        >
-                                            <MailPlusIcon className="mr-2" />
-                                            <span>초대하기</span>
-                                        </DropdownMenuItem>
-                                        {user?.idx ===
-                                            basketInfoAPI.data
-                                                ?.createdUserIdx && (
-                                            <>
-                                                {/* <DropdownMenuItem
-                                                    onSelect={handleSend}
-                                                >
-                                                    <Send className="mr-2" />
-                                                    <span>보내기</span>
-                                                </DropdownMenuItem> */}
-                                                <DropdownMenuItem
-                                                    onSelect={handleEdit}
-                                                >
-                                                    <Edit className="mr-2" />
-                                                    <span>수정하기</span>
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem
-                                                    onSelect={handleDelete}
-                                                >
-                                                    <Trash className="mr-2" />
-                                                    <span>삭제하기</span>
-                                                </DropdownMenuItem>
-                                            </>
-                                        )}
-                                    </DropdownMenuGroup>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        )}
+                        <div className="bar_wrap">
+                            <div className="bar">
+                                <div
+                                    className="color"
+                                    // todo: change graph depending on dDay
+                                    style={{
+                                        width:
+                                            dDay <= 0
+                                                ? '100%'
+                                                : `${((basketInfoAPI.data - dDay) * 100) / 3}%`,
+                                    }}
+                                ></div>
+                            </div>
+                            <div className="giftBox"></div>
+                        </div>
                     </div>
+                    <button
+                        className={cn(
+                            'image animate-pulse bg-center bg-contain bg-no-repeat block',
+                            mode && 'bg-border-[#FF4BC1] border-4',
+                        )}
+                        style={{backgroundImage: `url(${giftMessage})`}}
+                        onClick={handleModeChange}
+                    ></button>
                 </div>
 
-                <BasketInfoCard
-                    basket={basketInfoAPI.data}
-                    className=" overflow-hidden  w-full my-2"
-                />
-                <div className="p-1 w-full text-center justify-center bg-oneit-blue flex items-center rounded-md mb-3">
-                    <h3 className="text-lg font-bold align-middle">
-                        상품 목록
-                    </h3>
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                    {basketProductAPI.data?.map((product: Product) => (
-                        <BasketProductCard
-                            shared={false}
-                            key={product.idx}
-                            product={product}
-                            basketID={basketID || ''}
-                            voteStatus={product.voteStatus || 'NONE'}
-                            likeCount={product.likeCount || 0}
-                        />
-                    ))}
-                    <div
-                        className="rounded-lg overflow-hidden shadow-sm flex items-center justify-center hover:bg-primary-foreground"
-                        onClick={(e) => navigate(`/basket/add/${basketID}`)}
-                    >
-                        상품 추가
+                <div className="mt-5 rounding_border">
+                    <div className="giftBox_title">
+                        <div className="title">
+                            <p>바구니에 담긴 선물</p>
+                            <p>{basketProductAPI.data?.length}</p>
+                        </div>
+                        <div className="icons">
+                            <button
+                                className="btn_zoomer"
+                                onClick={handleSearch}
+                            ></button>
+                            <button className="btn_filter"></button>
+                        </div>
                     </div>
+                    {basketProductAPI?.data?.length !== 0 ? (
+                        <div className="mt-3 gift_list ">
+                            <ul>
+                                <li className="grid-cols-2 grid gap-2">
+                                    {basketProductAPI.data?.map(
+                                        (product: Product) => (
+                                            <BasketProductCard
+                                                shared={false}
+                                                key={product.idx}
+                                                product={product}
+                                                basketID={basketID || ''}
+                                                voteStatus={
+                                                    product.voteStatus || 'NONE'
+                                                }
+                                                likeCount={
+                                                    product.likeCount || 0
+                                                }
+                                                purchaseStatus={
+                                                    product.purchaseStatus ||
+                                                    'NOT_PURCHASED'
+                                                }
+                                            />
+                                        ),
+                                    )}
+                                </li>
+                            </ul>
+                        </div>
+                    ) : (
+                        <div className="flex justify-center">
+                            <p className="text-sm text-[#5d5d5d] text-center mt-7 mb-1">
+                                아직 선물 바구니가 비어있어요!
+                            </p>
+                        </div>
+                    )}
                 </div>
             </div>
 
-            <Button
-                className="fixed bottom-0 right-0 px-3 py-6 rounded-full shadow-lg m-1"
-                onClick={scrollToTop}
-            >
-                <ArrowUp />
-            </Button>
-            {selectedCount > 0 && (
-                <nav className="fixed bottom-16  w-full bg-white shadow-md flex justify-center max-w-sm gap-2 rounded-lg">
-                    <Dialog>
-                        <DialogTrigger asChild>
-                            <Button
-                                variant="ghost"
-                                className="w-full flex flex-col items-center gap-1 text-muted-foreground hover:text-foreground"
-                            >
-                                <span className="text-xs">물어보기</span>
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-[425px]">
-                            <DialogHeader>
-                                <DialogTitle>
-                                    물어볼 상대의 이름을 입력해주세요
-                                </DialogTitle>
-                            </DialogHeader>
-                            <div className="grid gap-4 py-4">
-                                <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label
-                                        htmlFor="taget"
-                                        className="text-right"
-                                    >
-                                        이름
-                                    </Label>
-                                    <Input
-                                        id="target"
-                                        placeholder="누구에게 물어볼까요?"
-                                        className="col-span-3"
-                                        value={target}
-                                        onChange={(e) =>
-                                            setTarget(e.target.value)
-                                        }
-                                    />
-                                </div>
-                            </div>
-                            <DialogFooter>
-                                <Button onClick={handleInquiry} type="submit">
-                                    물어보기
-                                </Button>
-                            </DialogFooter>
-                        </DialogContent>
-                    </Dialog>
-
-                    <Button
-                        variant="ghost"
-                        onClick={() => setSelected([])}
-                        className="w-full flex flex-col items-center gap-1 text-muted-foreground hover:text-foreground"
+            <>
+                <Global
+                    styles={{
+                        '.MuiPaper-root.MuiPaper-root': {
+                            height: `calc(50% - ${drawerBleeding}px - 100px)`,
+                            overflow: 'visible',
+                        },
+                    }}
+                />
+                <SwipeableDrawer
+                    anchor="bottom"
+                    open={open}
+                    onClose={toggleDrawer(false)}
+                    onOpen={toggleDrawer(true)}
+                    swipeAreaWidth={drawerBleeding}
+                    ModalProps={{
+                        keepMounted: true,
+                    }}
+                >
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            top: -drawerBleeding,
+                            borderTopLeftRadius: 24,
+                            borderTopRightRadius: 24,
+                            visibility: 'visible',
+                            right: 0,
+                            left: 0,
+                            background:
+                                'linear-gradient(90deg, #ff4341, #ff4bc1)',
+                        }}
                     >
-                        <span className="text-xs">선택 해제</span>
-                    </Button>
-                </nav>
-            )}
+                        {/* <Box
+              sx={{
+                width: 30,
+                height: 6,
+                bgcolor: "grey.300",
+                borderRadius: "3px",
+                position: "absolute",
+              }}
+            /> */}
+                        <Typography
+                            sx={{
+                                p: 1,
+                                color: 'white',
+                                fontWeight: 'bold',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <i>
+                                <img src={giftBox2} alt="선물 바구니 아이콘" />
+                            </i>
+                            선물 추가하기
+                        </Typography>
+                    </Box>
+
+                    <div className="bottom_sheet -z-10">
+                        <button
+                            className="btn_border pink"
+                            onClick={() => navigate('/recommend')}
+                        >
+                            <i className="gift"></i>선물 요정에게 추천 받아
+                            추가하기
+                        </button>
+                        <button
+                            className="btn_border pink"
+                            onClick={() => navigate('/curation')}
+                        >
+                            <i className="zoomer"></i>상품 검색을 통해 선물
+                            추가하기
+                        </button>
+                        {/* <button className="btn_border pink">
+                            <i className="link"></i>외부 링크 가져오기
+                        </button> */}
+                    </div>
+                </SwipeableDrawer>
+                {/* <Button
+                    className="fixed bottom-[48px] right-0 z-[999] px-3 py-6 rounded-full shadow-lg m-1"
+                    onClick={scrollToTop}
+                >
+                    <ArrowUp />
+                </Button> */}
+            </>
         </>
     );
 };

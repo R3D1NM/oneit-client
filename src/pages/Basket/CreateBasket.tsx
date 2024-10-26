@@ -1,6 +1,6 @@
 import {Input} from '@/components/ui/input';
 import {useAtom, useSetAtom} from 'jotai';
-import {useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import {
     basketName,
     basketDescription,
@@ -9,7 +9,6 @@ import {
     imageUrl,
     accessStatus,
 } from '@/atoms/basket';
-import {Button} from '@/components/ui/button';
 import {Calendar} from '@/components/ui/calendar';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {
@@ -23,12 +22,14 @@ import {
 import {useForm} from 'react-hook-form';
 import {z} from 'zod';
 import {Textarea} from '@/components/ui/textarea';
-import {LockKeyhole, LockKeyholeOpen} from 'lucide-react';
+import {ImageIcon, LockKeyhole, LockKeyholeOpen} from 'lucide-react';
 import {createBasket} from '@/api/basket';
 import {useNavigate} from 'react-router-dom';
 import {ToggleGroup, ToggleGroupItem} from '@/components/ui/toggle-group';
 import {AspectRatio} from '@/components/ui/aspect-ratio';
 import {useMutation} from '@tanstack/react-query';
+import Header from '@/components/common/Header';
+import {Button} from '@/components/common/Button';
 
 const CreateBasket = () => {
     const [currentStep, setCurrentStep] = useState('title');
@@ -49,14 +50,9 @@ const CreateBasket = () => {
     });
 
     const formSchema = z.object({
-        title: z
-            .string()
-            .min(2, {
-                message: '바구니 이름은 2자 이상이어야합니다.',
-            })
-            .max(10, {
-                message: '바구니 이름은 10자 이하여야합니다.',
-            }),
+        title: z.string().min(2, {
+            message: '바구니 이름은 2자 이상이어야합니다.',
+        }),
         description: z.string().optional(),
         image: z.instanceof(File).optional(),
         access: z.enum(['PUBLIC', 'PRIVATE']),
@@ -102,10 +98,42 @@ const CreateBasket = () => {
         }
     };
 
+    const handleGoBack = () => {
+        if (currentStep == 'title') {
+            navigate('/basket', {replace: true});
+        } else {
+            setCurrentStep((prevStep) => {
+                if (prevStep === 'thumbnail') {
+                    return 'title';
+                } else if (prevStep === 'deadline') {
+                    return 'thumbnail';
+                }
+                return 'title'; // Default return value to ensure a string is always returned
+            });
+            window.history.pushState(null, '', window.location.href);
+        }
+    };
+    useEffect(() => {
+        window.history.pushState({currentStep}, '', window.location.href);
+    }, [currentStep]);
+    useEffect(() => {
+        const handlePopState = (event: PopStateEvent) => {
+            event.preventDefault();
+            handleGoBack();
+        };
+
+        window.history.pushState(null, '', window.location.href);
+        window.addEventListener('popstate', handlePopState);
+
+        return () => {
+            window.removeEventListener('popstate', handlePopState);
+        };
+    }, [currentStep]);
+
     return (
         <>
-            <div className="flex flex-col content-center mt-3 w-full justify-center gap-2">
-                <p className="text-center">새 바구니 만들기</p>
+            <Header variant="logo" />
+            <main className="pt-14 px-4" role="main">
                 <Form {...form}>
                     <form
                         onSubmit={form.handleSubmit(onSubmit)}
@@ -113,126 +141,97 @@ const CreateBasket = () => {
                     >
                         {currentStep === 'title' && (
                             <>
+                                <div className="mt-2.5">
+                                    <p className="text-2xl font-bold">
+                                        소중한 사람을 위한 <br />
+                                        선물 바구니를 만들어 보세요!
+                                    </p>
+                                </div>
                                 <FormField
                                     control={form.control}
                                     name="title"
                                     render={({field}) => (
                                         <FormItem>
-                                            <FormLabel>바구니 이름</FormLabel>
-                                            <FormMessage />
+                                            <FormLabel className="text-sm text-[#5d5d5d] text-center mt-7 mb-1">
+                                                바구니 이름
+                                            </FormLabel>
                                             <FormControl>
                                                 <Input
                                                     autoFocus={true}
                                                     {...field}
-                                                    placeholder="ex) 00의 생일 선물 바구니"
+                                                    placeholder="바구니 이름을 입력하세요"
+                                                    className="mt-6 px-3 h-12 border border-[#d1d1d1] rounded-lg flex items-center placeholder:text-sm placeholder:text-[#d1d1d1]"
                                                 />
                                             </FormControl>
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="access"
-                                    render={({field}) => (
-                                        <FormItem className="flex justify-start gap-5 items-center">
-                                            <div className="flex flex-col">
-                                                <FormLabel>
-                                                    바구니 공개 여부
-                                                </FormLabel>
-                                                {/* <FormMessage /> */}
-                                            </div>
-                                            <ToggleGroup
-                                                type="single"
-                                                className="flex gap-2"
-                                                onValueChange={(value) => {
-                                                    if (
-                                                        value === 'PUBLIC' ||
-                                                        value === 'PRIVATE'
-                                                    )
-                                                        field.onChange(value);
-                                                }}
-                                                defaultValue={field.value}
-                                            >
-                                                <ToggleGroupItem
-                                                    value="PUBLIC"
-                                                    size="sm"
-                                                >
-                                                    <LockKeyholeOpen />
-                                                </ToggleGroupItem>
-                                                <ToggleGroupItem
-                                                    value="PRIVATE"
-                                                    size="sm"
-                                                >
-                                                    <LockKeyhole />
-                                                </ToggleGroupItem>
-                                            </ToggleGroup>
-                                        </FormItem>
-                                    )}
-                                />
-                                <FormField
-                                    control={form.control}
-                                    name="description"
-                                    render={({field}) => (
-                                        <FormItem>
-                                            <FormLabel>
-                                                바구니 설명 <span>(선택)</span>
-                                            </FormLabel>
                                             <FormMessage />
-                                            <FormControl>
-                                                <Textarea
-                                                    value={field.value}
-                                                    onChange={field.onChange}
-                                                    placeholder="선물의 목적이나 바구니에 담을 선물을 설명해주세요"
-                                                />
-                                            </FormControl>
+                                            <div className="flex w-full absolute bottom-2 right-0 p-4">
+                                                <Button
+                                                    onClick={() => {
+                                                        if (
+                                                            form.getValues()
+                                                                .title.length >
+                                                            2
+                                                        ) {
+                                                            setCurrentStep(
+                                                                'thumbnail',
+                                                            );
+                                                        }
+                                                    }}
+                                                    disabled={
+                                                        field.value.length < 2
+                                                    }
+                                                    variant={
+                                                        field.value.length < 2
+                                                            ? 'disabled'
+                                                            : 'primary'
+                                                    }
+                                                    className="w-full "
+                                                >
+                                                    다음
+                                                </Button>
+                                            </div>
                                         </FormItem>
                                     )}
                                 />
-                                <div className="flex justify-end">
-                                    <Button
-                                        onClick={() => {
-                                            if (
-                                                form.getValues().title.length >
-                                                2
-                                            ) {
-                                                setCurrentStep('thumbnail');
-                                            }
-                                        }}
-                                    >
-                                        다음
-                                    </Button>
-                                </div>
                             </>
                         )}
                         {currentStep === 'thumbnail' && (
-                            <div>
+                            <>
+                                <div className="mt-2.5">
+                                    <p className="text-2xl font-bold">
+                                        사람들에게 보여줄 바구니 사진을 <br />
+                                        설정해주세요.
+                                    </p>
+                                </div>
                                 <FormField
                                     control={form.control}
                                     name="image"
                                     render={({field}) => (
                                         <FormItem>
-                                            <FormLabel>
-                                                바구니 대표 이미지 (선택)
-                                            </FormLabel>
                                             <FormControl>
                                                 <Input
                                                     {...fileRef}
                                                     ref={fileInputRef}
                                                     onChange={(event) => {
-                                                        const displayUrl: string =
-                                                            URL.createObjectURL(
-                                                                event.target
-                                                                    .files![0],
-                                                            );
-
-                                                        setImageURL(displayUrl);
-                                                        console.log(event);
                                                         const file =
                                                             event.target
-                                                                .files![0];
-                                                        console.log(file);
-
-                                                        field.onChange(file);
+                                                                .files?.[0];
+                                                        if (file) {
+                                                            const displayUrl =
+                                                                URL.createObjectURL(
+                                                                    file,
+                                                                );
+                                                            console.log(
+                                                                'Image URL:',
+                                                                displayUrl,
+                                                            );
+                                                            setImageURL(
+                                                                displayUrl,
+                                                            );
+                                                            field.onChange(
+                                                                file,
+                                                            );
+                                                        }
                                                     }}
                                                     type="file"
                                                     accept="image/*"
@@ -244,6 +243,14 @@ const CreateBasket = () => {
                                         </FormItem>
                                     )}
                                 />
+                                <Button
+                                    variant="border"
+                                    className="w-full p-4"
+                                    onClick={handleAvatarClick}
+                                >
+                                    <ImageIcon />
+                                    사진 선택
+                                </Button>
                                 <div className="w-full p-3">
                                     <AspectRatio
                                         ratio={1 / 1}
@@ -252,40 +259,66 @@ const CreateBasket = () => {
                                     >
                                         <img
                                             src={
-                                                imageURL ||
-                                                'https://via.placeholder.com/400'
+                                                imageURL === ''
+                                                    ? 'https://via.placeholder.com/400'
+                                                    : imageURL
                                             }
                                             alt={'basket thumbnail'}
-                                            className="z-[-10] h-full object-cover hover:opacity-80 transition-opacity"
+                                            className="z-10 w-full h-full object-cover hover:opacity-80 transition-opacity"
                                         />
                                     </AspectRatio>
                                 </div>
-                                <div className="flex justify-end gap-2">
-                                    <Button
-                                        onClick={() => setCurrentStep('title')}
-                                    >
-                                        이전
-                                    </Button>
-                                    <Button
+                                <div className="flex-col w-full gap-2 absolute bottom-2 right-0 p-4">
+                                    <div className="flex gap-2">
+                                        <Button
+                                            onClick={() =>
+                                                setCurrentStep('title')
+                                            }
+                                            className="w-full"
+                                            variant="border"
+                                        >
+                                            이전
+                                        </Button>
+                                        <Button
+                                            onClick={() =>
+                                                setCurrentStep('deadline')
+                                            }
+                                            className="w-full"
+                                            variant={
+                                                imageURL === ''
+                                                    ? 'disabled'
+                                                    : 'primary'
+                                            }
+                                        >
+                                            다음
+                                        </Button>
+                                    </div>
+                                    <button
+                                        className="w-full underline text-sm text-[#5d5d5d] pt-2"
                                         onClick={() =>
                                             setCurrentStep('deadline')
                                         }
                                     >
-                                        다음
-                                    </Button>
+                                        건너뛰기
+                                    </button>
                                 </div>
-                            </div>
+                            </>
                         )}
                         {currentStep === 'deadline' && (
                             <>
+                                <div className="mt-2.5">
+                                    <p className="text-2xl font-bold">
+                                        기념일 디데이를 설정해주세요.
+                                    </p>
+                                </div>
                                 <FormField
                                     control={form.control}
                                     name="deadline"
                                     render={({field}) => (
                                         <FormItem>
-                                            <FormLabel>
-                                                언제까지 선물을 골라야 하나요?
-                                            </FormLabel>
+                                            {/* <FormLabel className="text-sm text-[#5d5d5d] text-center mt-7 mb-1">
+                                                기념일 설정
+                                            </FormLabel> */}
                                             <FormMessage />
                                             <FormControl>
                                                 <Calendar
@@ -294,24 +327,38 @@ const CreateBasket = () => {
                                                     onSelect={field.onChange}
                                                 />
                                             </FormControl>
+                                            <div className="flex w-full gap-2 absolute bottom-2 right-0 p-4">
+                                                <Button
+                                                    onClick={() =>
+                                                        setCurrentStep(
+                                                            'thumbnail',
+                                                        )
+                                                    }
+                                                    className="w-full"
+                                                    variant="border"
+                                                >
+                                                    이전
+                                                </Button>
+                                                <Button
+                                                    type="submit"
+                                                    className="w-full"
+                                                    variant={
+                                                        field.value === null
+                                                            ? 'disabled'
+                                                            : 'primary'
+                                                    }
+                                                >
+                                                    다음
+                                                </Button>
+                                            </div>
                                         </FormItem>
                                     )}
-                                ></FormField>
-                                <div className="flex justify-end gap-2">
-                                    <Button
-                                        onClick={() =>
-                                            setCurrentStep('thumbnail')
-                                        }
-                                    >
-                                        이전
-                                    </Button>
-                                    <Button type="submit">만들기</Button>
-                                </div>
+                                />
                             </>
                         )}
                     </form>
                 </Form>
-            </div>
+            </main>
         </>
     );
 };

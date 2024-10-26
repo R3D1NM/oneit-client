@@ -338,6 +338,10 @@ const Recommend = () => {
                 <p className="text-sm text-[#5d5d5d] text-center mt-[4.125rem] mb-6">
                     선물의 가격대를 입력해주세요.
                 </p>
+                <div className="flex justify-between text-xs text-[#5d5d5d]">
+                    <p>0원</p>
+                    <p>30만원</p>
+                </div>
                 <Controller
                     name="priceRange"
                     control={control}

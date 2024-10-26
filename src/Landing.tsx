@@ -1,14 +1,14 @@
 import React from 'react';
 import {useNavigate} from 'react-router-dom';
-import page1 from '@/assets/page1.png';
-import page2 from '@/assets/page2.png';
+import page1 from '@/assets/images/page1.png';
+import page2 from '@/assets/images/page2.png';
 const Landing = () => {
     const navigate = useNavigate();
 
     return (
         <section className="h-screen overflow-y-auto scrollbar-hide">
             <div className="pb-20 px-4">
-                <div className="w-[11.9375rem] h-[6.5rem] bg-[url('@/assets/logo_landing.svg')] bg-no-repeat bg-center bg-contain mx-auto mt-12 mb-[3.25rem]"></div>
+                <div className="w-[11.9375rem] h-[6.5rem] bg-[url('@/assets/images/logo_landing.svg')] bg-no-repeat bg-center bg-contain mx-auto mt-12 mb-[3.25rem]"></div>
 
                 <div className="flex flex-col gap-2.5">
                     <div className="h-[2.5625rem] px-5 text-sm flex justify-center items-center w-fit bg-[#fef1fa] text-[#F01299] to-[#FF4341] rounded-[10px_10px_10px_0px]">
@@ -25,7 +25,7 @@ const Landing = () => {
                     </div>
                 </div>
 
-                <div className="text-sm text-[#6d6d6d] text-center before:content-[''] before:w-16 before:h-16 before:block before:bg-[url('@/assets/exhale.gif')] before:bg-no-repeat before:bg-center before:bg-contain before:mx-auto before:mt-8 before:mb-5">
+                <div className="text-sm text-[#6d6d6d] text-center before:content-[''] before:w-16 before:h-16 before:block before:bg-[url('@/assets/images/exhale.gif')] before:bg-no-repeat before:bg-center before:bg-contain before:mx-auto before:mt-8 before:mb-5">
                     선물하는 과정에서 마주하는 수많은 고민거리로
                     <br />
                     마음을 전달하기 앞서 부담이 쌓인다면
@@ -38,11 +38,7 @@ const Landing = () => {
                     지금 바로 ONE!T에서 고민을 해결해보세요!
                 </div>
 
-                {/* <div className="text-[0.625rem] text-[#d1d1d1] text-center mt-3.5 after:content-[''] after:w-3 after:h-3 after:block after:bg-[url('@/assets/icon_scroll_down.svg')] after:bg-no-repeat after:bg-center after:bg-contain after:mt-1 after:mx-auto">
-                    Scroll Down
-                </div> */}
-
-                <div className="mt-5 before:content-[''] before:w-[7.5rem] before:h-[7.5rem] before:block before:bg-[url('@/assets/icon_giftbox.svg')] before:bg-no-repeat before:bg-center before:bg-contain before:mx-auto before:mb-2.5">
+                <div className="mt-5 before:content-[''] before:w-[7.5rem] before:h-[7.5rem] before:block before:bg-[url('@/assets/images/icon_giftbox.svg')] before:bg-no-repeat before:bg-center before:bg-contain before:mx-auto before:mb-2.5">
                     <p className="font-bold bg-gradient-to-br from-[#FF4BC1] to-[#FF4341] bg-clip-text text-transparent text-center text-lg">
                         선물을 원하는 당신을 위한,
                     </p>
@@ -68,7 +64,7 @@ const Landing = () => {
                 </div>
 
                 <ul className="flex items-center justify-between">
-                    <li className="text-[0.9375rem] font-bold bg-gradient-to-br from-[#FF4BC1] to-[#FF4341] bg-clip-text text-transparent text-center after:content-[''] after:w-[4.375rem] after:h-[4.625rem] after:block after:bg-[url('@/assets/icon_angel.svg')] after:bg-no-repeat after:bg-center after:bg-contain after:mt-1.5">
+                    <li className="text-[0.9375rem] font-bold bg-gradient-to-br from-[#FF4BC1] to-[#FF4341] bg-clip-text text-transparent text-center after:content-[''] after:w-[4.375rem] after:h-[4.625rem] after:block after:bg-[url('@/assets/images/icon_angel.svg')] after:bg-no-repeat after:bg-center after:bg-contain after:mt-1.5">
                         선물추천
                     </li>
                     <li>
@@ -94,7 +90,7 @@ const Landing = () => {
                 </div>
 
                 <ul className="flex flex-row-reverse items-center justify-between">
-                    <li className="text-[0.9375rem] font-bold bg-gradient-to-br from-[#FF4BC1] to-[#FF4341] bg-clip-text text-transparent text-center after:content-[''] after:w-[4.375rem] after:h-[4.625rem] after:block after:bg-[url('@/assets/icon_backet.svg')] after:bg-no-repeat after:bg-center after:bg-contain after:mt-1.5">
+                    <li className="text-[0.9375rem] font-bold bg-gradient-to-br from-[#FF4BC1] to-[#FF4341] bg-clip-text text-transparent text-center after:content-[''] after:w-[4.375rem] after:h-[4.625rem] after:block after:bg-[url('@/assets/images/icon_basket.svg')] after:bg-no-repeat after:bg-center after:bg-contain after:mt-1.5">
                         선물 바구니
                     </li>
                     <li>

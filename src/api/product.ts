@@ -55,3 +55,14 @@ export const fetchProduct = async (productID: string): Promise<Product> => {
             return Promise.reject(err);
         });
 };
+
+export const searchProduct = async (keyword: string): Promise<Product[]> => {
+    return axios
+        .get(`/v2/products/search?searchKeyword=${keyword}`)
+        .then((res) => {
+            return Promise.resolve(res.data);
+        })
+        .catch((err) => {
+            return Promise.reject(err);
+        });
+};
