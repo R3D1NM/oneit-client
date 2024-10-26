@@ -96,7 +96,9 @@ const Main = () => {
                         className="w-full object-contain"
                     />
                     <div className="absolute inset-0 flex flex-col justify-center items-start p-6 text-white">
+
                         <h2 className="text-lg font-bold text-white">
+
                             ONE!T 10월 31일 정식 출시 예정
                             <br />
                             {isLogin
@@ -120,7 +122,7 @@ const Main = () => {
                             아직 공사 중이에요!
                         </p>
                         <div className="text-lg font-bold mt-2 mb-5 text-left">
-                            10월 21일 출시를 목표로
+                            10월 31일 출시를 목표로
                             <br />
                             열심히 개발하고 있어요!
                         </div>

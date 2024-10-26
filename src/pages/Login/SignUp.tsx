@@ -90,7 +90,11 @@ const SignUp = () => {
         },
         onSuccess: () => {
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-            if (isIOS) {
+            const isInAppBrowser =
+                /FBAN|FBAV|Instagram|Daum|KAKAOTALK|NAVER/.test(
+                    navigator.userAgent,
+                );
+            if (isIOS || isInAppBrowser) {
                 const redirect = localStorage.getItem('redirect');
                 console.log(`[AUTH] Redirect to ${redirect}`);
 
