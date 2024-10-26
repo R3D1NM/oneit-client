@@ -50,31 +50,46 @@ const Auth = () => {
                         .then((isSignedUp: boolean) => {
                             useUpdateAuth();
                             console.log('[AUTH] login success');
+                            const isIOS = /iPad|iPhone|iPod/.test(
+                                navigator.userAgent,
+                            );
                             if (isSignedUp) {
-                                firebaseMessagingConfig().then((token) => {
+                                if (isIOS) {
+                                    const redirect =
+                                        localStorage.getItem('redirect');
                                     console.log(
-                                        `[AUTH] Firebase token: ${token}`,
+                                        `[AUTH] Redirect to ${redirect}`,
                                     );
-                                    sendFCMToken(token)
-                                        .then((res) => {
-                                            const redirect =
-                                                localStorage.getItem(
-                                                    'redirect',
-                                                );
-                                            console.log(
-                                                `[AUTH] Redirect to ${redirect}`,
-                                            );
 
-                                            navigate(redirect || '/main', {
-                                                replace: true,
+                                    navigate(redirect || '/main', {
+                                        replace: true,
+                                    });
+                                } else {
+                                    firebaseMessagingConfig().then((token) => {
+                                        console.log(
+                                            `[AUTH] Firebase token: ${token}`,
+                                        );
+                                        sendFCMToken(token)
+                                            .then((res) => {
+                                                const redirect =
+                                                    localStorage.getItem(
+                                                        'redirect',
+                                                    );
+                                                console.log(
+                                                    `[AUTH] Redirect to ${redirect}`,
+                                                );
+
+                                                navigate(redirect || '/main', {
+                                                    replace: true,
+                                                });
+                                            })
+                                            .catch((err) => {
+                                                console.log(
+                                                    '[AUTH] Error sending FCM token',
+                                                );
                                             });
-                                        })
-                                        .catch((err) => {
-                                            console.log(
-                                                '[AUTH] Error sending FCM token',
-                                            );
-                                        });
-                                });
+                                    });
+                                }
                             } else {
                                 console.log('[AUTH] Redirect to signup');
                                 navigate('/signup', {replace: true});

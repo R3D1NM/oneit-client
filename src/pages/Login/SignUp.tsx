@@ -89,21 +89,31 @@ const SignUp = () => {
             return await signUp(user);
         },
         onSuccess: () => {
-            firebaseMessagingConfig().then((token) => {
-                console.log(`[AUTH] Firebase token: ${token}`);
-                sendFCMToken(token)
-                    .then((res) => {
-                        const redirect = localStorage.getItem('redirect');
-                        console.log(`[AUTH] Redirect to ${redirect}`);
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+            if (isIOS) {
+                const redirect = localStorage.getItem('redirect');
+                console.log(`[AUTH] Redirect to ${redirect}`);
 
-                        navigate(redirect || '/main', {
-                            replace: true,
+                navigate(redirect || '/main', {
+                    replace: true,
+                });
+            } else {
+                firebaseMessagingConfig().then((token) => {
+                    console.log(`[AUTH] Firebase token: ${token}`);
+                    sendFCMToken(token)
+                        .then((res) => {
+                            const redirect = localStorage.getItem('redirect');
+                            console.log(`[AUTH] Redirect to ${redirect}`);
+
+                            navigate(redirect || '/main', {
+                                replace: true,
+                            });
+                        })
+                        .catch((err) => {
+                            console.log('[AUTH] Error sending FCM token');
                         });
-                    })
-                    .catch((err) => {
-                        console.log('[AUTH] Error sending FCM token');
-                    });
-            });
+                });
+            }
             // const redirect = localStorage.getItem('redirect');
             // navigate(redirect || '/');
         },
