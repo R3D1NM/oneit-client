@@ -69,7 +69,7 @@ const Mypage = () => {
                         </ul>
                     </div> */}
                 </div>
-                <div className="rounding_grey ">
+                {/* <div className="rounding_grey ">
                     <div className="basket_area ">
                         <div className="title">현재 참여중인 바구니</div>
                         <div className="wish_area scrollbar-hide">
@@ -96,9 +96,9 @@ const Mypage = () => {
                             </ul>
                         </div>
                     </div>
-                </div>
+                </div> */}
 
-                <div className="nav">
+                {/* <div className="nav">
                     <ul>
                         <li>
                             <button onClick={() => navigate('/friends')}>
@@ -125,7 +125,7 @@ const Mypage = () => {
                             <button onClick={handleNotyet}>타임어택</button>
                         </li>
                     </ul>
-                </div>
+                </div> */}
             </div>
         </>
     );

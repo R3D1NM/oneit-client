@@ -123,19 +123,19 @@ function App() {
                                             path="/recommend/:chatID/result"
                                             element={<Results />}
                                         />
-                                        <Route
+                                        {/* <Route
                                             path="/product/:productID"
                                             element={<Product />}
                                         />
                                         <Route
                                             path="/curation"
                                             element={<Curation />}
-                                        />
+                                        /> */}
                                         {/* <Route
                                             path="/collection"
                                             element={<Discover />}
                                         /> */}
-                                        <Route
+                                        {/* <Route
                                             path="/collection/:collectionID"
                                             element={<Collection />}
                                         />
@@ -217,7 +217,7 @@ function App() {
                                         <Route
                                             path="/inquiry/after"
                                             element={<AfterInquiry />}
-                                        />
+                                        /> */}
                                         {/* 
                                         <Route
                                             path="/basket/share/:basketID"
@@ -283,7 +283,7 @@ function App() {
                                                 </AuthRouter>
                                             }
                                         />
-                                        <Route
+                                        {/* <Route
                                             path="/friends"
                                             element={
                                                 <AuthRouter
@@ -293,7 +293,7 @@ function App() {
                                                     <Friends />
                                                 </AuthRouter>
                                             }
-                                        />
+                                        /> */}
                                         {import.meta.env.DEV && (
                                             <Route
                                                 path="/fakeLogin"
@@ -325,13 +325,13 @@ function App() {
                 </div>
                 <footer className="bg-gray-100 p-4">
                     <div className="text-sm text-gray-500">
-                        <button
+                        {/* <button
                             onClick={() => {
                                 throw new Error('에러 발생');
                             }}
                         >
                             에러
-                        </button>
+                        </button> */}
                         <strong>워닛(ONEIT)</strong>
                         <br />
                         <strong>대표자</strong> 정세연 |{' '}

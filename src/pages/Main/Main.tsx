@@ -43,7 +43,8 @@ const Main = () => {
                     </button>
 
                     <button
-                        onClick={() => navigate('/basket')}
+                        // onClick={() => navigate('/basket')}
+                        onClick={() => setIsModalOpen(true)}
                         className="h-[7.125rem] rounded-3xl w-full relative flex flex-col justify-center bg-[#fef1fa]"
                     >
                         <div className="pl-6 text-left text-sm text-[#5d5d5d] mb-2">
@@ -62,7 +63,8 @@ const Main = () => {
                     </button>
 
                     <button
-                        onClick={() => navigate('/curation')}
+                        // onClick={() => navigate('/curation')}
+                        onClick={() => setIsModalOpen(true)}
                         className="h-[7.125rem] rounded-3xl w-full relative flex flex-col justify-center bg-[#eee3ff]"
                     >
                         <div className="pl-6 text-left text-sm text-[#5d5d5d] mb-2">
@@ -96,9 +98,7 @@ const Main = () => {
                         className="w-full object-contain"
                     />
                     <div className="absolute inset-0 flex flex-col justify-center items-start p-6 text-white">
-
                         <h2 className="text-lg font-bold text-white">
-
                             ONE!T 10월 31일 정식 출시 예정
                             <br />
                             {isLogin
@@ -108,7 +108,7 @@ const Main = () => {
                     </div>
                 </div>
             </main>
-            {/* {isModalOpen && (
+            {isModalOpen && (
                 <div
                     className="absolute inset-0 flex items-center justify-center"
                     onClick={() => setIsModalOpen(false)}
@@ -131,7 +131,9 @@ const Main = () => {
                                 href="https://www.instagram.com/oneit.gift/"
                                 className="bg-[#000000] text-white w-full h-[2.5625rem] text-sm font-bold flex justify-center items-center"
                             >
-                                인스타그램 둘러보고 ONE!T 소식 받기
+                                <span className="text-white">
+                                    인스타그램 둘러보고 ONE!T 소식 받기
+                                </span>
                             </a>
                         ) : (
                             <button
@@ -143,7 +145,7 @@ const Main = () => {
                         )}
                     </div>
                 </div>
-            )} */}
+            )}
         </>
     );
 };
