@@ -17,6 +17,7 @@ import {
 import {ReactQueryDevtools} from '@tanstack/react-query-devtools';
 import '@/lib/firebase';
 import Landing from './Landing';
+import AfterBasketCreate from './pages/Basket/AfterBasketCreate';
 
 // Custom component to handle dynamic redirect
 const AuthRouterWithRedirect = ({
@@ -162,6 +163,17 @@ function App() {
                                             }
                                         />
                                         <Route
+                                            path="/basket/create/:basketID/after"
+                                            element={
+                                                <AuthRouter
+                                                    option={true}
+                                                    redirectTo="/login?redirect=/basket"
+                                                >
+                                                    <AfterBasketCreate />
+                                                </AuthRouter>
+                                            }
+                                        />
+                                        <Route
                                             path="/basket/:basketID"
                                             element={
                                                 <AuthRouterWithRedirect
@@ -183,6 +195,7 @@ function App() {
                                                 </AuthRouterWithRedirect>
                                             }
                                         />
+
                                         <Route
                                             path="/basket/:basketID/product/:productID"
                                             element={

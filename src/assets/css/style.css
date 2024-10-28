@@ -1857,7 +1857,8 @@ header {
 }
 
 .collection {
-  background: #b4dacf;
+  /* background: #b4dacf; */
+  background: #7d7d7d;
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;

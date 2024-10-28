@@ -45,7 +45,7 @@ const CreateBasket = () => {
     const submitAPI = useMutation({
         mutationFn: makeBasket,
         onSuccess: (data) => {
-            navigate(`/basket/${data}`, {replace: true});
+            navigate(`/basket/create/${data}/after`, {replace: true});
         },
     });
 

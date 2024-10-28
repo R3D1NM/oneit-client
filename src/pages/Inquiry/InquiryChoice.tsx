@@ -19,11 +19,23 @@ import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover';
 import {cn} from '@/lib/utils';
 import Header from '@/components/common/Header';
 
+type emojiEnumType = 'LOVE' | 'LIKE' | 'NEED' | 'SOSO' | 'BAD' | 'HAVE';
+const emojiEnum: emojiEnumType[] = [
+    'LOVE',
+    'LIKE',
+    'NEED',
+    'SOSO',
+    'BAD',
+    'HAVE',
+];
+
 const InquiryChoice = () => {
     const {inquiryID} = useParams();
     const [currentIdx, setCurrentIdx] = useState(0);
     const [isSelected, setIsSelected] = useState(false);
-    const [selectedEmoji, setSelectedEmoji] = useState(0);
+    const [selectedEmoji, setSelectedEmoji] = useState<emojiEnumType | null>(
+        null,
+    );
     const choiceList = useAtomValue(choices);
     const selectEmoji = useSetAtom(addChoice);
     const navigate = useNavigate();
@@ -35,17 +47,17 @@ const InquiryChoice = () => {
         queryFn: () => getInquiry(inquiryID || ''),
     });
 
-    const handleEmoji = (emoji: Emoji) => {
-        if (selectedEmoji === emoji.idx) {
-            setSelectedEmoji(0);
+    const handleEmoji = (emoji: emojiEnumType) => {
+        if (selectedEmoji === emoji) {
+            setSelectedEmoji(null);
             setIsSelected(false);
             return;
         }
         setIsSelected(true);
-        setSelectedEmoji(emoji.idx);
+        setSelectedEmoji(emoji);
         const choice: InquiryChoiceType = {
             productIdx: inquiryAPI.data?.selectedProducts[currentIdx].idx,
-            emojiIdx: emoji.idx,
+            emojiIdx: emoji,
         };
         selectEmoji(choice);
     };
@@ -56,7 +68,7 @@ const InquiryChoice = () => {
 
             navigate(`/inquiry/${inquiryID}/result`);
         } else {
-            setSelectedEmoji(0);
+            setSelectedEmoji(null);
             setCurrentIdx((prev) => prev + 1);
         }
     };
@@ -88,17 +100,17 @@ const InquiryChoice = () => {
         };
     }, [currentIdx]);
 
-    const EmojiButton = ({emoji}: {emoji: Emoji}) => {
+    const EmojiButton = ({emoji}: {emoji: emojiEnumType}) => {
         return (
             <button
                 className={cn(
-                    `${emoji.name}`,
-                    selectedEmoji === emoji.idx && 'active',
+                    `${EmojiList[emoji].name}`,
+                    selectedEmoji === emoji && 'active',
                 )}
                 onClick={() => handleEmoji(emoji)}
             >
                 <i></i>
-                <p>{emoji.content}</p>
+                <p>{EmojiList[emoji].content}</p>
             </button>
         );
     };
@@ -110,10 +122,10 @@ const InquiryChoice = () => {
                 <div className="big_title">
                     친구들이 준비한 선물 리스트 중<br />
                     <span>
-                        {inquiryAPI?.data?.name ? (
+                        {inquiryAPI?.data?.target ? (
                             <>
-                                <span>서연</span>님 마음에 드는 선물을
-                                선택해주세요
+                                <span>{inquiryAPI?.data?.target}</span>님 마음에
+                                드는 선물을 선택해주세요
                             </>
                         ) : (
                             '마음에 드는 선물을 선택해주세요'
@@ -151,14 +163,18 @@ const InquiryChoice = () => {
 
                     <div className="emoji_area">
                         <div className="area_one">
-                            {EmojiList?.slice(0, 3)?.map((emoji, idx) => (
-                                <EmojiButton emoji={emoji} key={idx} />
-                            ))}
+                            {emojiEnum
+                                .slice(0, 3)
+                                ?.map((emoji, idx) => (
+                                    <EmojiButton emoji={emoji} key={idx} />
+                                ))}
                         </div>
                         <div className="area_two">
-                            {EmojiList?.slice(3, 6)?.map((emoji, idx) => (
-                                <EmojiButton emoji={emoji} key={idx} />
-                            ))}
+                            {emojiEnum
+                                .slice(3, 6)
+                                ?.map((emoji, idx) => (
+                                    <EmojiButton emoji={emoji} key={idx} />
+                                ))}
                         </div>
                     </div>
                     <Button

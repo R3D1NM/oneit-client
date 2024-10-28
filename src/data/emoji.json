@@ -1,32 +1,32 @@
-[
-    {
+{
+    "LOVE": {
         "idx": 1,
         "name": "like",
         "content": "완전 좋아!"
     },
-    {
+    "LIKE": {
         "idx": 2,
         "name": "like2",
         "content": "취향 저격"
     },
-    {
+    "NEED": {
         "idx": 3,
         "name": "need",
         "content": "필요했어"
     },
-    {
+    "SOSO": {
         "idx": 4,
         "name": "soso",
         "content": "그저 그래"
     },
-    {
+    "BAD": {
         "idx": 5,
         "name": "bad",
         "content": "완전 별로"
     },
-    {
+    "HAVE": {
         "idx": 6,
         "name": "had",
         "content": "이미 있어"
     }
-]
+}

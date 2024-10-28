@@ -5,8 +5,9 @@ export type Answer = {
 
 export type Keyword = {
     idx: number;
-    keyword: string;
+    name: string;
     description: string;
+    field?: string;
 };
 
 export type Product = {
@@ -84,7 +85,7 @@ export type Emoji = {
 
 export type InquiryChoice = {
     productIdx: number;
-    emojiIdx: number;
+    emojiIdx: 'LOVE' | 'LIKE' | 'NEED' | 'SOSO' | 'BAD' | 'HAVE';
 };
 
 export type Friend = {
