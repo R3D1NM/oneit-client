@@ -1,4 +1,4 @@
-import {Product} from '@/lib/types';
+import {BaksetProduct, Product} from '@/lib/types';
 import {atomWithMutation} from 'jotai-tanstack-query';
 import axios from '@/lib/axios';
 import {choices} from '@/atoms/inquiry';
@@ -6,7 +6,7 @@ const {Kakao} = window;
 
 type CreateInquiryVariables = {
     basketIdx: string;
-    selected: Product[];
+    selected: BaksetProduct[];
     target: string;
 };
 

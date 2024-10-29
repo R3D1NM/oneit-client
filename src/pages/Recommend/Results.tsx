@@ -247,23 +247,23 @@ const Results = () => {
                                                 >
                                                     공유하기
                                                 </Button>
-                                                <a
-                                                    href={item.productUrl}
-                                                    target="_blank"
-                                                    className="flex-1 flex justify-center items-center"
+
+                                                <Button
+                                                    className="w-full flex-1 flex justify-center items-center"
+                                                    variant="border"
+                                                    onClick={() =>
+                                                        navigate(
+                                                            `/product/${item.idx}`,
+                                                        )
+                                                    }
                                                 >
-                                                    <Button
-                                                        className="w-full"
-                                                        variant="border"
-                                                    >
-                                                        <img
-                                                            src={giftIcon}
-                                                            alt="Gift icon"
-                                                            className="w-6 h-6 mr-1"
-                                                        />
-                                                        구매하러 가기
-                                                    </Button>
-                                                </a>
+                                                    <img
+                                                        src={giftIcon}
+                                                        alt="Gift icon"
+                                                        className="w-6 h-6 mr-1"
+                                                    />
+                                                    자세히 보기
+                                                </Button>
                                             </div>
                                         </CarouselItem>
                                     ),

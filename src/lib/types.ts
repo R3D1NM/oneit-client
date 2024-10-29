@@ -21,11 +21,24 @@ export type Product = {
     categoryName?: string;
     categoryDisplayName?: string;
     keywords?: string[];
-    status?: string;
+    productStatus?: string;
     description: string;
     likeCount?: number;
     voteStatus?: 'LIKE' | 'DISLIKE' | 'NONE';
-    purchaseStatus?: 'PURCHASED' | 'NOT_PURCHASED';
+};
+
+export type BaksetProduct = {
+    idx: number;
+    name: string;
+    originalPrice: number;
+    thumbnailUrl: string;
+    keywords: Keyword[];
+    productStatus: string;
+    description: string;
+    likeCountInGiftbox: number;
+    voteStatus: 'LIKE' | 'DISLIKE' | 'NONE';
+    purchaseStatus: 'PURCHASED' | 'NOT_PURCHASED';
+    emojiIdx?: 'LOVE' | 'LIKE' | 'NEED' | 'SOSO' | 'BAD' | 'HAVE';
 };
 
 export type Question = {
@@ -61,6 +74,7 @@ export type Basket = {
     accessStatus?: string;
     imageUrl?: string;
     participants?: Participant[];
+    dday: number;
 };
 
 export interface Participant {
@@ -118,6 +132,7 @@ export type Comment = {
     giftboxProductIdx: number;
     writerIdx: number;
     writerNickName: string;
+    writerProfileImg: string;
     content: string;
     createdAt: Date;
 };

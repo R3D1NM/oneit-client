@@ -2,6 +2,7 @@ import {AspectRatio} from '@/components/ui/aspect-ratio';
 import {Product} from '@/lib/types';
 import {Link, useNavigate} from 'react-router-dom';
 import logo from '@/assets/images/oneit.png';
+import {cn} from '@/lib/utils';
 
 interface ProductCardProps {
     product: Product;
@@ -12,7 +13,7 @@ const ProductCard = (props: ProductCardProps) => {
     const navigate = useNavigate();
     return (
         <div
-            className="box"
+            className={cn('box', product.productStatus === 'INVALID' && 'sold')}
             onClick={() => navigate(`/product/${product.idx}`)}
         >
             <div className="image">
@@ -29,7 +30,7 @@ const ProductCard = (props: ProductCardProps) => {
                 </p>
                 <div className="tags">
                     {product.keywords
-                        ?.splice(0, 3)
+                        ?.slice(0, 3)
                         .map((tag, idx) => <span key={idx}>#{tag}</span>)}
                 </div>
             </a>

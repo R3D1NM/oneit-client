@@ -16,6 +16,7 @@ const SignUp = () => {
     const navigate = useNavigate();
     const user = useAtomValue(authAtom);
     const [isNicknameChecked, setIsNicknameChecked] = useState(false);
+    const [isAgreed, setIsAgreed] = useState(false);
 
     const formSchema = z.object({
         name: z
@@ -133,6 +134,10 @@ const SignUp = () => {
                 type: 'manual',
                 message: '닉네임 중복 검사를 먼저 진행해주세요.',
             });
+            return;
+        }
+        if (!isAgreed) {
+            toast.error('개인정보처리방침에 동의해주세요.');
             return;
         }
         const birthDate = `${data.birthYear}-${data.birthMonth.padStart(2, '0')}-${data.birthDay.padStart(2, '0')}`;
@@ -313,6 +318,28 @@ const SignUp = () => {
                         올바른 생년월일을 입력해주세요.
                     </p>
                 )}
+
+                <div className="flex gap-1">
+                    <input
+                        type="checkbox"
+                        onChange={() => setIsAgreed(!isAgreed)}
+                    />
+                    <p className="text-xs">
+                        <a href="/policy.pdf" className="">
+                            <span className="text-[#ff4bc1]">
+                                개인정보처리방침
+                            </span>
+                        </a>
+                        에 동의합니다 (필수)
+                    </p>
+                </div>
+
+                {/* <div className="flex gap-1">
+                    <input type="checkbox" />
+                    <p className="text-xs">
+                        ONE!T 카카오 채널로 소식을 받아볼래요 (선택)
+                    </p>
+                </div> */}
 
                 <div className="mt-6">
                     <Button

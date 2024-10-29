@@ -1,4 +1,9 @@
-import {deleteBasket, editBasket, fetchBasketInfo} from '@/api/basket';
+import {
+    basketInvite,
+    deleteBasket,
+    editBasket,
+    fetchBasketInfo,
+} from '@/api/basket';
 import Header from '@/components/common/Header';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import React, {useEffect, useRef, useState} from 'react';
@@ -35,6 +40,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import {toast} from 'sonner';
 import {cn} from '@/lib/utils';
+const {Kakao} = window;
 
 const ParticipantThumbnail = ({participant}: {participant: Participant}) => {
     const user = useAtomValue(authAtom);
@@ -132,19 +138,18 @@ const BasketEdit = ({
             image,
         }: {
             basketID: string;
-            basket: Basket;
+            basket: any;
             image: File | null;
         }) => {
             return await editBasket(basketID, basket, image);
         },
         onSuccess: (data, variables) => {
-            closeModal();
             //todo: update basket info
-            queryClient.setQueryData(['basket', basket.idx], {
-                ...basket,
-                name: variables.basket.name,
-                deadline: variables.basket.deadline,
+            queryClient.invalidateQueries({
+                queryKey: ['basket', basket.idx.toString()],
             });
+            toast.success('바구니 정보가 수정되었습니다.');
+            closeModal();
         },
     });
 
@@ -182,8 +187,6 @@ const BasketEdit = ({
             name: values.title,
             deadline: new Date(values.deadline),
             idx: basket.idx,
-            description: basket.description,
-            accessStatus: basket.accessStatus,
         };
 
         editBasketAPI.mutate({
@@ -319,23 +322,12 @@ const BasketInfo = () => {
     const {basketID} = useParams();
     const [isOpen, setIsOpen] = useState(false);
     const [isOpen2, setIsOpen2] = useState(false);
-    const [dDay, setDDay] = useState(0);
     const user = useAtomValue(authAtom);
     const navigate = useNavigate();
 
     const basketInfoAPI = useQuery({
         queryKey: ['basket', basketID],
-        queryFn: () =>
-            fetchBasketInfo(basketID || '').then((data) => {
-                const dDay =
-                    Math.ceil(
-                        (new Date(data?.deadline).getTime() -
-                            new Date().getTime()) /
-                            (1000 * 60 * 60 * 24),
-                    ) || 0;
-                setDDay(dDay);
-                return data;
-            }),
+        queryFn: () => fetchBasketInfo(basketID || ''),
     });
 
     const deleteAPI = useMutation({
@@ -344,6 +336,52 @@ const BasketInfo = () => {
             navigate(`/basket`, {replace: true});
         },
     });
+    useEffect(() => {
+        if (!Kakao.isInitialized()) {
+            Kakao.init(import.meta.env.VITE_KAKAO_API_KEY);
+        }
+    }, []);
+
+    const inviteAPI = useMutation({
+        mutationFn: () => basketInvite(basketID || ''),
+        mutationKey: ['invite'],
+    });
+
+    const handleInvite = () => {
+        inviteAPI.mutateAsync().then((res) => {
+            const invitationIdx = res.invitationIdx;
+
+            const url = `${import.meta.env.VITE_CURRENT_DOMAIN}/basket/${basketID}/invite/${invitationIdx}`;
+
+            Kakao.Share.sendDefault({
+                objectType: 'feed',
+                content: {
+                    title: user
+                        ? `${user?.nickname}님이 선물 바구니에 초대했습니다.`
+                        : 'ONE!T 선물 바구니에 초대되었습니다.',
+                    description: basketInfoAPI.data.name || 'ONE!T 선물 바구니',
+                    imageUrl:
+                        basketInfoAPI.data.imageUrl ||
+                        'https://www.oneit.gift/oneit.png',
+                    link: {
+                        mobileWebUrl: url,
+                        webUrl: url,
+                    },
+                },
+                buttons: [
+                    {
+                        title: 'ONE!T에서 확인하기',
+                        link: {
+                            mobileWebUrl: url,
+                            webUrl: url,
+                        },
+                    },
+                ],
+            }).then(() => {
+                toast.success('친구에게 초대장을 보냈습니다.');
+            });
+        });
+    };
 
     // const openModal = () => setIsOpen(true);
     const closeModal = () => setIsOpen(false);
@@ -353,6 +391,18 @@ const BasketInfo = () => {
 
     const hanldeDelete = () => {
         deleteAPI.mutate();
+    };
+
+    const handleCopy = async () => {
+        inviteAPI.mutateAsync().then((res) => {
+            const invitationIdx = res.invitationIdx;
+
+            const url = `${import.meta.env.VITE_CURRENT_DOMAIN}/basket/${basketID}/invite/${invitationIdx}`;
+
+            navigator.clipboard.writeText(url).then(() => {
+                toast('클립보드에 복사되었습니다.');
+            });
+        });
     };
 
     return (
@@ -369,14 +419,14 @@ const BasketInfo = () => {
                             />
                         </div>
                         <div>
-                            {dDay >= 0 ? (
+                            {basketInfoAPI?.data?.dday >= 0 ? (
                                 <div className="dDay">
                                     D-
-                                    {dDay}
+                                    {basketInfoAPI?.data?.dday}
                                 </div>
                             ) : (
                                 <div className="text-[#ff5757] text-sm font-semibold">
-                                    {-dDay}일 지남
+                                    {-basketInfoAPI?.data?.dday}일 지남
                                 </div>
                             )}
                             <div
@@ -500,8 +550,12 @@ const BasketInfo = () => {
                             친한 친구를 바구니에 초대해보세요
                         </div>
                         <div className="btn_share_area">
-                            <button className="kakao">카카오톡</button>
-                            <button className="link">링크복사</button>
+                            <button className="kakao" onClick={handleInvite}>
+                                카카오톡
+                            </button>
+                            <button className="link" onClick={handleCopy}>
+                                링크복사
+                            </button>
                         </div>
                         <button
                             className="btn_text"

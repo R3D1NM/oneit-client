@@ -74,7 +74,7 @@ const Collection = () => {
                         )}
                     </ul>
                 </div>
-                {fetchCollectionAPI?.data?.productList[0]?.status ===
+                {fetchCollectionAPI?.data?.productList[0]?.productStatus ===
                 'ACTIVE' ? (
                     <button
                         className="btn_more"

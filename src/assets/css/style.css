@@ -517,7 +517,7 @@ header {
   }
 
   .talk_area {
-    margin-top: 2rem;
+    margin-top: 0.25rem;
 
     .title {
       font-size: 0.875rem;
@@ -596,7 +596,7 @@ header {
   }
 
   .talk_input_fixed {
-    position: fixed;
+    position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
@@ -760,7 +760,7 @@ header {
 
         &.sold {
           &::before {
-            content: "이미 구매 한 제품이에요 ㅠㅠ";
+            content: "구매 불가능한 제품이에요:(";
             font-size: 0.75rem;
             font-weight: bold;
             color: #fff;
@@ -834,8 +834,8 @@ header {
             }
 
             img {
-              width: 100%;
-              height: 100%;
+              width: 143px;
+              height: 143px;
               object-fit: contain;
               border-radius: 0.5rem;
               overflow: hidden;
@@ -852,11 +852,261 @@ header {
               font-size: 0.625rem;
               color: #fff;
 
-              i {
+              /* i {
                 margin-right: 0.5rem;
                 img {
                   width: 1.5rem;
                   height: 1.5rem;
+                }
+              } */
+
+              >button {
+                margin-top: 0.3125rem;
+                border: 1px solid #ff4bc1;
+                color: #ff4bc1;
+                font-size: 0.75rem;
+                font-weight: 400;
+                height: 1.75rem;
+                border-radius: 999px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 100%;
+                /* opacity: 0.6; */
+
+                i {
+                  width: 1.5rem;
+                  height: 1.5rem;
+                  margin-right: 0.2188rem;
+                  display: block;
+                  background: url("/src/assets/images/emoji_like.svg") no-repeat center/contain;
+                }
+
+                &.like {
+                  i {
+                    background: url("/src/assets/images/emoji_like.svg") no-repeat center/contain;
+                  }
+                }
+
+                &.like2 {
+                  i {
+                    background: url("/src/assets/images/emoji_like2.svg") no-repeat center/contain;
+                  }
+                }
+
+                &.need {
+                  i {
+                    background: url("/src/assets/images/emoji_need.svg") no-repeat center/contain;
+                  }
+                }
+
+                &.soso {
+                  i {
+                    background: url("/src/assets/images/emoji_soso.svg") no-repeat center/contain;
+                  }
+                }
+
+                &.bad {
+                  i {
+                    background: url("/src/assets/images/emoji_bad.svg") no-repeat center/contain;
+                  }
+                }
+
+                &.had {
+                  i {
+                    background: url("/src/assets/images/emoji_had.svg") no-repeat center/contain;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.gift_list_in_basket {
+  ul {
+
+    /* display: flex;
+    flex-direction: column; */
+    li {
+      /* display: flex;
+      align-items: center;
+      gap: 0.6875rem; */
+
+      +li {
+        margin-top: 0.6875rem;
+      }
+
+      .box {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+        border-radius: 0.5rem;
+
+        &.sold {
+          &::before {
+            content: "이미 구매한 제품이에요";
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.6);
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            position: absolute;
+            z-index: 5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+        }
+
+        .title {
+          font-size: 0.875rem;
+          color: #3d3d3d;
+          font-weight: bold;
+          margin-top: 0.75rem;
+          margin-bottom: 0;
+        }
+
+        .price {
+          font-size: 0.75rem;
+          color: #4f4f4f;
+          margin-top: 0.25rem;
+        }
+
+        .tags {
+          margin-top: 0.25rem;
+          display: flex;
+          gap: 0.375rem;
+          flex-flow: wrap;
+
+          >span {
+            background: #f5f5f5;
+            font-size: 0.625rem;
+            color: #4f4f4f;
+            padding: 0.125rem 0.375rem;
+            border-radius: 999px;
+          }
+        }
+
+        .image {
+          width: 100%;
+          /* height: 100%; */
+
+          .photo {
+            position: relative;
+            border-radius: 0.5rem;
+            overflow: hidden;
+
+            .heart {
+              font-size: 1rem;
+              color: #fff;
+              position: absolute;
+              top: 0.5rem;
+              left: 0.5rem;
+              z-index: 8;
+              display: flex;
+              align-items: center;
+
+              i {
+                width: 1.75rem;
+                height: 1.75rem;
+                margin-right: 0.125rem;
+                background: url("/src/assets/images/mage_heart.svg") no-repeat center/contain;
+                display: block;
+              }
+            }
+
+            img {
+              width: 143px;
+              height: 143px;
+              object-fit: contain;
+              border-radius: 0.5rem;
+              overflow: hidden;
+            }
+
+            .desc {
+              position: absolute;
+              bottom: 0;
+              width: 100%;
+              height: 2.25rem;
+              background: rgba(0, 0, 0, 0.6);
+              display: flex;
+              align-items: center;
+              padding: 0 0.375rem;
+              font-size: 0.625rem;
+              color: #fff;
+
+              /* i {
+                margin-right: 0.5rem;
+                img {
+                  width: 1.5rem;
+                  height: 1.5rem;
+                }
+              } */
+
+              >button {
+                margin-top: 0.3125rem;
+                border: 1px solid #ff4bc1;
+                color: #ff4bc1;
+                font-size: 0.75rem;
+                font-weight: 400;
+                height: 1.75rem;
+                border-radius: 999px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 100%;
+                /* opacity: 0.6; */
+
+                i {
+                  width: 1.5rem;
+                  height: 1.5rem;
+                  margin-right: 0.2188rem;
+                  display: block;
+                  background: url("/src/assets/images/emoji_like.svg") no-repeat center/contain;
+                }
+
+                &.like {
+                  i {
+                    background: url("/src/assets/images/emoji_like.svg") no-repeat center/contain;
+                  }
+                }
+
+                &.like2 {
+                  i {
+                    background: url("/src/assets/images/emoji_like2.svg") no-repeat center/contain;
+                  }
+                }
+
+                &.need {
+                  i {
+                    background: url("/src/assets/images/emoji_need.svg") no-repeat center/contain;
+                  }
+                }
+
+                &.soso {
+                  i {
+                    background: url("/src/assets/images/emoji_soso.svg") no-repeat center/contain;
+                  }
+                }
+
+                &.bad {
+                  i {
+                    background: url("/src/assets/images/emoji_bad.svg") no-repeat center/contain;
+                  }
+                }
+
+                &.had {
+                  i {
+                    background: url("/src/assets/images/emoji_had.svg") no-repeat center/contain;
+                  }
                 }
               }
             }
@@ -901,7 +1151,7 @@ header {
   .slide_btns_area {
     display: flex;
     align-items: center;
-    margin-top: 2.25rem;
+    margin-top: 0.75rem;
 
     .btns {
       display: flex;
@@ -973,7 +1223,26 @@ header {
         width: 100%;
         object-fit: contain;
       }
+      &.sold {
+        &::before {
+          content: "구매 불가능한 제품이에요:(";
+          font-size: 0.75rem;
+          font-weight: bold;
+          color: #fff;
+          background: rgba(0, 0, 0, 0.6);
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          /* position: absolute; */
+          z-index: 5;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      }
     }
+
 
     .info {
       padding: 1rem;
@@ -2140,7 +2409,7 @@ header {
 input[type="text"],
 input[type="number"] {
   width: 100%;
-  height: 3rem;
+  height: 2.25rem;
   padding: 0 0.75rem;
   border: 1px solid #d1d1d1;
   border-radius: 0.5rem;
@@ -2351,4 +2620,43 @@ input[type="number"] {
   100% {
     width: 100%;
   }
+}
+
+.invite{
+  .thums {
+      position: relative;
+      margin-left: 0.25rem;
+  
+      ul {
+        display: flex;
+        align-items: center;
+  
+        li {
+          width: 1.25rem;
+          height: 1.25rem;
+          /* position: absolute; */
+          border-radius: 999px;
+          overflow: hidden;
+  
+          +li {
+            margin-left: -0.5rem;
+          }
+  
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+          }
+  
+          &:last-child {
+            background: #3d3d3d;
+            font-size: 0.625rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+          }
+        }
+      }
+    }
 }

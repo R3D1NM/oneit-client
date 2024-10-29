@@ -113,6 +113,78 @@ export const nicknameCheck = async (nickname: string) => {
         });
 };
 
+interface EditUserInfo {
+    nickname: string;
+    profileImage?: File | null;
+    birthDate: string;
+}
+
+export const editUserInfo = async (user: EditUserInfo) => {
+    const data = {
+        nickname: user.nickname,
+        birthDate: user.birthDate,
+    };
+    let payload = new FormData();
+    payload.append('request', JSON.stringify(data));
+    if (user.profileImage) {
+        payload.append('image', user.profileImage as File);
+    }
+    return axios
+        .patch('/v2/user', payload, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+            transformRequest: [() => payload],
+        })
+        .then((res) => {
+            return Promise.resolve(res.data);
+        })
+        .catch((err) => {
+            return Promise.reject(err);
+        });
+};
+
+export const userWithdrawal = async () => {
+    return axios
+        .post('/v2/withdraw')
+        .then((res) => {
+            return Promise.resolve(res.data);
+        })
+        .catch((err) => {
+            return Promise.reject(err);
+        });
+};
+
+// export const editBasket = async (
+//     basketID: string,
+//     basket: Basket,
+//     thumbnail: File | null,
+// ) => {
+//     const data = {
+//         name: basket.name,
+//         description: basket.description,
+//         deadline: basket.deadline,
+//         accessStatus: basket.accessStatus,
+//     };
+
+//     let payload = new FormData();
+//     payload.append('request', JSON.stringify(data));
+//     payload.append('image', thumbnail as File);
+//     return axios
+//         .put(`/v2/giftbox/${basketID}`, basket, {
+//             headers: {
+//                 'Content-Type': 'multipart/form-data',
+//             },
+//             transformRequest: [() => payload],
+//         })
+//         .then((res) => {
+//             return Promise.resolve(res.data);
+//         })
+//         .catch((err) => {
+//             return Promise.reject(err);
+//         });
+// };
+
 // const getRefreshToken = async (): Promise<string> => {
 //     return axios.get("/auth/refresh", {
 //         headers: {

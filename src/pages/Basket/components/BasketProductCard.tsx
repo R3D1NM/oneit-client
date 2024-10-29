@@ -1,18 +1,7 @@
 import {basketProductVote, deleteBasketProduct} from '@/api/basket';
 import {selctedProductCount, selectProduct} from '@/atoms/basket';
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import {AspectRatio} from '@/components/ui/aspect-ratio';
-import {Button} from '@/components/ui/button';
-import {Product} from '@/lib/types';
+import EmojiList from '@/data/emoji.json';
+import {BaksetProduct} from '@/lib/types';
 import {cn} from '@/lib/utils';
 import {useMutation} from '@tanstack/react-query';
 import {useAtomValue, useSetAtom} from 'jotai';
@@ -24,7 +13,7 @@ import mageHeartFill from '@/assets/images/mage_heart_fill.svg';
 import {useNavigate} from 'react-router-dom';
 
 interface ProductCardProps {
-    product: Product;
+    product: BaksetProduct;
     basketID: string;
     shared: boolean;
     likeCount: number;
@@ -60,15 +49,6 @@ const BasketProductCard = (props: ProductCardProps) => {
         }
     });
 
-    const handleClick = () => {
-        setIsSelected(!isSelected);
-        onSelect(product);
-    };
-
-    const handleDelete = async () => {
-        deleteAPI.mutate();
-    };
-
     const handleVote = () => {
         let newVote: 'LIKE' | 'DISLIKE' | 'NONE';
         let newCount: number;
@@ -90,7 +70,7 @@ const BasketProductCard = (props: ProductCardProps) => {
     };
 
     return (
-        <div className={cn('box', purchaseStatus === 'PURCHASED' && 'solid')}>
+        <div className={cn('box', purchaseStatus === 'PURCHASED' && 'sold')}>
             <div className="image">
                 <div className="photo">
                     <img
@@ -124,20 +104,26 @@ const BasketProductCard = (props: ProductCardProps) => {
                             {count}
                         </span>
                     </div>
-                    <div
-                        className="desc"
-                        onClick={() =>
-                            navigate(
-                                `/basket/${basketID}/product/${product.idx}`,
-                            )
-                        }
-                    >
-                        {/* todo: get inquiry result */}
-                        <i>
-                            <img src={likeit} alt="좋아요 아이콘" />
-                        </i>
-                        너무 맘에 들어
-                    </div>
+                    {product?.emojiIdx && (
+                        <div
+                            // className={cn(
+                            //     'desc',
+                            //     product.emojiIdx &&
+                            //         `${EmojiList[product.emojiIdx].name}`,
+                            // )}
+                            className="desc like"
+                            onClick={() =>
+                                navigate(
+                                    `/basket/${basketID}/product/${product.idx}`,
+                                )
+                            }
+                        >
+                            <button className="like">
+                                <i></i>
+                                <p>{EmojiList[product.emojiIdx].content}</p>
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
             <a
@@ -151,8 +137,12 @@ const BasketProductCard = (props: ProductCardProps) => {
                 </p>
                 <div className="tags">
                     {product.keywords
-                        ?.splice(0, 3)
-                        .map((tag, idx) => <span key={idx}>#{tag}</span>)}
+                        ?.slice(0, 3)
+                        .map((tag, idx) => (
+                            <span key={`${product.idx}-${idx}`}>
+                                #{tag.name}
+                            </span>
+                        ))}
                 </div>
             </a>
         </div>

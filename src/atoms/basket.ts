@@ -1,4 +1,4 @@
-import {Product} from '@/lib/types';
+import {BaksetProduct, Product} from '@/lib/types';
 import {atom} from 'jotai';
 
 //create basket
@@ -16,10 +16,10 @@ export const accessStatus = atom<'PUBLIC' | 'PRIVATE'>('PUBLIC');
 accessStatus.debugLabel = 'accessStatus';
 
 //select product
-export const selectedProduct = atom<Product[]>([] as Product[]);
+export const selectedProduct = atom<BaksetProduct[]>([] as BaksetProduct[]);
 selectedProduct.debugLabel = 'selectedProduct';
 export const selctedProductCount = atom((get) => get(selectedProduct).length);
-export const selectProduct = atom(null, (get, set, product: Product) => {
+export const selectProduct = atom(null, (get, set, product: BaksetProduct) => {
     const selected = get(selectedProduct);
     if (selected.find((p) => p.idx === product.idx)) {
         set(

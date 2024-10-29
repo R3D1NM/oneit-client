@@ -1,19 +1,39 @@
-import {authAtom} from '@/api/auth';
+import {authAtom, editUserInfo} from '@/api/auth';
 import Header from '@/components/common/Header';
-import {useAtom, useAtomValue} from 'jotai';
-import React, {useEffect, useRef, useState} from 'react';
+import {useMutation} from '@tanstack/react-query';
+import {useAtomValue} from 'jotai';
+import React, {useRef, useState} from 'react';
 
 const EditInfo = () => {
     const user = useAtomValue(authAtom);
     const [newNickname, setNewNickname] = useState(user?.nickname || '');
     const [imageURL, setImageURL] = useState(user?.profileImgFromKakao || '');
+    const [newBirthDate, setNewBirthDate] = useState(user?.birthDate || '');
     const [image, setImage] = useState<File | null>(null);
+    const [birthDateError, setBirthDateError] = useState('');
     const fileInputRef = useRef<HTMLInputElement>(null);
 
-    //todo: connect edit info api
+    const EditInfoAPI = useMutation({
+        mutationKey: ['editInfo'],
+        mutationFn: () =>
+            editUserInfo({
+                nickname: newNickname,
+                profileImage: image,
+                birthDate: newBirthDate.toString(),
+            }),
+    });
+
     const handleSubmit = () => {
+        const birthDateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!birthDateRegex.test(newBirthDate.toString())) {
+            setBirthDateError('생년월일은 YYYY-MM-DD 형식이어야 합니다.');
+            return;
+        }
+
+        setBirthDateError('');
         console.log(newNickname);
         console.log(image);
+        EditInfoAPI.mutate();
     };
 
     return (
@@ -61,8 +81,16 @@ const EditInfo = () => {
                         value={newNickname}
                         onChange={(e) => setNewNickname(e.target.value)}
                     />
-                    {/* <small>전화번호</small>
-                    <input type="number" placeholder="010-000-0000" /> */}
+                    <small>생년월일</small>
+                    <input
+                        type="text"
+                        placeholder="YYYY-MM-DD"
+                        value={newBirthDate.toString()}
+                        onChange={(e) => setNewBirthDate(e.target.value)}
+                    />
+                    {birthDateError && (
+                        <small style={{color: 'red'}}>{birthDateError}</small>
+                    )}
                 </div>
             </div>
             <div className="btn_area_fixed pl-4 pr-4">

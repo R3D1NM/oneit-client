@@ -207,7 +207,7 @@ const Quiz = () => {
                                 variant="disabled"
                                 onClick={() => {
                                     setError(false);
-                                    navigate('/');
+                                    navigate('/main');
                                 }}
                             >
                                 메인으로
