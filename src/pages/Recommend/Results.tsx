@@ -25,6 +25,7 @@ import {
 } from '@/components/ui/drawer';
 import {rateResult} from '@/api/chat';
 import {Gift} from 'lucide-react';
+import logo from '@/assets/images/oneit.png';
 
 const {Kakao} = window;
 
@@ -204,7 +205,10 @@ const Results = () => {
                                                 </div>
                                                 <div className="img mt-[1.125rem] w-[165px] h-[165px] mx-auto overflow-hidden rounded-2xl">
                                                     <img
-                                                        src={item.thumbnailUrl}
+                                                        src={
+                                                            item?.thumbnailUrl ||
+                                                            logo
+                                                        }
                                                         alt={item.name}
                                                         className="w-full h-full object-cover"
                                                     />
@@ -240,7 +244,9 @@ const Results = () => {
                                                                     ?.resultType
                                                                     .title ||
                                                                 'ONE!T - 선물 추천 플랫폼',
-                                                            image: item.thumbnailUrl,
+                                                            image:
+                                                                item?.thumbnailUrl ||
+                                                                'https://www.oneit.gift/oneit.png',
                                                             url: `${import.meta.env.VITE_CURRENT_DOMAIN}/recommend/${chatID}/result`,
                                                         })
                                                     }

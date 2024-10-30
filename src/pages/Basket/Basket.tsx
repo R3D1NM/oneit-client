@@ -28,6 +28,19 @@ import giftBox2 from '@/assets/images/giftBox2.svg';
 import giftMessage from '@/assets/images/gift_messege.svg';
 import giftMessageFill from '@/assets/images/gift_messege_fill.svg';
 import {cn} from '@/lib/utils';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
+import {Button} from '@/components/common/Button';
+import {Label} from '@/components/ui/label';
+import {Input} from '@/components/ui/input';
+import {ArrowUp} from 'lucide-react';
 
 const {Kakao} = window;
 const drawerBleeding = 48;
@@ -50,7 +63,7 @@ const Basket = () => {
     const selectedCount = useAtomValue(selctedProductCount);
     const [selected, setSelected] = useAtom(selectedProduct);
     const [target, setTarget] = useState('');
-    const [{mutate}] = useAtom(createInquiry);
+    const [{mutateAsync}] = useAtom(createInquiry);
     const [open, setOpen] = useState(false);
     const [searchOpen, setSearchOpen] = useState(false);
     const [dDay, setDDay] = useState(0);
@@ -126,8 +139,28 @@ const Basket = () => {
     };
 
     const handleInquiry = () => {
-        mutate({basketIdx: basketID || '', selected, target});
-        setSelected([]);
+        //select all products
+        // const products =
+        //     basketProductAPI.data?.map((p: BaksetProduct) => p.idx) ||
+        //     ([] as BaksetProduct[]);
+        // console.log(products);
+
+        // setSelected(products);
+
+        mutateAsync({
+            basketIdx: basketID || '',
+            selected: basketProductAPI.data,
+            target,
+        })
+            .then((data) => {
+                toast.success('물어보기 전송 완료');
+                setMode(false);
+            })
+            .catch((err) => {
+                toast.error('물어보기 전송 실패');
+                setMode(false);
+            });
+        // setSelected([]);
     };
 
     const scrollToTop = () => {
@@ -220,14 +253,58 @@ const Basket = () => {
                             <div className="giftBox"></div>
                         </div>
                     </div>
-                    <button
-                        className={cn(
-                            'image animate-pulse bg-center bg-contain bg-no-repeat block',
-                            mode && 'bg-border-[#FF4BC1] border-4',
-                        )}
-                        style={{backgroundImage: `url(${giftMessage})`}}
-                        onClick={handleModeChange}
-                    ></button>
+                    <Dialog open={mode} onOpenChange={handleModeChange}>
+                        <DialogTrigger>
+                            <div
+                                className={cn(
+                                    'image bg-center bg-contain bg-no-repeat block',
+                                    mode &&
+                                        'shadow-[#FF4BC1] rounded-full shadow-sm',
+                                    !mode && 'animate-wiggle',
+                                )}
+                                style={{backgroundImage: `url(${giftMessage})`}}
+                                onClick={handleModeChange}
+                            ></div>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>선물 바구니 물어보기</DialogTitle>
+
+                                <DialogDescription>
+                                    선물 받는 사람에게 바구니에 담긴 선물이
+                                    마음에 드는지 물어보세요!
+                                </DialogDescription>
+                            </DialogHeader>
+                            <div className="grid gap-4 py-4">
+                                <div className="grid grid-cols-4 items-center gap-4">
+                                    <Label
+                                        htmlFor="name"
+                                        className="text-right"
+                                    >
+                                        받는 사람
+                                    </Label>
+                                    <Input
+                                        id="name"
+                                        defaultValue="받는 사람 이름"
+                                        className="col-span-3"
+                                        onChange={(e) =>
+                                            setTarget(e.target.value)
+                                        }
+                                        value={target}
+                                    />
+                                </div>
+                            </div>
+                            <DialogFooter className="w-full">
+                                <Button
+                                    type="submit"
+                                    onClick={handleInquiry}
+                                    className="w-full"
+                                >
+                                    카카오톡으로 물어보기
+                                </Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
                 </div>
 
                 <div className="mt-5 rounding_border">

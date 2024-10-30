@@ -36,15 +36,15 @@ const SignUp = () => {
         birthDay: z.string().regex(/^(0?[1-9]|[12][0-9]|3[01])$/, {
             message: '올바른 일을 입력해주세요.',
         }),
-        phoneNum1: z
-            .string()
-            .regex(/^[0-9]{3}$/, {message: '올바른 번호를 입력해주세요.'}),
-        phoneNum2: z
-            .string()
-            .regex(/^[0-9]{4}$/, {message: '올바른 번호를 입력해주세요.'}),
-        phoneNum3: z
-            .string()
-            .regex(/^[0-9]{4}$/, {message: '올바른 번호를 입력해주세요.'}),
+        // phoneNum1: z
+        //     .string()
+        //     .regex(/^[0-9]{3}$/, {message: '올바른 번호를 입력해주세요.'}),
+        // phoneNum2: z
+        //     .string()
+        //     .regex(/^[0-9]{4}$/, {message: '올바른 번호를 입력해주세요.'}),
+        // phoneNum3: z
+        //     .string()
+        //     .regex(/^[0-9]{4}$/, {message: '올바른 번호를 입력해주세요.'}),
     });
 
     const {
@@ -58,7 +58,7 @@ const SignUp = () => {
         defaultValues: {
             name: user?.name || '',
             nickname: user?.nickname || '',
-            gender: user?.gender || 'MALE',
+            gender: user?.gender || 'FEMALE',
             birthYear: user?.birthDate
                 ? user.birthDate.toString().split('-')[0]
                 : '',
@@ -68,7 +68,7 @@ const SignUp = () => {
             birthDay: user?.birthDate
                 ? user.birthDate.toString().split('-')[2].split('T')[0]
                 : '',
-            phoneNum1: '010',
+            // phoneNum1: '010',
         },
         mode: 'all',
     });
@@ -139,15 +139,15 @@ const SignUp = () => {
 
     const onSubmit = (data: z.infer<typeof formSchema>) => {
         console.log(data);
+        if (!isAgreed) {
+            toast.error('개인정보처리방침에 동의해주세요.');
+            return;
+        }
         if (!isNicknameChecked && data.nickname !== user?.nickname) {
             setError('nickname', {
                 type: 'manual',
                 message: '닉네임 중복 검사를 먼저 진행해주세요.',
             });
-            return;
-        }
-        if (!isAgreed) {
-            toast.error('개인정보처리방침에 동의해주세요.');
             return;
         }
         const birthDate = `${data.birthYear}-${data.birthMonth.padStart(2, '0')}-${data.birthDay.padStart(2, '0')}`;
@@ -329,7 +329,7 @@ const SignUp = () => {
                     </p>
                 )}
 
-                <p className="text-base mb-4 font-medium mt-6">전화번호</p>
+                {/* <p className="text-base mb-4 font-medium mt-6">전화번호</p>
                 <div className="flex gap-4 items-center mb-6">
                     <div className="relative flex-1">
                         <Controller
@@ -378,7 +378,7 @@ const SignUp = () => {
                     <p className="text-red-500 text-sm mt-1">
                         올바른 전화번호를 입력해주세요.
                     </p>
-                )}
+                )} */}
 
                 <div className="flex gap-1">
                     <input

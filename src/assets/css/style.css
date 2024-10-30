@@ -758,24 +758,7 @@ header {
         position: relative;
         border-radius: 0.5rem;
 
-        &.sold {
-          &::before {
-            content: "구매 불가능한 제품이에요:(";
-            font-size: 0.75rem;
-            font-weight: bold;
-            color: #fff;
-            background: rgba(0, 0, 0, 0.6);
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            position: absolute;
-            z-index: 5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          }
-        }
+        
 
         .title {
           font-size: 0.875rem;
@@ -805,13 +788,33 @@ header {
         }
 
         .image {
-          width: 100%;
+          width: 143px;
+          height: 143px;
           /* height: 100%; */
 
           .photo {
             position: relative;
             border-radius: 0.5rem;
             overflow: hidden;
+
+            &.sold {
+                &::before {
+                  content: "구매 불가능한 제품이에요:(";
+                  font-size: 0.75rem;
+                  font-weight: bold;
+                  color: #fff;
+                  background: rgba(0, 0, 0, 0.6);
+                  top: 0;
+                  left: 0;
+                  right: 0;
+                  bottom: 0;
+                  position: absolute;
+                  z-index: 5;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                }
+              }
 
             .heart {
               font-size: 1rem;
@@ -947,24 +950,7 @@ header {
         position: relative;
         border-radius: 0.5rem;
 
-        &.sold {
-          &::before {
-            content: "이미 구매한 제품이에요";
-            font-size: 0.75rem;
-            font-weight: bold;
-            color: #fff;
-            background: rgba(0, 0, 0, 0.6);
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            position: absolute;
-            z-index: 5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-          }
-        }
+        
 
         .title {
           font-size: 0.875rem;
@@ -1004,6 +990,24 @@ header {
             border-radius: 0.5rem;
             overflow: hidden;
 
+            &.sold {
+                &::before {
+                  content: "이미 구매한 제품이에요";
+                  font-size: 0.75rem;
+                  font-weight: bold;
+                  color: #fff;
+                  background: rgba(0, 0, 0, 0.6);
+                  top: 0;
+                  left: 0;
+                  right: 0;
+                  bottom: 0;
+                  position: absolute;
+                  z-index: 5;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                }
+              }
             .heart {
               font-size: 1rem;
               color: #fff;
@@ -1224,7 +1228,7 @@ header {
         object-fit: contain;
       }
       &.sold {
-        &::before {
+        &::after {
           content: "구매 불가능한 제품이에요:(";
           font-size: 0.75rem;
           font-weight: bold;

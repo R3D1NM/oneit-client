@@ -24,7 +24,7 @@ const NotifiCard = (props: {notif: Notif}) => {
         // "GIFTBOX_ADD_PRODUCT": "/basket",
         // "GIFTBOX_COMMENT": "/basket",
         // "GIFTBOX_LIKE": "/basket",
-        // "GIFT_ASK_COMPLETE": "/basket",
+        GIFT_ASK_COMPLETE: '/basket',
         // "BIRTHDAY": "/friends",
         // "TIME_ATTACK_OPEN": "/timeAttack", //todo: sync with App.tsx
     };

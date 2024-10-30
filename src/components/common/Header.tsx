@@ -17,6 +17,7 @@ import {useQuery} from '@tanstack/react-query';
 import {useEffect, useState} from 'react';
 import NotifiCard from './NotifiCard';
 import {Notif} from '@/lib/types';
+import {ArrowDownSquare} from 'lucide-react';
 
 export interface HeaderProps {
     btn_back?: boolean;
@@ -119,12 +120,21 @@ const Header = ({
                                 />
                             )}
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent side="bottom" align="end">
+                        <DropdownMenuContent
+                            side="bottom"
+                            align="end"
+                            className="scrollbar-track-white scrollbar-thumb-[#ff9fe5] scrollbar-thumb-rounded-full scrollbar-thin max-h-52 overflow-y-auto"
+                        >
                             {fetchNotifAPI?.data?.map(
                                 (notif: Notif, idx: number) => (
                                     <NotifiCard key={idx} notif={notif} />
                                 ),
                             )}
+                            {/* {(fetchNotifAPI?.data?.length ?? 0) > 3 && (
+                                <div className="flex justify-center py-2 absolute top-3/4 right-1/2">
+                                    <ArrowDownSquare className="w-6 h-6" />
+                                </div>
+                            )} */}
                         </DropdownMenuContent>
                     </DropdownMenu>
                 )}

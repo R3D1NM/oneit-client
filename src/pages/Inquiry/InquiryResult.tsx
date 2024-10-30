@@ -8,11 +8,11 @@ import EmojiList from '@/data/emoji.json';
 import {useAtom, useAtomValue} from 'jotai';
 import {choices} from '@/atoms/inquiry';
 import Header from '@/components/common/Header';
+import logo from '@/assets/images/oneit.png';
 
 const InquiryResult = () => {
     const {inquiryID} = useParams();
     const navigate = useNavigate();
-    const selectedEmojis = useAtomValue(choices);
     const [choiceList, setChoiceList] = useAtom(choices);
     const [{mutate}] = useAtom(submitInquiry);
 
@@ -56,30 +56,35 @@ const InquiryResult = () => {
                                     <li key={product.idx}>
                                         <div className="picture">
                                             <img
-                                                src={product.thumbnailUrl}
+                                                src={
+                                                    product?.thumbnailUrl ||
+                                                    logo
+                                                }
                                                 alt="상품 대표 이미지"
                                             />
                                         </div>
                                         <div className="info min-w-40 justify-center">
-                                            <div className="title">
-                                                {product.name}
+                                            <div className="title text-overflow">
+                                                {product?.name ||
+                                                    '제품정보없음'}
                                             </div>
                                             <div className="text text-overflow">
-                                                {product.description}
+                                                {product?.description}
                                             </div>
                                             <button
                                                 className={`${
                                                     EmojiList[
-                                                        choiceList[idx].emojiIdx
-                                                    ]?.name
+                                                        choiceList[idx]
+                                                            ?.emojiName ||
+                                                            'LOVE'
+                                                    ]?.name || 'like'
                                                 }`}
                                             >
                                                 <i></i>
-                                                {
-                                                    EmojiList[
-                                                        choiceList[idx].emojiIdx
-                                                    ]?.content
-                                                }
+                                                {EmojiList[
+                                                    choiceList[idx].emojiName ||
+                                                        'LOVE'
+                                                ]?.content || '완전 좋아!'}
                                             </button>
                                         </div>
                                     </li>

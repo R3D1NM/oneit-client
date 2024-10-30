@@ -18,6 +18,7 @@ import {addChoice, choices} from '@/atoms/inquiry';
 import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover';
 import {cn} from '@/lib/utils';
 import Header from '@/components/common/Header';
+import logo from '@/assets/images/oneit.png';
 
 type emojiEnumType = 'LOVE' | 'LIKE' | 'NEED' | 'SOSO' | 'BAD' | 'HAVE';
 const emojiEnum: emojiEnumType[] = [
@@ -57,7 +58,7 @@ const InquiryChoice = () => {
         setSelectedEmoji(emoji);
         const choice: InquiryChoiceType = {
             productIdx: inquiryAPI.data?.selectedProducts[currentIdx].idx,
-            emojiIdx: emoji,
+            emojiName: emoji,
         };
         selectEmoji(choice);
     };
@@ -138,8 +139,7 @@ const InquiryChoice = () => {
                         <img
                             src={
                                 inquiryAPI.data?.selectedProducts[currentIdx]
-                                    .thumbnailUrl ||
-                                'https://via.placeholder.com/400'
+                                    ?.thumbnailUrl || logo
                             }
                             alt="상품 대표 이미지"
                         />

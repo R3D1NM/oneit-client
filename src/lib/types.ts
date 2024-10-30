@@ -20,8 +20,9 @@ export type Product = {
     thumbnailUrl: string;
     categoryName?: string;
     categoryDisplayName?: string;
-    keywords?: string[];
+    keywords?: Keyword[];
     productStatus?: string;
+    detailImages?: string[];
     description: string;
     likeCount?: number;
     voteStatus?: 'LIKE' | 'DISLIKE' | 'NONE';
@@ -99,7 +100,7 @@ export type Emoji = {
 
 export type InquiryChoice = {
     productIdx: number;
-    emojiIdx: 'LOVE' | 'LIKE' | 'NEED' | 'SOSO' | 'BAD' | 'HAVE';
+    emojiName: 'LOVE' | 'LIKE' | 'NEED' | 'SOSO' | 'BAD' | 'HAVE';
 };
 
 export type Friend = {

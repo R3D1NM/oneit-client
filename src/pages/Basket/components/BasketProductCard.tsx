@@ -11,6 +11,7 @@ import likeit from '@/assets/images/icon_likeit.svg';
 import mageHeart from '@/assets/images/mage_heart.svg';
 import mageHeartFill from '@/assets/images/mage_heart_fill.svg';
 import {useNavigate} from 'react-router-dom';
+import logo from '@/assets/images/oneit.png';
 
 interface ProductCardProps {
     product: BaksetProduct;
@@ -72,14 +73,19 @@ const BasketProductCard = (props: ProductCardProps) => {
     return (
         <div className={cn('box', purchaseStatus === 'PURCHASED' && 'sold')}>
             <div className="image">
-                <div className="photo">
+                <div
+                    className={cn(
+                        'photo',
+                        purchaseStatus === 'PURCHASED' && 'sold',
+                    )}
+                >
                     <img
                         onClick={() =>
                             navigate(
                                 `/basket/${basketID}/product/${product.idx}`,
                             )
                         }
-                        src={product.thumbnailUrl}
+                        src={product?.thumbnailUrl || logo}
                         alt="제품 이미지"
                     />
                     <div className="heart" onClick={handleVote}>
@@ -106,19 +112,24 @@ const BasketProductCard = (props: ProductCardProps) => {
                     </div>
                     {product?.emojiIdx && (
                         <div
-                            // className={cn(
-                            //     'desc',
-                            //     product.emojiIdx &&
-                            //         `${EmojiList[product.emojiIdx].name}`,
-                            // )}
-                            className="desc like"
+                            className={cn(
+                                'desc',
+                                product.emojiIdx &&
+                                    `${EmojiList[product.emojiIdx].name}`,
+                            )}
+                            // className="desc like"
                             onClick={() =>
                                 navigate(
                                     `/basket/${basketID}/product/${product.idx}`,
                                 )
                             }
                         >
-                            <button className="like">
+                            <button
+                                className={cn(
+                                    product.emojiIdx &&
+                                        `${EmojiList[product.emojiIdx].name}`,
+                                )}
+                            >
                                 <i></i>
                                 <p>{EmojiList[product.emojiIdx].content}</p>
                             </button>

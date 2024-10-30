@@ -66,7 +66,7 @@ const BasketProduct = () => {
     });
 
     const productAPI = useQuery({
-        queryKey: ['product', productID],
+        queryKey: ['basketProduct', basketID, productID],
         queryFn: () => {
             return fetchBasketProductDetail(
                 basketID || '',
@@ -215,7 +215,11 @@ const BasketProduct = () => {
                         >
                             {count}
                         </span>
-                        <span>명이 이 선물을 좋아하고 있어요!</span>
+                        {productAPI?.data?.purchaseStatus === 'PURCHASED' ? (
+                            <span>이미 누군가 구매한 제품이에요 :(</span>
+                        ) : (
+                            <span>명이 이 선물을 좋아하고 있어요!</span>
+                        )}
                         <div className="flex justify-end ml-16 pr-2">
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>

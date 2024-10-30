@@ -11,6 +11,7 @@ import {isLoginAtom} from '@/api/auth';
 import Header from '@/components/common/Header';
 import logo from '@/assets/images/oneit.png';
 import {Button} from '@/components/common/Button';
+import {ArrowUp} from 'lucide-react';
 
 const Product = () => {
     const {productID} = useParams();
@@ -34,6 +35,9 @@ const Product = () => {
 
     const handleGoBack = () => {
         navigate(-1);
+    };
+    const scrollToTop = () => {
+        window.scrollTo({top: 0, behavior: 'smooth'});
     };
 
     const handleAddToBasket = (basketID: string) => {
@@ -88,7 +92,7 @@ const Product = () => {
                         </div>
                         <div className="tags">
                             {productAPI.data?.keywords?.map((tag, idx) => (
-                                <span key={idx}>#{tag}</span>
+                                <span key={idx}>#{tag.name}</span>
                             ))}
                         </div>
                     </div>
@@ -158,10 +162,24 @@ const Product = () => {
                     <div className="desc">
                         <div className="title">제품 설명</div>
                         {/* todo: product detail images */}
-                        <div className="texts"></div>
+                        <div className="texts">
+                            {productAPI.data?.detailImages?.map((img, idx) => (
+                                <img
+                                    key={idx}
+                                    src={img}
+                                    alt="상품 상세 이미지"
+                                />
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>
+            {/* <Button
+                className="fixed bottom-0 right-0 z-[999] px-3 py-6 rounded-full shadow-lg m-1"
+                onClick={scrollToTop}
+            >
+                <ArrowUp />
+            </Button> */}
         </>
     );
 };
