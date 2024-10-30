@@ -36,6 +36,15 @@ const SignUp = () => {
         birthDay: z.string().regex(/^(0?[1-9]|[12][0-9]|3[01])$/, {
             message: '올바른 일을 입력해주세요.',
         }),
+        phoneNum1: z
+            .string()
+            .regex(/^[0-9]{3}$/, {message: '올바른 번호를 입력해주세요.'}),
+        phoneNum2: z
+            .string()
+            .regex(/^[0-9]{4}$/, {message: '올바른 번호를 입력해주세요.'}),
+        phoneNum3: z
+            .string()
+            .regex(/^[0-9]{4}$/, {message: '올바른 번호를 입력해주세요.'}),
     });
 
     const {
@@ -59,6 +68,7 @@ const SignUp = () => {
             birthDay: user?.birthDate
                 ? user.birthDate.toString().split('-')[2].split('T')[0]
                 : '',
+            phoneNum1: '010',
         },
         mode: 'all',
     });
@@ -159,7 +169,7 @@ const SignUp = () => {
             <h2 className="font-medium text-xl">간단한 정보를 알려주세요</h2>
             <form onSubmit={handleSubmit(onSubmit)} className="mt-7.5">
                 <p className="text-base mb-4 font-medium">이름</p>
-                <div className="relative flex w-full h-12 mb-6">
+                <div className="relative flex w-full h-10 mb-4">
                     <Controller
                         name="name"
                         control={control}
@@ -179,13 +189,13 @@ const SignUp = () => {
                     )}
                 </div>
 
-                <p className="text-base mb-4 font-medium mt-6">닉네임</p>
+                <p className="text-base mb-4 font-medium mt-2">닉네임</p>
                 {errors.nickname && (
                     <p className="text-red-500 text-sm mt-1">
                         {errors.nickname.message}
                     </p>
                 )}
-                <div className="relative flex w-full h-12 mb-6">
+                <div className="relative flex w-full h-12 mb-2">
                     <Controller
                         name="nickname"
                         control={control}
@@ -200,7 +210,7 @@ const SignUp = () => {
                     />
                     <Button
                         variant="border"
-                        className="w-[6.5625rem] h-[2.1875rem] text-[#ff4bc1] border border-[#ff4bc1] rounded-full absolute top-1/2 -translate-y-1/2 right-0 text-sm font-medium"
+                        className="w-[6.5625rem] h-[1.75rem] text-[#ff4bc1] border border-[#ff4bc1] rounded-full absolute mt-1 right-0 text-sm font-medium"
                         onClick={() =>
                             checkNickname(control._getWatch('nickname'))
                         }
@@ -209,7 +219,7 @@ const SignUp = () => {
                     </Button>
                 </div>
 
-                <p className="text-base mb-4 font-medium mt-6">성별</p>
+                <p className="text-base mb-4 font-medium mt-2">성별</p>
                 <div className="relative w-full mb-6">
                     <div className="w-full flex gap-4">
                         <Controller
@@ -228,7 +238,7 @@ const SignUp = () => {
                                         />
                                         <label
                                             htmlFor="select"
-                                            className={`flex justify-center items-center cursor-pointer h-[2.625rem] w-full border border-[#b1b1b1] rounded-full ${
+                                            className={`flex justify-center items-center cursor-pointer h-[2rem] w-full border border-[#b1b1b1] rounded-full ${
                                                 field.value === 'MALE'
                                                     ? 'text-[#ff4bc1] border-2 border-[#ff4bc1]'
                                                     : 'text-[#3d3d3d] bg-white'
@@ -248,7 +258,7 @@ const SignUp = () => {
                                         />
                                         <label
                                             htmlFor="select2"
-                                            className={`flex justify-center items-center cursor-pointer h-[2.625rem] w-full border border-[#b1b1b1] rounded-full ${
+                                            className={`flex justify-center items-center cursor-pointer h-[2rem] w-full border border-[#b1b1b1] rounded-full ${
                                                 field.value === 'FEMALE'
                                                     ? 'text-[#ff4bc1] border-2 border-[#ff4bc1]'
                                                     : 'text-[#3d3d3d] bg-white'
@@ -316,6 +326,57 @@ const SignUp = () => {
                 {(errors.birthYear || errors.birthMonth || errors.birthDay) && (
                     <p className="text-red-500 text-sm mt-1">
                         올바른 생년월일을 입력해주세요.
+                    </p>
+                )}
+
+                <p className="text-base mb-4 font-medium mt-6">전화번호</p>
+                <div className="flex gap-4 items-center mb-6">
+                    <div className="relative flex-1">
+                        <Controller
+                            name="phoneNum1"
+                            control={control}
+                            render={({field}) => (
+                                <input
+                                    {...field}
+                                    type="text"
+                                    placeholder="010"
+                                    className="w-full text-center border-0 border-b border-gray-300 text-sm px-3 py-3.5 placeholder-gray-300 focus:outline-none focus:border-[#ff4bc1] transition-all duration-400"
+                                />
+                            )}
+                        />
+                    </div>
+                    <div className="relative flex-1">
+                        <Controller
+                            name="phoneNum2"
+                            control={control}
+                            render={({field}) => (
+                                <input
+                                    {...field}
+                                    type="text"
+                                    placeholder="0000"
+                                    className="w-full text-center border-0 border-b border-gray-300 text-sm px-3 py-3.5 placeholder-gray-300 focus:outline-none focus:border-[#ff4bc1] transition-all duration-400"
+                                />
+                            )}
+                        />
+                    </div>
+                    <div className="relative flex-1">
+                        <Controller
+                            name="phoneNum3"
+                            control={control}
+                            render={({field}) => (
+                                <input
+                                    {...field}
+                                    type="text"
+                                    placeholder="0000"
+                                    className="w-full text-center border-0 border-b border-gray-300 text-sm px-3 py-3.5 placeholder-gray-300 focus:outline-none focus:border-[#ff4bc1] transition-all duration-400"
+                                />
+                            )}
+                        />
+                    </div>
+                </div>
+                {(errors.phoneNum1 || errors.phoneNum2 || errors.phoneNum3) && (
+                    <p className="text-red-500 text-sm mt-1">
+                        올바른 전화번호를 입력해주세요.
                     </p>
                 )}
 
