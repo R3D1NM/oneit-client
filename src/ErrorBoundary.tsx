@@ -28,7 +28,16 @@ class ErrorBoundary extends React.Component<
     render() {
         if (this.state.hasError) {
             // 폴백 UI를 커스텀하여 렌더링할 수 있습니다.
-            return <h1>Something went wrong.</h1>;
+            return (
+                <p>
+                    <h1>Something went wrong.</h1>
+                    <a href={`${import.meta.env.VITE_CURRENT_DOMAIN}`}>
+                        <span className="text-blue-600 underline">
+                            Back to main
+                        </span>
+                    </a>
+                </p>
+            );
         }
 
         return this.props.children;

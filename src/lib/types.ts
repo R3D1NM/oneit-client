@@ -42,6 +42,13 @@ export type BaksetProduct = {
     emojiIdx?: 'LOVE' | 'LIKE' | 'NEED' | 'SOSO' | 'BAD' | 'HAVE';
 };
 
+export type CollctionProduct = {
+    productIdx: number;
+    productName: string;
+    keywords: Keyword[];
+    showcaseImageUrl: string;
+};
+
 export type Question = {
     question: string;
     options: string[];

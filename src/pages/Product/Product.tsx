@@ -162,15 +162,19 @@ const Product = () => {
                     <div className="desc">
                         <div className="title">제품 설명</div>
                         {/* todo: product detail images */}
-                        <div className="texts">
-                            {productAPI.data?.detailImages?.map((img, idx) => (
-                                <img
-                                    key={idx}
-                                    src={img}
-                                    alt="상품 상세 이미지"
-                                />
-                            ))}
-                        </div>
+                        {productAPI.data?.detailImages && (
+                            <div className="texts">
+                                {productAPI.data?.detailImages?.map(
+                                    (img, idx) => (
+                                        <img
+                                            key={idx}
+                                            src={img}
+                                            alt="상품 상세 이미지"
+                                        />
+                                    ),
+                                )}
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
