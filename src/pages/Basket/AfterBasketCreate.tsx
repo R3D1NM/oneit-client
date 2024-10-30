@@ -25,7 +25,9 @@ const AfterBasketCreate = () => {
                 <div className="w-full mt-4 absolute bottom-0 right-0 pl-4 pr-4 mb-6">
                     <Button
                         className="w-full"
-                        onClick={() => navigate('/basket/' + basketID)}
+                        onClick={() =>
+                            navigate('/basket/' + basketID, {replace: true})
+                        }
                     >
                         바구니 바로가기
                     </Button>

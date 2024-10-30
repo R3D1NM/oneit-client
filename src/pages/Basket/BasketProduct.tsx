@@ -34,7 +34,7 @@ import {
     fetchBasketProductDetail,
     productPurchased,
 } from '@/api/basket';
-import {BaksetProduct, Comment} from '@/lib/types';
+import {BaksetProduct, Comment, Keyword} from '@/lib/types';
 import {set} from 'date-fns';
 import Header from '@/components/common/Header';
 import mageHeart from '@/assets/images/mage_heart.svg';
@@ -279,9 +279,9 @@ const BasketProduct = () => {
                     <div className="title">Tag</div>
                     <ul>
                         {productAPI.data?.keywords?.map(
-                            (keyword: string, idx: number) => (
+                            (keyword: Keyword, idx: number) => (
                                 <li key={idx}>
-                                    <button disabled>{keyword}</button>
+                                    <button disabled>{keyword.name}</button>
                                 </li>
                             ),
                         )}

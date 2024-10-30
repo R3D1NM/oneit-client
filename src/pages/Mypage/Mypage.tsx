@@ -3,7 +3,7 @@ import {authAtom, logout, userWithdrawal} from '@/api/auth';
 import {Button} from '@/components/common/Button';
 import {useAtomValue} from 'jotai';
 import {User2Icon, UserIcon} from 'lucide-react';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import profileButtonSvg from '@/assets/images/profile_button.svg';
 import Header from '@/components/common/Header';
@@ -25,6 +25,7 @@ import {
 
 const Mypage = () => {
     const navigate = useNavigate();
+    const [open, setOpen] = useState(false);
     const user = useAtomValue(authAtom);
     const handleLogout = async () => {
         await logout();
@@ -45,9 +46,14 @@ const Mypage = () => {
         mutationFn: () => userWithdrawal(),
         onSuccess: () => {
             toast('회원 탈퇴가 완료되었습니다');
+            localStorage.removeItem('token');
             navigate('/main');
         },
     });
+
+    const handleWithdraw = () => {
+        withdrawAPI.mutate();
+    };
 
     const handleNotyet = () => {
         toast('아직 준비 중인 기능이에요');
@@ -144,7 +150,7 @@ const Mypage = () => {
                         </li>
                     </ul>
                 </div>
-                <Dialog>
+                <Dialog onOpenChange={setOpen} open={open}>
                     <DialogTrigger>
                         <div className="flex justify-center text-center absolute bottom-1 right-1/2 translate-x-4 text-[#5d5d5d]">
                             <Button variant="underline" className="text-xs">
@@ -159,11 +165,19 @@ const Mypage = () => {
                             언제든 다시 가입하실 수 있습니다.
                         </p>
                         <div className="w-full flex gap-2">
-                            <Button variant="border" className="w-full">
+                            <Button
+                                variant="border"
+                                className="w-full"
+                                onClick={() => setOpen(false)}
+                            >
                                 취소
                             </Button>
 
-                            <Button variant="disabled" className="w-full">
+                            <Button
+                                variant="disabled"
+                                className="w-full"
+                                onClick={handleWithdraw}
+                            >
                                 탈퇴
                             </Button>
                         </div>

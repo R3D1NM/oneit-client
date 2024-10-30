@@ -44,7 +44,7 @@ const Quiz = () => {
         } else if (currentDepth === MAXDEPTH - 1) {
             await setAnswers(index, currentDepth);
             mutateAsync({chatID});
-            navigate(`/recommend/${chatID}/result`);
+            navigate(`/recommend/${chatID}/result`, {replace: true});
         } else {
             setError(true);
         }

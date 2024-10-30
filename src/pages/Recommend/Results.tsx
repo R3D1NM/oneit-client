@@ -93,6 +93,20 @@ const Results = () => {
     }, [chatID, navigate]);
 
     useEffect(() => {
+        history.pushState(null, '', '');
+
+        const handleClickBrowserBackBtn = () => {
+            navigate('/recommend');
+        };
+
+        window.addEventListener('popstate', handleClickBrowserBackBtn);
+
+        return () => {
+            window.removeEventListener('popstate', handleClickBrowserBackBtn);
+        };
+    }, [navigate]);
+
+    useEffect(() => {
         const timer = setTimeout(() => {
             if (!isOpen) setIsOpen(true);
         }, 5000);
