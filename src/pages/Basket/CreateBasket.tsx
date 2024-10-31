@@ -56,7 +56,7 @@ const CreateBasket = () => {
             message: '바구니 이름은 2자 이상이어야합니다.',
         }),
         description: z.string().optional(),
-        image: z.instanceof(File).optional(),
+        image: z.instanceof(File).nullable().optional(),
         access: z.enum(['PUBLIC', 'PRIVATE']),
         deadline: z.string().refine(
             (val) => {
@@ -228,6 +228,19 @@ const CreateBasket = () => {
                                                             event.target
                                                                 .files?.[0];
                                                         if (file) {
+                                                            if (
+                                                                file.size >
+                                                                1048489
+                                                            ) {
+                                                                toast.error(
+                                                                    '이미지 용량이 너무 커서 사용할 수 없습니다.',
+                                                                );
+                                                                field.onChange(
+                                                                    null,
+                                                                );
+                                                                setImageURL('');
+                                                                return;
+                                                            }
                                                             // if file is in heic format, convert it to jpeg
                                                             if (
                                                                 file &&
@@ -297,21 +310,7 @@ const CreateBasket = () => {
                                                                     'Image URL:',
                                                                     displayUrl,
                                                                 );
-                                                                if (
-                                                                    file.size >
-                                                                    1048489
-                                                                ) {
-                                                                    toast.error(
-                                                                        '이미지 용량이 너무 커서 사용할 수 없습니다.',
-                                                                    );
-                                                                    field.onChange(
-                                                                        null,
-                                                                    );
-                                                                    setImageURL(
-                                                                        '',
-                                                                    );
-                                                                    return;
-                                                                }
+
                                                                 setImageURL(
                                                                     displayUrl,
                                                                 );

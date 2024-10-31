@@ -152,6 +152,19 @@ const Mypage = () => {
                         <li>
                             <button onClick={handleNotyet}>타임어택</button>
                         </li>
+                        <li>
+                            <button
+                                onClick={() =>
+                                    window.open(
+                                        'https://pf.kakao.com/_VFnxhn',
+                                        '_blank',
+                                        'noopener',
+                                    )
+                                }
+                            >
+                                문의하기
+                            </button>
+                        </li>
                     </ul>
                 </div>
                 <Dialog onOpenChange={setOpen} open={open}>

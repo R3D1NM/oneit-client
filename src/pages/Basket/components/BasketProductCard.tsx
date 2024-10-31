@@ -125,6 +125,7 @@ const BasketProductCard = (props: ProductCardProps) => {
                 </div>
             </div>
             <a
+                className="pr-3"
                 onClick={() =>
                     navigate(`/basket/${basketID}/product/${product.idx}`)
                 }

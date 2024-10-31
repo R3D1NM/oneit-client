@@ -70,6 +70,14 @@ const EditInfo = () => {
                             const file = event.target.files![0];
                             console.log(file);
                             if (file) {
+                                if (file.size > 1048489) {
+                                    toast.error(
+                                        '이미지 용량이 너무 커서 사용할 수 없습니다.',
+                                    );
+                                    setImage(null);
+                                    setImageURL('');
+                                    return;
+                                }
                                 // if file is in heic format, convert it to jpeg
                                 if (file && file.type === 'image/heic') {
                                     console.log('heic file detected');

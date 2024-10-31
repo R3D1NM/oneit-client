@@ -19,7 +19,7 @@ const ProductCard = (props: ProductCardProps) => {
             <div className="image">
                 <div
                     className={cn(
-                        'photo',
+                        'photo ',
                         product.productStatus === 'INVALID' && 'sold',
                     )}
                 >
@@ -29,7 +29,7 @@ const ProductCard = (props: ProductCardProps) => {
                     />
                 </div>
             </div>
-            <a>
+            <a className="pr-4">
                 <p className="title text-overflow h-10 ">
                     {product?.name || '상품정보없음'}
                 </p>
