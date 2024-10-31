@@ -20,6 +20,7 @@ import Landing from './Landing';
 import AfterBasketCreate from './pages/Basket/AfterBasketCreate';
 import ScrollToTop from './components/common/ScrollToTop';
 import Footer from './components/common/Footer';
+import GetLocation from './components/common/GetLocation';
 
 // Custom component to handle dynamic redirect
 const AuthRouterWithRedirect = ({
@@ -114,6 +115,7 @@ function App() {
                         <>
                             <Suspense fallback={<Spinner size="large" />}>
                                 <Router>
+                                    <GetLocation />
                                     <ScrollToTop />
                                     <Routes>
                                         <Route
