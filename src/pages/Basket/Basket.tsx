@@ -123,17 +123,20 @@ const Basket = () => {
     };
 
     const handleInquiry = () => {
+        if (target === '' || basketProductAPI.data?.length === 0) {
+            return;
+        }
+
         mutateAsync({
             basketIdx: basketID || '',
             selected: basketProductAPI.data,
             target,
         })
             .then((data) => {
-                toast.success('물어보기 전송 완료');
+                // toast.success('물어보기 전송 완료');
                 setMode(false);
             })
             .catch((err) => {
-                toast.error('물어보기 전송 실패');
                 setMode(false);
             });
     };

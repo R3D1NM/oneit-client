@@ -68,9 +68,6 @@ const BasketInvitation = () => {
                                     : basketInfoAPI?.data?.dday === 0
                                       ? 'D-Day'
                                       : '마감'}
-                                {basketInfoAPI?.data?.dday < 0
-                                    ? '마감'
-                                    : 'D-' + basketInfoAPI?.data?.dday}
                             </p>
                             <p className="text-lg font-semibold text-overflow-one max-w-">
                                 {basketInfoAPI?.data?.name}

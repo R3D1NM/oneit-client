@@ -40,6 +40,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import {toast} from 'sonner';
 import {cn} from '@/lib/utils';
+import heic2any from 'heic2any';
 const {Kakao} = window;
 
 const ParticipantThumbnail = ({participant}: {participant: Participant}) => {
@@ -157,7 +158,7 @@ const BasketEdit = ({
         title: z.string().min(2, {
             message: '바구니 이름은 2자 이상이어야합니다.',
         }),
-        image: z.instanceof(File).optional(),
+        image: z.instanceof(File).nullable().optional(),
         deadline: z
             .string()
             .regex(/^\d{4}-\d{2}-\d{2}$/, {
@@ -185,7 +186,7 @@ const BasketEdit = ({
 
         const payload = {
             name: values.title,
-            deadline: new Date(values.deadline),
+            deadline: values.deadline,
             idx: basket.idx,
         };
 
@@ -266,18 +267,83 @@ const BasketEdit = ({
                                             {...fileRef}
                                             ref={fileInputRef}
                                             onChange={(event) => {
-                                                const displayUrl: string =
-                                                    URL.createObjectURL(
-                                                        event.target.files![0],
-                                                    );
-
-                                                // setImageURL(displayUrl);
-                                                console.log(event);
                                                 const file =
-                                                    event.target.files![0];
-                                                console.log(file);
+                                                    event.target.files?.[0];
+                                                if (file) {
+                                                    if (file.size > 1048489) {
+                                                        toast.error(
+                                                            '이미지 용량이 너무 커서 사용할 수 없습니다.',
+                                                        );
+                                                        field.onChange(null);
+                                                        return;
+                                                    }
+                                                    // if file is in heic format, convert it to jpeg
+                                                    if (
+                                                        file &&
+                                                        file.type ===
+                                                            'image/heic'
+                                                    ) {
+                                                        console.log(
+                                                            'heic file detected',
+                                                        );
 
-                                                field.onChange(file);
+                                                        heic2any({
+                                                            blob: file,
+                                                            toType: 'image/webp',
+                                                        }).then((blob) => {
+                                                            const newFile =
+                                                                new File(
+                                                                    [
+                                                                        blob as Blob,
+                                                                    ],
+                                                                    file?.name +
+                                                                        '.webp',
+                                                                    {
+                                                                        type: 'image/webp',
+                                                                    },
+                                                                );
+                                                            console.log(
+                                                                newFile,
+                                                            );
+                                                            const displayUrl =
+                                                                URL.createObjectURL(
+                                                                    newFile,
+                                                                );
+                                                            console.log(
+                                                                'Image URL:',
+                                                                displayUrl,
+                                                            );
+                                                            if (
+                                                                newFile.size >
+                                                                1048489
+                                                            ) {
+                                                                toast.error(
+                                                                    '이미지 용량이 너무 커서 사용할 수 없습니다.',
+                                                                );
+                                                                field.onChange(
+                                                                    null,
+                                                                );
+
+                                                                return;
+                                                            }
+
+                                                            field.onChange(
+                                                                newFile,
+                                                            );
+                                                        });
+                                                    } else {
+                                                        const displayUrl =
+                                                            URL.createObjectURL(
+                                                                file,
+                                                            );
+                                                        console.log(
+                                                            'Image URL:',
+                                                            displayUrl,
+                                                        );
+
+                                                        field.onChange(file);
+                                                    }
+                                                }
                                             }}
                                             type="file"
                                             accept="image/*"

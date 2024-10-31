@@ -72,7 +72,7 @@ const handler404 = (code: string) => {
                 action: {
                     label: '메인으로',
                     onClick: () => {
-                        window.location.href = '/';
+                        window.location.href = '/main';
                     },
                 },
             });
@@ -82,7 +82,7 @@ const handler404 = (code: string) => {
                 action: {
                     label: '메인으로',
                     onClick: () => {
-                        window.location.href = '/';
+                        window.location.href = '/main';
                     },
                 },
             });
@@ -92,7 +92,7 @@ const handler404 = (code: string) => {
                 action: {
                     label: '메인으로',
                     onClick: () => {
-                        window.location.href = '/';
+                        window.location.href = '/main';
                     },
                 },
             });
@@ -102,7 +102,37 @@ const handler404 = (code: string) => {
                 action: {
                     label: '메인으로',
                     onClick: () => {
-                        window.location.href = '/';
+                        window.location.href = '/main';
+                    },
+                },
+            });
+            break;
+        case 'PRODUCT_NOT_FOUND':
+            toast.error('상품을 찾을 수 없습니다.', {
+                action: {
+                    label: '메인으로',
+                    onClick: () => {
+                        window.location.href = '/main';
+                    },
+                },
+            });
+            break;
+        case 'GIFTBOX_NOT_FOUND':
+            toast.error('상품 정보를 불러오는데 실패하였습니다.', {
+                action: {
+                    label: '메인으로',
+                    onClick: () => {
+                        window.location.href = '/main';
+                    },
+                },
+            });
+            break;
+        case 'PRODUCT_DTO_ERROR':
+            toast.error('상품 정보를 찾을 수 없습니다.', {
+                action: {
+                    label: '메인으로',
+                    onClick: () => {
+                        window.location.href = '/main';
                     },
                 },
             });
@@ -112,7 +142,7 @@ const handler404 = (code: string) => {
                 action: {
                     label: '메인으로',
                     onClick: () => {
-                        window.location.href = '/';
+                        window.location.href = '/main';
                     },
                 },
             });
