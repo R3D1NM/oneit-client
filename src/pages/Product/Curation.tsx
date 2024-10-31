@@ -93,19 +93,19 @@ const Curation = () => {
     };
 
     //redirect go back to basket page
-    // useEffect(() => {
-    //     const handlePopState = (event: PopStateEvent) => {
-    //         event.preventDefault();
-    //         navigate(`/main`);
-    //     };
+    useEffect(() => {
+        const handlePopState = (event: PopStateEvent) => {
+            event.preventDefault();
+            navigate(`/main`);
+        };
 
-    //     window.history.pushState(null, '', window.location.href);
-    //     window.addEventListener('popstate', handlePopState);
+        window.history.pushState(null, '', window.location.href);
+        window.addEventListener('popstate', handlePopState);
 
-    //     return () => {
-    //         window.removeEventListener('popstate', handlePopState);
-    //     };
-    // }, []);
+        return () => {
+            window.removeEventListener('popstate', handlePopState);
+        };
+    }, []);
 
     if (isLoading) return <Spinner />;
     if (isError) return <NotFound />;

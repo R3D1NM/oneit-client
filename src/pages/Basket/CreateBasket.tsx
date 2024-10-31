@@ -58,13 +58,15 @@ const CreateBasket = () => {
         description: z.string().optional(),
         image: z.instanceof(File).optional(),
         access: z.enum(['PUBLIC', 'PRIVATE']),
-        deadline: z
-            .date({
-                required_error: '날짜를 선택해주세요.',
-            })
-            .min(new Date(), {
+        deadline: z.string().refine(
+            (val) => {
+                const date = new Date(val);
+                return !isNaN(date.getTime()) && date >= new Date();
+            },
+            {
                 message: '과거의 날짜는 선택할 수 없습니다.',
-            }),
+            },
+        ),
     });
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -85,13 +87,20 @@ const CreateBasket = () => {
 
         setTitle(values.title);
         setDescription(values.description || '');
-        values.description;
+        // values.description;
         setCurrentStep('deadline');
         setAccess(values.access);
         setImage(values.image || null);
         console.log(values);
         setDeadline(values.deadline);
         submitAPI.mutate();
+    };
+
+    const formatDate = (date: Date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
     };
 
     const handleAvatarClick = () => {
@@ -402,8 +411,22 @@ const CreateBasket = () => {
                                             <FormControl className="flex justify-center w-full">
                                                 <Calendar
                                                     mode="single"
-                                                    selected={field.value}
-                                                    onSelect={field.onChange}
+                                                    selected={
+                                                        field.value
+                                                            ? new Date(
+                                                                  field.value,
+                                                              )
+                                                            : undefined
+                                                    }
+                                                    onSelect={(date) => {
+                                                        field.onChange(
+                                                            date
+                                                                ? formatDate(
+                                                                      date,
+                                                                  )
+                                                                : '',
+                                                        );
+                                                    }}
                                                 />
                                             </FormControl>
                                             <div className="flex w-full gap-2 absolute bottom-2 right-0 p-4">
