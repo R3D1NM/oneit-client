@@ -9,7 +9,7 @@ import {Spinner} from '@/components/ui/spinner';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {useNavigate, useParams} from 'react-router-dom';
 import NotFound from '../NotFound';
-import {BaksetProduct} from '@/lib/types';
+import {BaksetProduct, Participant} from '@/lib/types';
 import BasketProductCard from './components/BasketProductCard';
 import {toast} from 'sonner';
 import {authAtom} from '@/api/auth';
@@ -127,6 +127,16 @@ const Basket = () => {
             return;
         }
 
+        if (
+            !basketInfoAPI.data?.participants.some(
+                (parti: Participant) =>
+                    parti.userRole == 'MANAGER' && parti.userIdx == user?.idx,
+            )
+        ) {
+            toast.error('물어보기는 바구니 관리자만 가능합니다.');
+            return;
+        }
+
         mutateAsync({
             basketIdx: basketID || '',
             selected: basketProductAPI.data,
@@ -137,6 +147,11 @@ const Basket = () => {
                 setMode(false);
             })
             .catch((err) => {
+                if (err?.response?.status === 403) {
+                    toast.error('물어보기는 바구니 관리자만 가능합니다.');
+                }
+                // console.log(err);
+
                 setMode(false);
             });
     };
@@ -151,6 +166,15 @@ const Basket = () => {
 
     const handleModeChange = () => {
         if (basketProductAPI.data?.length === 0) return;
+        if (
+            !basketInfoAPI.data?.participants.some(
+                (parti: Participant) =>
+                    parti.userRole == 'MANAGER' && parti.userIdx == user?.idx,
+            )
+        ) {
+            toast.error('물어보기는 바구니 관리자만 가능합니다.');
+            return;
+        }
         setMode(!mode);
     };
 
@@ -376,7 +400,7 @@ const Basket = () => {
             </div>
 
             <>
-                <div className="fixed bottom-0 w-full p-2 right-1/2 translate-x-1/2 z-50">
+                <div className="fixed bottom-0 w-full p-2 right-1/2 translate-x-1/2 z-30">
                     <Button
                         className="w-full"
                         onClick={() => toggleDrawer(true)}

@@ -355,7 +355,7 @@ function App() {
                     </div>
                 </div>
                 <Footer />
-                <Toaster position="bottom-center" />
+                <Toaster position="bottom-center" className="z-50" />
                 {/* <ReactQueryDevtools initialIsOpen={false} /> */}
             </QueryClientProvider>
         </>
