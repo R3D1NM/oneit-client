@@ -32,6 +32,7 @@ import Header from '@/components/common/Header';
 import {Button} from '@/components/common/Button';
 import heic2any from 'heic2any';
 import {toast} from 'sonner';
+import placeHolder from '@/assets/images/placeholder400.png';
 
 const CreateBasket = () => {
     const [currentStep, setCurrentStep] = useState('title');
@@ -347,7 +348,7 @@ const CreateBasket = () => {
                                         <img
                                             src={
                                                 imageURL === ''
-                                                    ? 'https://via.placeholder.com/400'
+                                                    ? placeHolder
                                                     : imageURL
                                             }
                                             alt={'basket thumbnail'}

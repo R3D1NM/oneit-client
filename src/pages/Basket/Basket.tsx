@@ -373,7 +373,7 @@ const Basket = () => {
             </div>
 
             <>
-                <div className="fixed bottom-0 w-full p-2 right-1/2 translate-x-1/2">
+                <div className="fixed bottom-0 w-full p-2 right-1/2 translate-x-1/2 z-50">
                     <Button
                         className="w-full"
                         onClick={() => toggleDrawer(true)}

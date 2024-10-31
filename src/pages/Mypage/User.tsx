@@ -63,12 +63,14 @@ const User = () => {
                                 {fetchUserInfoAPI?.data?.birthDate}
                             </span>
                         </div>
-                        <button
-                            className="self-center btn_logout ml-auto w-[5.0625rem] h-[2.125rem] flex justify-center items-center bg-[#f01299] text-white text-sm font-bold rounded-lg"
-                            onClick={handleRequest}
-                        >
-                            친구 신청
-                        </button>
+                        {!fetchUserInfoAPI?.data?.isFriend && (
+                            <button
+                                className="self-center btn_logout ml-auto w-[5.0625rem] h-[2.125rem] flex justify-center items-center bg-[#f01299] text-white text-sm font-bold rounded-lg"
+                                onClick={handleRequest}
+                            >
+                                친구 신청
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>

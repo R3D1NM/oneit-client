@@ -198,7 +198,7 @@ header {
             img {
               width: 100%;
               height: 100%;
-              object-fit: contain;
+              object-fit: fill;
             }
 
             &:last-child {
@@ -954,7 +954,24 @@ header {
         position: relative;
         border-radius: 0.5rem;
 
-        
+        &.invalid {
+            &::before {
+              content: "구매 불가능한 제품이에요:(";
+              font-size: 0.75rem;
+              font-weight: bold;
+              color: #fff;
+              background: rgba(0, 0, 0, 0.6);
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
+              position: absolute;
+              z-index: 5;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+            }
+          }
 
         .title {
           font-size: 0.875rem;

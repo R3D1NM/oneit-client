@@ -170,6 +170,7 @@ const BasketProduct = () => {
     const handleText = (e: {preventDefault: () => void}) => {
         e.preventDefault();
         console.log(text);
+        if (!text || text.replace(/\s/g, '').length < 1) return;
         addCommentAPI.mutateAsync();
     };
 
@@ -306,7 +307,7 @@ const BasketProduct = () => {
                         </TabsTrigger>
                     </TabsList>
                     <TabsContent value="chat" className="talk_area">
-                        <div className="chat_area min-h-32 shadow-sm shadow-[#ffcaf2]  rounded-md  overflow-y-auto scrollbar-hide ">
+                        <div className="chat_area min-h-32 shadow-sm shadow-[#ffcaf2] max-h-60  rounded-md  overflow-y-auto scrollbar-hide ">
                             {fetchCommentsAPI?.data?.length === 0 && (
                                 <div className="flex justify-center text-center">
                                     첫 번째 댓글을 남겨보세요!
