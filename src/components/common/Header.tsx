@@ -69,7 +69,14 @@ const Header = ({
             {...props}
         >
             <div className="flex items-center">
-                {variant === 'logo' ? (
+                <a href="/main" className="flex items-center">
+                    <img
+                        src={logoImage}
+                        alt="Logo"
+                        className="w-[4.75rem] h-[2.125rem] object-contain"
+                    />
+                </a>
+                {/* {variant === 'logo' ? (
                     <a href="/main" className="flex items-center">
                         <img
                             src={logoImage}
@@ -91,7 +98,7 @@ const Header = ({
                         </button>
                         <h2 className="text-overflow-one h-6 w-36">{title}</h2>
                     </>
-                )}
+                )} */}
             </div>
             <div className="flex items-center gap-4 right">
                 {setting && (

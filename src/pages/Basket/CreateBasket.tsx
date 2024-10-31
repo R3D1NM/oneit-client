@@ -180,7 +180,7 @@ const CreateBasket = () => {
                                                     onClick={() => {
                                                         if (
                                                             form.getValues()
-                                                                .title.length >
+                                                                .title.length >=
                                                             2
                                                         ) {
                                                             setCurrentStep(
