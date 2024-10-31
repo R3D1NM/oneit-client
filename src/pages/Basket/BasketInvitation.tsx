@@ -129,7 +129,11 @@ const BasketInvitation = () => {
                             초대 수락하기
                         </Button>
                     )}
-                    <Button className="w-full" variant="border">
+                    <Button
+                        className="w-full"
+                        variant="border"
+                        onClick={() => navigate('/main')}
+                    >
                         메인으로
                     </Button>
                 </div>
