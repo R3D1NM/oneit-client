@@ -1,5 +1,5 @@
 import {useForm, Controller, useWatch} from 'react-hook-form';
-import {useAtom} from 'jotai';
+import {useAtom, useAtomValue} from 'jotai';
 import {gender, name, priceRange, recipient} from '@/atoms/recommend';
 import {Button} from '@/components/common/Button';
 
@@ -8,6 +8,7 @@ import Header from '@/components/common/Header';
 import {useEffect, useRef, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {nanoid} from 'nanoid';
+import {authAtom} from '@/api/auth';
 
 type FormData = {
     name: string;
@@ -18,6 +19,7 @@ type FormData = {
 
 const Recommend = () => {
     const navigate = useNavigate();
+    const user = useAtomValue(authAtom);
     const [step, setStep] = useState(0);
     const [nameAtom, setNameAtom] = useAtom(name);
     const [genderAtom, setGenderAtom] = useAtom(gender);
@@ -73,7 +75,7 @@ const Recommend = () => {
         console.log('onSubmit', data);
 
         const chatID = nanoid(10);
-        mutate({chatID});
+        mutate({chatID, userID: user ? user.idx.toString() : ''});
         navigate(`/recommend/${chatID}/0`);
     };
 

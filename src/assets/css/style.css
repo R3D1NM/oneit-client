@@ -122,6 +122,7 @@ header {
         width: 7.5rem;
         height: 7.5rem;
         overflow: hidden;
+        object-fit: fill;
         border-radius: 0.75rem;
       }
     }
@@ -152,7 +153,9 @@ header {
       bottom: 0;
       display: block;
       z-index: 0;
-      box-shadow: 2px 2px 2px 2px rgba(255, 75, 93, 0.2);
+      /* border-color: #ff4bc1; */
+      border: 2px solid #ff4bc1;
+      /* box-shadow: 2px 2px 2px 2px rgba(255, 75, 93, 0.2); */
     }
 
     .capsule {
@@ -250,7 +253,7 @@ header {
             position: absolute;
             width: 100%;
             height: 100%;
-            object-fit: contain;
+            object-fit: fill;
           }
         }
         &:nth-child(2) {
@@ -347,8 +350,9 @@ header {
               overflow: hidden;
 
               img {
-                width: 100%;
-                object-fit: contain;
+                width: 3.5rem;
+                  height: 3.5rem;
+                object-fit: fill;
               }
             }
             > p {
@@ -425,7 +429,7 @@ header {
 
 .cardDetail {
   margin-top: -3.5rem;
-  padding-bottom: 3.625rem;
+  /* padding-bottom: 3.625rem; */
 
   .image_area {
     position: relative;
@@ -596,12 +600,12 @@ header {
   }
 
   .talk_input_fixed {
-    position: absolute;
-    bottom: 0;
+    /* position: absolute; */
+    /* bottom: 0;
     left: 0;
-    right: 0;
+    right: 0; */
     height: 3.625rem;
-    padding: 0 1rem;
+    /* padding: 0 1rem; */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1017,14 +1021,21 @@ header {
               z-index: 8;
               display: flex;
               align-items: center;
+              img {
+                  width: 1.75rem;
+                  height: 1.75rem;
+                  margin-right: 0.125rem;
+                }
 
-              i {
+
+              /* i {
                 width: 1.75rem;
                 height: 1.75rem;
                 margin-right: 0.125rem;
                 background: url("/src/assets/images/mage_heart.svg") no-repeat center/contain;
                 display: block;
               }
+               */
             }
 
             img {
@@ -1456,8 +1467,9 @@ header {
         overflow: hidden;
 
         img {
-          width: 100%;
-          object-fit: contain;
+          width: 4rem;
+          height: 64px;
+          object-fit: fill;
         }
       }
       .name {
@@ -1750,8 +1762,9 @@ header {
           position: relative;
 
           img {
-            width: 100%;
-            object-fit: contain;
+            width: 3.5rem;
+              height: 3.5rem;
+            object-fit: fill;
             position: absolute;
             top: 0;
             left: 0;
@@ -2048,7 +2061,8 @@ header {
 
           > img {
             height: 100%;
-            object-fit: contain;
+            width: 100%;
+            object-fit: fill;
           }
         }
         .info {

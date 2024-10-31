@@ -38,6 +38,7 @@ const resultList = results as Result[];
 
 interface startRecommendVariables {
     chatID: string;
+    userID: string;
 }
 
 export const startRecommend = atomWithMutation<
@@ -45,7 +46,7 @@ export const startRecommend = atomWithMutation<
     startRecommendVariables
 >((get) => ({
     mutationKey: ['saveRecommendInfo'],
-    mutationFn: async ({chatID}: {chatID: string}) => {
+    mutationFn: async ({chatID, userID}: {chatID: string; userID: string}) => {
         await write(ref(db, `recommendRecord/${chatID}`), {
             chatID,
             name: get(name),
@@ -55,6 +56,7 @@ export const startRecommend = atomWithMutation<
             priceRange: get(priceRange),
             createdAt: serverTimestamp(),
             production: import.meta.env.VITE_CURRENT_DOMAIN,
+            userID: userID.length > 0 ? userID : 'anonymous',
         });
     },
     onSuccess: (data, variables, context) => {},
@@ -181,10 +183,8 @@ export const rateResult = atomWithMutation<unknown, rateResultVariables>(
             rating: number;
         }) => {
             await push(ref(db, `recommendRecord/${chatID}/ratings`), {
-                rating: {
-                    rating,
-                    modifiedAt: serverTimestamp(),
-                },
+                rating,
+                modifiedAt: serverTimestamp(),
             });
         },
     }),

@@ -63,6 +63,11 @@ const BasketInvitation = () => {
                     <div className="p-2 invite flex w-full justify-between">
                         <div className="flex gap-1 items-center">
                             <p className="text-xs text-white rounded-xl bg-[#ff4bc1] h-fit px-2 py-1">
+                                {basketInfoAPI?.data?.dday > 0
+                                    ? `D-${basketInfoAPI?.data?.dday}`
+                                    : basketInfoAPI?.data?.dday === 0
+                                      ? 'D-Day'
+                                      : '마감'}
                                 {basketInfoAPI?.data?.dday < 0
                                     ? '마감'
                                     : 'D-' + basketInfoAPI?.data?.dday}

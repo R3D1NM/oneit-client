@@ -163,7 +163,7 @@ const BasketEdit = ({
             .regex(/^\d{4}-\d{2}-\d{2}$/, {
                 message: '날짜 형식은 YYYY-MM-DD이어야 합니다.',
             })
-            .refine((date) => new Date(date) >= new Date(), {
+            .refine((date) => new Date(date) > new Date(), {
                 message: '과거의 날짜는 선택할 수 없습니다.',
             }),
     });
@@ -419,13 +419,14 @@ const BasketInfo = () => {
                             />
                         </div>
                         <div>
-                            {basketInfoAPI?.data?.dday >= 0 ? (
-                                <div className="dDay">
-                                    D-
-                                    {basketInfoAPI?.data?.dday}
+                            {basketInfoAPI?.data?.dday > 0 ? (
+                                <div className="dDay px-1">
+                                    D-{basketInfoAPI?.data?.dday}
                                 </div>
+                            ) : basketInfoAPI?.data?.dday === 0 ? (
+                                <div className="dDay px-1">D-Day</div>
                             ) : (
-                                <div className="text-[#ff5757] text-sm font-semibold">
+                                <div className="dDay px-1">
                                     {-basketInfoAPI?.data?.dday}일 지남
                                 </div>
                             )}

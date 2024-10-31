@@ -1,13 +1,18 @@
 import {authAtom, editUserInfo} from '@/api/auth';
 import Header from '@/components/common/Header';
-import {useMutation} from '@tanstack/react-query';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {useAtomValue} from 'jotai';
 import React, {useRef, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import {toast} from 'sonner';
+import heic2any from 'heic2any';
 
 const EditInfo = () => {
     const user = useAtomValue(authAtom);
+    const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const [newNickname, setNewNickname] = useState(user?.nickname || '');
-    const [imageURL, setImageURL] = useState(user?.profileImgFromKakao || '');
+    const [imageURL, setImageURL] = useState(user?.profileImg || '');
     const [newBirthDate, setNewBirthDate] = useState(user?.birthDate || '');
     const [image, setImage] = useState<File | null>(null);
     const [birthDateError, setBirthDateError] = useState('');
@@ -21,6 +26,12 @@ const EditInfo = () => {
                 profileImage: image,
                 birthDate: newBirthDate.toString(),
             }),
+        onSuccess: () => {
+            // queryClient.invalidateQueries({queryKey:['user']});
+            toast('회원 정보가 수정되었습니다.');
+            navigate('/mypage', {replace: true});
+            window.location.reload();
+        },
     });
 
     const handleSubmit = () => {
@@ -54,12 +65,60 @@ const EditInfo = () => {
                                 event.target.files![0],
                             );
 
-                            setImageURL(displayUrl);
-                            console.log(event);
+                            // setImageURL(displayUrl);
+                            // console.log(event);
                             const file = event.target.files![0];
                             console.log(file);
+                            if (file) {
+                                // if file is in heic format, convert it to jpeg
+                                if (file && file.type === 'image/heic') {
+                                    console.log('heic file detected');
 
-                            setImage(file);
+                                    heic2any({
+                                        blob: file,
+                                        toType: 'image/webp',
+                                    }).then((blob) => {
+                                        const newFile = new File(
+                                            [blob as Blob],
+                                            file?.name + '.webp',
+                                            {
+                                                type: 'image/webp',
+                                            },
+                                        );
+                                        console.log(newFile);
+                                        const displayUrl =
+                                            URL.createObjectURL(newFile);
+                                        console.log('Image URL:', displayUrl);
+                                        if (newFile.size > 1048489) {
+                                            toast.error(
+                                                '이미지 용량이 너무 커서 사용할 수 없습니다.',
+                                            );
+                                            setImage(null);
+
+                                            setImageURL('');
+                                            return;
+                                        }
+                                        setImageURL(displayUrl);
+                                        setImage(newFile);
+                                    });
+                                } else {
+                                    const displayUrl =
+                                        URL.createObjectURL(file);
+                                    console.log('Image URL:', displayUrl);
+                                    if (file.size > 1048489) {
+                                        toast.error(
+                                            '이미지 용량이 너무 커서 사용할 수 없습니다.',
+                                        );
+                                        setImage(null);
+
+                                        setImageURL('');
+                                        return;
+                                    }
+                                    setImageURL(displayUrl);
+                                    setImage(file);
+                                }
+                            }
+                            // setImage(file);
                         }}
                     />
                     <button

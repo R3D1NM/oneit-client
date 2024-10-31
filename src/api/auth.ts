@@ -121,13 +121,13 @@ interface EditUserInfo {
 
 export const editUserInfo = async (user: EditUserInfo) => {
     const data = {
-        nickname: user.nickname,
+        nickName: user.nickname,
         birthDate: user.birthDate,
     };
     let payload = new FormData();
-    payload.append('request', JSON.stringify(data));
+    payload.append('updateUserRequest', JSON.stringify(data));
     if (user.profileImage) {
-        payload.append('image', user.profileImage as File);
+        payload.append('profileImage', user.profileImage as File);
     }
     return axios
         .patch('/v2/user', payload, {

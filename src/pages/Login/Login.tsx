@@ -3,7 +3,7 @@ import logoColor from '@/assets/images/logo_color.svg';
 import kakaoIcon from '@/assets/images/kakao.png';
 import Header from '@/components/common/Header';
 
-const kakaoURL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${import.meta.env.VITE_KAKAO_REST_API_KEY}&redirect_uri=${import.meta.env.VITE_KAKAO_LOGIN_REDIRECT_URI}&scope=profile_nickname,profile_image,account_email,talk_message,friends`;
+const kakaoURL = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${import.meta.env.VITE_KAKAO_REST_API_KEY}&redirect_uri=${import.meta.env.VITE_KAKAO_LOGIN_REDIRECT_URI}&scope=profile_nickname,profile_image,account_email,talk_message,friends,name,birthday,birthyear,phone_number`;
 
 const Login = () => {
     useEffect(() => {

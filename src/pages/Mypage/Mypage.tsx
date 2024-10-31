@@ -66,7 +66,10 @@ const Mypage = () => {
                 <div className="rounding_grey">
                     <div className="nickname_area">
                         <div className="picture">
-                            <img src={user?.profileImgFromKakao} alt="" />
+                            <img
+                                src={user?.profileImg || logo}
+                                alt="사용자 대표 이미지"
+                            />
                         </div>
                         <div className="name">{user?.nickname}</div>
                         <button
@@ -110,6 +113,7 @@ const Mypage = () => {
                                             <img
                                                 src={basket.imageUrl || logo}
                                                 alt=""
+                                                className="h-20 w-20 rounded-xl"
                                             />
                                             <p className="text-overflow-one text-sm text-[#5d5d5d] text-center">
                                                 {basket.name}

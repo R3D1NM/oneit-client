@@ -16,16 +16,21 @@ const BasketInfoCard = ({
         <ul className="rounding" onClick={handleClick}>
             <li>
                 <div className="cont">
-                    {basket.dday >= 0 ? (
+                    {basket.dday > 0 ? (
                         <div className="capsule">
                             D-
                             {basket.dday}
                         </div>
+                    ) : basket.dday === 0 ? (
+                        <div className="capsule">D-Day</div>
                     ) : (
                         <div className="capsule">마감</div>
                     )}
+
                     <div>
-                        <p className="text-sm font-bold">{basket.name}</p>
+                        <p className="text-md text-overflow-one font-bold">
+                            {basket.name}
+                        </p>
                         <div className="mt-2 mr-4 text-xs persons">
                             참여자
                             <div className="thums">

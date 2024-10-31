@@ -47,6 +47,7 @@ import {
 import {DropdownMenuTrigger} from '@radix-ui/react-dropdown-menu';
 import logo from '@/assets/images/oneit.png';
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs';
+import {toast} from 'sonner';
 
 const BasketProduct = () => {
     const {basketID, productID} = useParams();
@@ -91,12 +92,14 @@ const BasketProduct = () => {
                             ...prev,
                             purchaseStatus:
                                 prev.purchaseStatus === 'PURCHASED'
-                                    ? null
+                                    ? 'NOT_PURCHASED'
                                     : 'PURCHASED',
                         };
                     }
                 },
             );
+            toast('해당 상품의 구매 여부를 표시했어요!');
+            // navigate(`/basket/${basketID}`, {replace: true});
         },
     });
 
@@ -185,8 +188,8 @@ const BasketProduct = () => {
         <>
             <Header variant="back" btn_back={false} />
 
-            <div className="cardDetail scrollbar-hide pt-24">
-                <div className="image_area">
+            <div className="cardDetail scrollbar-hide pt-24 pb-0">
+                <div className="image_area ">
                     <img
                         src={productAPI?.data?.thumbnailUrl || logo}
                         alt="상품 썸네일"
@@ -196,19 +199,25 @@ const BasketProduct = () => {
                         {vote == 'LIKE' ? (
                             <i
                                 className="w-7 h-7 mr-0.5 bg-center bg-contain bg-no-repeat block"
-                                style={{
-                                    backgroundImage: `url(${mageHeartFill})`,
-                                }}
                                 onClick={handleVote}
-                            ></i>
+                            >
+                                <img
+                                    src={mageHeartFill}
+                                    alt="Heart"
+                                    className="w-full h-full object-contain"
+                                />
+                            </i>
                         ) : (
                             <i
                                 className="w-7 h-7 mr-0.5 bg-center bg-contain bg-no-repeat block"
-                                style={{
-                                    backgroundImage: `url(${mageHeart})`,
-                                }}
                                 onClick={handleVote}
-                            ></i>
+                            >
+                                <img
+                                    src={mageHeart}
+                                    alt="Heart"
+                                    className="w-full h-full object-contain"
+                                />
+                            </i>
                         )}
                         <span
                             className={cn(vote == 'LIKE' && 'text-[#FF5757]')}
@@ -297,7 +306,7 @@ const BasketProduct = () => {
                         </TabsTrigger>
                     </TabsList>
                     <TabsContent value="chat" className="talk_area">
-                        <div className="chat_area min-h-32 shadow-sm shadow-[#ffcaf2]  rounded-md ">
+                        <div className="chat_area min-h-32 shadow-sm shadow-[#ffcaf2]  rounded-md  overflow-y-auto scrollbar-hide ">
                             {fetchCommentsAPI?.data?.length === 0 && (
                                 <div className="flex justify-center text-center">
                                     첫 번째 댓글을 남겨보세요!
@@ -360,7 +369,7 @@ const BasketProduct = () => {
                             )}
                         </div>
                         <form
-                            className="talk_input_fixed"
+                            className="talk_input_fixed px-1 "
                             onSubmit={handleText}
                         >
                             <input
@@ -373,7 +382,20 @@ const BasketProduct = () => {
                         </form>
                     </TabsContent>
                     {/* todo: product detail image */}
-                    <TabsContent value="detail">제품 상세 이미지</TabsContent>
+                    {productAPI?.data?.detailImages && (
+                        <TabsContent value="detail" className="detail_area">
+                            {productAPI?.data?.detailImages?.map(
+                                (img: string, idx: number) => (
+                                    <img
+                                        key={`image-${idx}`}
+                                        src={img}
+                                        alt="상품 상세 이미지"
+                                    />
+                                ),
+                            )}
+                        </TabsContent>
+                    )}
+                    {/* <TabsContent value="detail">제품 상세 이미지</TabsContent> */}
                 </Tabs>
             </div>
         </>

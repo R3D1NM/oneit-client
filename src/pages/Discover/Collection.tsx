@@ -232,20 +232,16 @@ const Collection = () => {
                         </div>
                         {fetchCollectionAPI?.data?.collectionProductDTOList[
                             currentPage - 1
-                        ]?.productStatus === 'ACTIVE' ? (
+                        ]?.productStatus === 'ACTIVE' && (
                             <button
                                 className="btn_more"
                                 onClick={() =>
                                     navigate(
-                                        `/product/${fetchCollectionAPI?.data?.collectionProductDTOList[currentPage - 1]?.idx}`,
+                                        `/product/${fetchCollectionAPI?.data?.collectionProductDTOList[currentPage - 1]?.productIdx}`,
                                     )
                                 }
                             >
                                 제품 더 알아보기
-                            </button>
-                        ) : (
-                            <button className=" btn_more " disabled>
-                                품절된 상품이에요 :(
                             </button>
                         )}
                     </>

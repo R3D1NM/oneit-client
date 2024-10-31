@@ -90,3 +90,14 @@ export const rejectFriend = async (friendIdx: string, requestIdx: string) => {
             return Promise.reject(err);
         });
 };
+
+export const fetchUserInfo = (userID: string) => {
+    return axios
+        .get(`/v2/friends/${userID}`)
+        .then((res) => {
+            return Promise.resolve(res.data);
+        })
+        .catch((err) => {
+            return Promise.reject(err);
+        });
+};

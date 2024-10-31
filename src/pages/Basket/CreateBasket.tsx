@@ -30,6 +30,8 @@ import {AspectRatio} from '@/components/ui/aspect-ratio';
 import {useMutation} from '@tanstack/react-query';
 import Header from '@/components/common/Header';
 import {Button} from '@/components/common/Button';
+import heic2any from 'heic2any';
+import {toast} from 'sonner';
 
 const CreateBasket = () => {
     const [currentStep, setCurrentStep] = useState('title');
@@ -217,20 +219,97 @@ const CreateBasket = () => {
                                                             event.target
                                                                 .files?.[0];
                                                         if (file) {
-                                                            const displayUrl =
-                                                                URL.createObjectURL(
+                                                            // if file is in heic format, convert it to jpeg
+                                                            if (
+                                                                file &&
+                                                                file.type ===
+                                                                    'image/heic'
+                                                            ) {
+                                                                console.log(
+                                                                    'heic file detected',
+                                                                );
+
+                                                                heic2any({
+                                                                    blob: file,
+                                                                    toType: 'image/webp',
+                                                                }).then(
+                                                                    (blob) => {
+                                                                        const newFile =
+                                                                            new File(
+                                                                                [
+                                                                                    blob as Blob,
+                                                                                ],
+                                                                                file?.name +
+                                                                                    '.webp',
+                                                                                {
+                                                                                    type: 'image/webp',
+                                                                                },
+                                                                            );
+                                                                        console.log(
+                                                                            newFile,
+                                                                        );
+                                                                        const displayUrl =
+                                                                            URL.createObjectURL(
+                                                                                newFile,
+                                                                            );
+                                                                        console.log(
+                                                                            'Image URL:',
+                                                                            displayUrl,
+                                                                        );
+                                                                        if (
+                                                                            newFile.size >
+                                                                            1048489
+                                                                        ) {
+                                                                            toast.error(
+                                                                                '이미지 용량이 너무 커서 사용할 수 없습니다.',
+                                                                            );
+                                                                            field.onChange(
+                                                                                null,
+                                                                            );
+                                                                            setImageURL(
+                                                                                '',
+                                                                            );
+                                                                            return;
+                                                                        }
+                                                                        setImageURL(
+                                                                            displayUrl,
+                                                                        );
+                                                                        field.onChange(
+                                                                            newFile,
+                                                                        );
+                                                                    },
+                                                                );
+                                                            } else {
+                                                                const displayUrl =
+                                                                    URL.createObjectURL(
+                                                                        file,
+                                                                    );
+                                                                console.log(
+                                                                    'Image URL:',
+                                                                    displayUrl,
+                                                                );
+                                                                if (
+                                                                    file.size >
+                                                                    1048489
+                                                                ) {
+                                                                    toast.error(
+                                                                        '이미지 용량이 너무 커서 사용할 수 없습니다.',
+                                                                    );
+                                                                    field.onChange(
+                                                                        null,
+                                                                    );
+                                                                    setImageURL(
+                                                                        '',
+                                                                    );
+                                                                    return;
+                                                                }
+                                                                setImageURL(
+                                                                    displayUrl,
+                                                                );
+                                                                field.onChange(
                                                                     file,
                                                                 );
-                                                            console.log(
-                                                                'Image URL:',
-                                                                displayUrl,
-                                                            );
-                                                            setImageURL(
-                                                                displayUrl,
-                                                            );
-                                                            field.onChange(
-                                                                file,
-                                                            );
+                                                            }
                                                         }
                                                     }}
                                                     type="file"
@@ -315,12 +394,12 @@ const CreateBasket = () => {
                                     control={form.control}
                                     name="deadline"
                                     render={({field}) => (
-                                        <FormItem>
+                                        <FormItem className="">
                                             {/* <FormLabel className="text-sm text-[#5d5d5d] text-center mt-7 mb-1">
                                                 기념일 설정
                                             </FormLabel> */}
                                             <FormMessage />
-                                            <FormControl>
+                                            <FormControl className="flex justify-center w-full">
                                                 <Calendar
                                                     mode="single"
                                                     selected={field.value}

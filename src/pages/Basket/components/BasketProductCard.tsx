@@ -65,8 +65,6 @@ const BasketProductCard = (props: ProductCardProps) => {
         setVote(newVote);
         setCount(newCount);
 
-        // console.log(basketID, product.idx, 'uuid', newVote);
-
         voteAPI.mutate();
     };
 
@@ -89,23 +87,13 @@ const BasketProductCard = (props: ProductCardProps) => {
                         alt="제품 이미지"
                     />
                     <div className="heart" onClick={handleVote}>
-                        {vote == 'LIKE' ? (
-                            <i
-                                className="w-7 h-7 mr-0.5 bg-center bg-contain bg-no-repeat block"
-                                style={{
-                                    backgroundImage: `url(${mageHeartFill})`,
-                                }}
-                            ></i>
-                        ) : (
-                            <i
-                                className="w-7 h-7 mr-0.5 bg-center bg-contain bg-no-repeat block"
-                                style={{
-                                    backgroundImage: `url(${mageHeart})`,
-                                }}
-                            ></i>
-                        )}
+                        <img
+                            src={vote === 'LIKE' ? mageHeartFill : mageHeart}
+                            alt="Heart"
+                            className="w-full h-full object-contain"
+                        />
                         <span
-                            className={cn(vote == 'LIKE' && 'text-[#FF5757]')}
+                            className={cn(vote === 'LIKE' && 'text-[#FF5757]')}
                         >
                             {count}
                         </span>
@@ -117,7 +105,6 @@ const BasketProductCard = (props: ProductCardProps) => {
                                 product.emojiIdx &&
                                     `${EmojiList[product.emojiIdx].name}`,
                             )}
-                            // className="desc like"
                             onClick={() =>
                                 navigate(
                                     `/basket/${basketID}/product/${product.idx}`,

@@ -36,6 +36,7 @@ const SignUp = () => {
         birthDay: z.string().regex(/^(0?[1-9]|[12][0-9]|3[01])$/, {
             message: '올바른 일을 입력해주세요.',
         }),
+        isAgreeMarketing: z.boolean(),
         // phoneNum1: z
         //     .string()
         //     .regex(/^[0-9]{3}$/, {message: '올바른 번호를 입력해주세요.'}),
@@ -68,6 +69,7 @@ const SignUp = () => {
             birthDay: user?.birthDate
                 ? user.birthDate.toString().split('-')[2].split('T')[0]
                 : '',
+            isAgreeMarketing: true,
             // phoneNum1: '010',
         },
         mode: 'all',
@@ -328,6 +330,28 @@ const SignUp = () => {
                         올바른 생년월일을 입력해주세요.
                     </p>
                 )}
+
+                <div className="relative flex w-full mb-2">
+                    <Controller
+                        name="isAgreeMarketing"
+                        control={control}
+                        render={({field}) => (
+                            <input
+                                {...field}
+                                type="checkbox"
+                                onChange={() => {
+                                    field.onChange(!field.value);
+                                }}
+                                value={field.value.toString()}
+                                defaultChecked={field.value}
+                                className="mr-1"
+                                // placeholder="마케팅 수신 동의"
+                                // className="border-0 border-b border-gray-300 text-sm flex-1 px-3 py-3.5 placeholder-gray-300 focus:outline-none focus:border-[#ff4bc1] transition-all duration-400"
+                            />
+                        )}
+                    />
+                    <p className="text-xs">마케팅 정보 수신 동의 (선택)</p>
+                </div>
 
                 {/* <p className="text-base mb-4 font-medium mt-6">전화번호</p>
                 <div className="flex gap-4 items-center mb-6">

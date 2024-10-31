@@ -69,24 +69,9 @@ const Basket = () => {
     const [dDay, setDDay] = useState(0);
     const [mode, setMode] = useState(false);
     const [keyword, setKeyword] = useState('');
-    const toggleDrawer = (newOpen: boolean) => () => {
+    const toggleDrawer = (newOpen: boolean) => {
         setOpen(newOpen);
     };
-
-    //redirect go back to basket page
-    // useEffect(() => {
-    //     const handlePopState = (event: PopStateEvent) => {
-    //         event.preventDefault();
-    //         navigate(`/basket`);
-    //     };
-
-    //     window.history.pushState(null, '', window.location.href);
-    //     window.addEventListener('popstate', handlePopState);
-
-    //     return () => {
-    //         window.removeEventListener('popstate', handlePopState);
-    //     };
-    // }, []);
 
     useEffect(() => {
         if (!Kakao.isInitialized()) {
@@ -114,7 +99,6 @@ const Basket = () => {
         queryFn: () => fetchBasketProducts(basketID || ''),
         enabled: basketInfoAPI.isSuccess && !basketInfoAPI.isError,
     });
-    // console.log(data);
 
     const deleteAPI = useMutation({
         mutationFn: () => deleteBasket(basketID || ''),
@@ -139,14 +123,6 @@ const Basket = () => {
     };
 
     const handleInquiry = () => {
-        //select all products
-        // const products =
-        //     basketProductAPI.data?.map((p: BaksetProduct) => p.idx) ||
-        //     ([] as BaksetProduct[]);
-        // console.log(products);
-
-        // setSelected(products);
-
         mutateAsync({
             basketIdx: basketID || '',
             selected: basketProductAPI.data,
@@ -160,22 +136,18 @@ const Basket = () => {
                 toast.error('물어보기 전송 실패');
                 setMode(false);
             });
-        // setSelected([]);
     };
 
     const scrollToTop = () => {
         window.scrollTo({top: 0, behavior: 'smooth'});
     };
 
-    //todo: search product by keyword & filtering
     const handleSearch = () => {
         setSearchOpen(!searchOpen);
     };
 
     const handleModeChange = () => {
         if (basketProductAPI.data?.length === 0) return;
-        console.log('mode change', mode);
-
         setMode(!mode);
     };
 
@@ -217,11 +189,10 @@ const Basket = () => {
             <div className="p-4 cardList scrollbar-hide">
                 <div className="Dday_wrap">
                     <div className="graph">
-                        {basketInfoAPI?.data?.dday >= 0 ? (
-                            <div className="count">
-                                D-
-                                {dDay}
-                            </div>
+                        {basketInfoAPI?.data?.dday > 0 ? (
+                            <div className="count">D-{dDay}</div>
+                        ) : basketInfoAPI?.data?.dday === 0 ? (
+                            <div className="count">D-Day</div>
                         ) : (
                             <div className="count">
                                 {-basketInfoAPI?.data?.dday}일 지남
@@ -241,7 +212,6 @@ const Basket = () => {
                             <div className="bar">
                                 <div
                                     className="color"
-                                    // todo: change graph depending on today - deadline
                                     style={{
                                         width:
                                             dDay <= 0
@@ -316,9 +286,8 @@ const Basket = () => {
                         <div className="icons">
                             <button
                                 className="btn_zoomer"
-                                onClick={() => setSearchOpen(true)}
+                                onClick={() => setSearchOpen(!searchOpen)}
                             ></button>
-                            <button className="btn_filter"></button>
                         </div>
                     </div>
                     {searchOpen && (
@@ -415,8 +384,9 @@ const Basket = () => {
                 <SwipeableDrawer
                     anchor="bottom"
                     open={open}
-                    onClose={toggleDrawer(false)}
-                    onOpen={toggleDrawer(true)}
+                    onClick={() => toggleDrawer(!open)}
+                    onClose={() => toggleDrawer(false)}
+                    onOpen={() => toggleDrawer(true)}
                     swipeAreaWidth={drawerBleeding}
                     ModalProps={{
                         keepMounted: true,
@@ -434,16 +404,8 @@ const Basket = () => {
                             background:
                                 'linear-gradient(90deg, #ff4341, #ff4bc1)',
                         }}
+                        onClick={() => toggleDrawer(true)} // Add onClick handler here
                     >
-                        {/* <Box
-              sx={{
-                width: 30,
-                height: 6,
-                bgcolor: "grey.300",
-                borderRadius: "3px",
-                position: "absolute",
-              }}
-            /> */}
                         <Typography
                             sx={{
                                 p: 1,
@@ -476,17 +438,8 @@ const Basket = () => {
                             <i className="zoomer"></i>상품 검색을 통해 선물
                             추가하기
                         </button>
-                        {/* <button className="btn_border pink">
-                            <i className="link"></i>외부 링크 가져오기
-                        </button> */}
                     </div>
                 </SwipeableDrawer>
-                {/* <Button
-                    className="fixed bottom-[48px] right-0 z-[999] px-3 py-6 rounded-full shadow-lg m-1"
-                    onClick={scrollToTop}
-                >
-                    <ArrowUp />
-                </Button> */}
             </>
         </>
     );

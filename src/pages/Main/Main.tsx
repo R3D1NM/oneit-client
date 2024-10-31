@@ -96,14 +96,26 @@ const Main = () => {
                         className="w-full object-contain"
                     />
                     <div className="absolute inset-0 flex flex-col justify-center items-start p-6 text-white">
-
                         <h2 className="text-lg font-bold text-white">
-
-                            ONE!T 10월 31일 정식 출시 예정
+                            <span className="bg-white/70 text-[#ff4bc1] px-1 rounded-md">
+                                ONE!T
+                            </span>{' '}
+                            오픈 기념 이벤트 🎉
                             <br />
-                            {isLogin
-                                ? '인스타그램 둘러보고 출시 소식 받기'
-                                : '회원가입하고 출시 알림 받기'}
+                            {isLogin ? (
+                                <p className="text-lg font-bold text-white">
+                                    인스타그램에서 참여하고{' '}
+                                    {/* <span className="bg-white/70 text-[#000] px-1 rounded-md"></span>{' '} */}
+                                    <span className="bg-white/70 text-[#ff4bc1] px-1 rounded-md">
+                                        선물
+                                    </span>{' '}
+                                    받기
+                                </p>
+                            ) : (
+                                <p className="text-lg font-bold text-black">
+                                    회원가입하고 참여하기
+                                </p>
+                            )}
                         </h2>
                     </div>
                 </div>
