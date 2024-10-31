@@ -12,26 +12,25 @@ const BasketInfoCard = ({
         navigate(`/basket/${basket.idx}`);
     };
 
-    //calculate the d-day
-    const today = new Date();
-    const dday = new Date(basket.deadline);
-    const gap = dday.getTime() - today.getTime();
-    const dDay = Math.ceil(gap / (1000 * 60 * 60 * 24));
-
     return (
         <ul className="rounding" onClick={handleClick}>
             <li>
                 <div className="cont">
-                    {dDay >= 0 ? (
+                    {basket.dday > 0 ? (
                         <div className="capsule">
                             D-
-                            {dDay}
+                            {basket.dday}
                         </div>
+                    ) : basket.dday === 0 ? (
+                        <div className="capsule">D-Day</div>
                     ) : (
                         <div className="capsule">마감</div>
                     )}
+
                     <div>
-                        <p className="text-sm font-bold">{basket.name}</p>
+                        <p className="text-md text-overflow-one font-bold">
+                            {basket.name}
+                        </p>
                         <div className="mt-2 mr-4 text-xs persons">
                             참여자
                             <div className="thums">

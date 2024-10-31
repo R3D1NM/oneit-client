@@ -1,18 +1,7 @@
 import {basketProductVote, deleteBasketProduct} from '@/api/basket';
 import {selctedProductCount, selectProduct} from '@/atoms/basket';
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
-import {AspectRatio} from '@/components/ui/aspect-ratio';
-import {Button} from '@/components/ui/button';
-import {Product} from '@/lib/types';
+import EmojiList from '@/data/emoji.json';
+import {BaksetProduct} from '@/lib/types';
 import {cn} from '@/lib/utils';
 import {useMutation} from '@tanstack/react-query';
 import {useAtomValue, useSetAtom} from 'jotai';
@@ -22,9 +11,10 @@ import likeit from '@/assets/images/icon_likeit.svg';
 import mageHeart from '@/assets/images/mage_heart.svg';
 import mageHeartFill from '@/assets/images/mage_heart_fill.svg';
 import {useNavigate} from 'react-router-dom';
+import logo from '@/assets/images/oneit.png';
 
 interface ProductCardProps {
-    product: Product;
+    product: BaksetProduct;
     basketID: string;
     shared: boolean;
     likeCount: number;
@@ -60,15 +50,6 @@ const BasketProductCard = (props: ProductCardProps) => {
         }
     });
 
-    const handleClick = () => {
-        setIsSelected(!isSelected);
-        onSelect(product);
-    };
-
-    const handleDelete = async () => {
-        deleteAPI.mutate();
-    };
-
     const handleVote = () => {
         let newVote: 'LIKE' | 'DISLIKE' | 'NONE';
         let newCount: number;
@@ -84,63 +65,72 @@ const BasketProductCard = (props: ProductCardProps) => {
         setVote(newVote);
         setCount(newCount);
 
-        // console.log(basketID, product.idx, 'uuid', newVote);
-
         voteAPI.mutate();
     };
 
     return (
-        <div className={cn('box', purchaseStatus === 'PURCHASED' && 'solid')}>
+        <div
+            className={cn(
+                'box ',
+                product.productStatus === 'INVALID' && 'invalid',
+            )}
+        >
             <div className="image">
-                <div className="photo">
+                <div
+                    className={cn(
+                        'photo',
+                        purchaseStatus === 'PURCHASED' && 'sold',
+                    )}
+                >
                     <img
                         onClick={() =>
                             navigate(
                                 `/basket/${basketID}/product/${product.idx}`,
                             )
                         }
-                        src={product.thumbnailUrl}
+                        src={product?.thumbnailUrl || logo}
                         alt="제품 이미지"
                     />
                     <div className="heart" onClick={handleVote}>
-                        {vote == 'LIKE' ? (
-                            <i
-                                className="w-7 h-7 mr-0.5 bg-center bg-contain bg-no-repeat block"
-                                style={{
-                                    backgroundImage: `url(${mageHeartFill})`,
-                                }}
-                            ></i>
-                        ) : (
-                            <i
-                                className="w-7 h-7 mr-0.5 bg-center bg-contain bg-no-repeat block"
-                                style={{
-                                    backgroundImage: `url(${mageHeart})`,
-                                }}
-                            ></i>
-                        )}
+                        <img
+                            src={vote === 'LIKE' ? mageHeartFill : mageHeart}
+                            alt="Heart"
+                            className="w-full h-full object-contain"
+                        />
                         <span
-                            className={cn(vote == 'LIKE' && 'text-[#FF5757]')}
+                            className={cn(vote === 'LIKE' && 'text-[#FF5757]')}
                         >
                             {count}
                         </span>
                     </div>
-                    <div
-                        className="desc"
-                        onClick={() =>
-                            navigate(
-                                `/basket/${basketID}/product/${product.idx}`,
-                            )
-                        }
-                    >
-                        {/* todo: get inquiry result */}
-                        <i>
-                            <img src={likeit} alt="좋아요 아이콘" />
-                        </i>
-                        너무 맘에 들어
-                    </div>
+                    {product?.emojiIdx && (
+                        <div
+                            className={cn(
+                                'desc',
+                                product.emojiIdx &&
+                                    `${EmojiList[product.emojiIdx].name}`,
+                            )}
+                            onClick={() =>
+                                navigate(
+                                    `/basket/${basketID}/product/${product.idx}`,
+                                )
+                            }
+                        >
+                            <button
+                                className={cn(
+                                    product.emojiIdx &&
+                                        `${EmojiList[product.emojiIdx].name}`,
+                                )}
+                            >
+                                <i></i>
+                                <p>{EmojiList[product.emojiIdx].content}</p>
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
             <a
+                className="pr-3"
                 onClick={() =>
                     navigate(`/basket/${basketID}/product/${product.idx}`)
                 }
@@ -151,8 +141,12 @@ const BasketProductCard = (props: ProductCardProps) => {
                 </p>
                 <div className="tags">
                     {product.keywords
-                        ?.splice(0, 3)
-                        .map((tag, idx) => <span key={idx}>#{tag}</span>)}
+                        ?.slice(0, 3)
+                        .map((tag, idx) => (
+                            <span key={`${product.idx}-${idx}`}>
+                                #{tag.name}
+                            </span>
+                        ))}
                 </div>
             </a>
         </div>

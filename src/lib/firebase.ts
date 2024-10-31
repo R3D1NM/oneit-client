@@ -18,6 +18,7 @@ const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 const isInAppBrowser = /FBAN|FBAV|Instagram|Daum|KAKAOTALK|NAVER/.test(
     navigator.userAgent,
 );
+
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
     authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -54,8 +55,10 @@ if (!isIOS && !isInAppBrowser) {
 }
 
 export const firebaseMessagingConfig = async (): Promise<string> => {
+    // console.log(navigator.userAgent);
+    // Check if the user agent is using IOS
     if (isIOS || isInAppBrowser) {
-        return Promise.resolve('ios');
+        return Promise.resolve('fcm blocked');
     }
     // Check if the browser supports notifications
     if (!('Notification' in window)) {

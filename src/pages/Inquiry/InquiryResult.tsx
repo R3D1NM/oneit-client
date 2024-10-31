@@ -4,20 +4,19 @@ import {Product} from '@/lib/types';
 import {useQuery} from '@tanstack/react-query';
 import React, {Key} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
-import ChoiceCard from './Components/ChoiceCard';
 import EmojiList from '@/data/emoji.json';
 import {useAtom, useAtomValue} from 'jotai';
 import {choices} from '@/atoms/inquiry';
 import Header from '@/components/common/Header';
+import logo from '@/assets/images/oneit.png';
 
 const InquiryResult = () => {
     const {inquiryID} = useParams();
     const navigate = useNavigate();
-    const selectedEmojis = useAtomValue(choices);
     const [choiceList, setChoiceList] = useAtom(choices);
     const [{mutate}] = useAtom(submitInquiry);
 
-    console.log(choiceList);
+    // console.log(choiceList);
 
     const inquiryAPI = useQuery({
         queryKey: ['inquiry', inquiryID],
@@ -34,9 +33,9 @@ const InquiryResult = () => {
             <Header btn_back variant="back" profile />
             <div className="question3">
                 <div className="title">
-                    {inquiryAPI.data?.name ? (
+                    {inquiryAPI.data?.target ? (
                         <>
-                            <span>서연</span>님의 Pick!
+                            <span>{inquiryAPI.data?.target}</span>님의 Pick!
                         </>
                     ) : (
                         '당신의 Pick!'
@@ -57,32 +56,35 @@ const InquiryResult = () => {
                                     <li key={product.idx}>
                                         <div className="picture">
                                             <img
-                                                src={product.thumbnailUrl}
+                                                src={
+                                                    product?.thumbnailUrl ||
+                                                    logo
+                                                }
                                                 alt="상품 대표 이미지"
                                             />
                                         </div>
                                         <div className="info min-w-40 justify-center">
-                                            <div className="title">
-                                                {product.name}
+                                            <div className="title text-overflow">
+                                                {product?.name ||
+                                                    '제품정보없음'}
                                             </div>
                                             <div className="text text-overflow">
-                                                {product.description}
+                                                {product?.description}
                                             </div>
                                             <button
                                                 className={`${
                                                     EmojiList[
                                                         choiceList[idx]
-                                                            ?.emojiIdx - 1
-                                                    ]?.name
+                                                            ?.emojiName ||
+                                                            'LOVE'
+                                                    ]?.name || 'like'
                                                 }`}
                                             >
                                                 <i></i>
-                                                {
-                                                    EmojiList[
-                                                        choiceList[idx]
-                                                            ?.emojiIdx - 1
-                                                    ]?.content
-                                                }
+                                                {EmojiList[
+                                                    choiceList[idx].emojiName ||
+                                                        'LOVE'
+                                                ]?.content || '완전 좋아!'}
                                             </button>
                                         </div>
                                     </li>

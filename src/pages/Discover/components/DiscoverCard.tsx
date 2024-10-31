@@ -4,6 +4,7 @@ import {Button} from '@/components/ui/button';
 import {Collection} from '@/lib/types';
 import {Heart} from 'lucide-react';
 import {Link} from 'react-router-dom';
+import logo from '@/assets/images/oneit.png';
 
 const DiscoverCard = (props: {collection: Collection}) => {
     const {collection} = props;
@@ -17,10 +18,7 @@ const DiscoverCard = (props: {collection: Collection}) => {
                             className="justify-center flex"
                         >
                             <img
-                                src={
-                                    collection.thumbnailUrl ||
-                                    'https://via.placeholder.com/400'
-                                }
+                                src={collection?.thumbnailUrl || logo}
                                 alt={collection.name}
                                 className="relative z-[-10] h-full object-cover hover:opacity-80 transition-opacity"
                             />
@@ -34,10 +32,7 @@ const DiscoverCard = (props: {collection: Collection}) => {
                     <KakaoShare
                         title={'ONE!T 선물 컬렉션 - ' + collection?.name}
                         description={collection?.description || 'ONE!T'}
-                        image={
-                            collection.thumbnailUrl ||
-                            'https://www.oneit.gift/oneit.png'
-                        }
+                        image={collection?.thumbnailUrl || logo}
                         url={`/collection/${collection.idx}`}
                     />
                 </div>

@@ -16,7 +16,7 @@ const BasketList = () => {
     if (isLoading) return <Spinner />;
     return (
         <>
-            <Header btn_back profile title="바구니 목록" variant="back" />
+            <Header profile title="바구니 목록" variant="logo" />
             <div className="p-4 cardList w-full flex-grow scrollbar-hide">
                 {data?.map((basket: Basket) => (
                     <BasketInfoCard key={basket.idx} basket={basket} />

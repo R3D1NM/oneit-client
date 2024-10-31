@@ -15,6 +15,7 @@ import {finishRecommend, next} from '@/api/chat';
 import {parse} from 'cox-postposition';
 import Header from '@/components/common/Header';
 import React from 'react';
+import {authAtom} from '@/api/auth';
 
 const MAXDEPTH = 8;
 
@@ -24,6 +25,7 @@ const Quiz = () => {
     const questionList = useAtomValue(question);
     const userRecipient = useAtomValue(recipient);
     const userName = useAtomValue(name);
+    const user = useAtomValue(authAtom);
 
     const navigate = useNavigate();
     const params = useParams();
@@ -44,7 +46,7 @@ const Quiz = () => {
         } else if (currentDepth === MAXDEPTH - 1) {
             await setAnswers(index, currentDepth);
             mutateAsync({chatID});
-            navigate(`/recommend/${chatID}/result`);
+            navigate(`/recommend/${chatID}/result`, {replace: true});
         } else {
             setError(true);
         }
@@ -207,7 +209,7 @@ const Quiz = () => {
                                 variant="disabled"
                                 onClick={() => {
                                     setError(false);
-                                    navigate('/');
+                                    navigate('/main');
                                 }}
                             >
                                 메인으로

@@ -1,12 +1,13 @@
-import {Product} from '@/lib/types';
+import {BaksetProduct, Product} from '@/lib/types';
 import {atomWithMutation} from 'jotai-tanstack-query';
 import axios from '@/lib/axios';
 import {choices} from '@/atoms/inquiry';
+import {toast} from 'sonner';
 const {Kakao} = window;
 
 type CreateInquiryVariables = {
     basketIdx: string;
-    selected: Product[];
+    selected: BaksetProduct[];
     target: string;
 };
 
@@ -45,7 +46,14 @@ export const createInquiry = atomWithMutation<unknown, CreateInquiryVariables>(
                     mobileWebUrl: url,
                     webUrl: url,
                 },
-            });
+            })
+                .then(() => {
+                    toast.success('물어보기 전송 완료');
+                })
+                .catch((err: any) => {
+                    console.log(err);
+                    toast.error('물어보기 전송 실패');
+                });
         },
     }),
 );

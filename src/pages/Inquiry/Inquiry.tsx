@@ -23,9 +23,10 @@ const Inquiry = () => {
             <Header btn_back variant="logo" profile />
             <div className="question1">
                 <div className="big_title">
-                    {inquiryAPI.data?.name ? (
+                    {inquiryAPI.data?.target ? (
                         <>
-                            <span>{inquiryAPI.data?.name}</span>님을 위한 <br />
+                            <span>{inquiryAPI.data?.target}</span>님을 위한{' '}
+                            <br />
                         </>
                     ) : (
                         <>

@@ -1,4 +1,4 @@
-import {useAtom} from 'jotai';
+import {useAtom, useAtomValue} from 'jotai';
 import {useNavigate, useParams} from 'react-router-dom';
 import {Spinner} from '@/components/ui/spinner';
 import {fetchRecommendedProducts} from '@/api/product';
@@ -25,6 +25,8 @@ import {
 } from '@/components/ui/drawer';
 import {rateResult} from '@/api/chat';
 import {Gift} from 'lucide-react';
+import logo from '@/assets/images/oneit.png';
+import {authAtom} from '@/api/auth';
 
 const {Kakao} = window;
 
@@ -69,6 +71,7 @@ const Results = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [api, setApi] = useState<any>();
     const [autoPlay, setAutoPlay] = useState(true);
+    const user = useAtomValue(authAtom);
 
     const handleInteractionStart = useCallback(() => setAutoPlay(false), []);
     const handleInteractionEnd = useCallback(() => setAutoPlay(true), []);
@@ -90,6 +93,20 @@ const Results = () => {
             navigate('/recommend');
         }
     }, [chatID, navigate]);
+
+    useEffect(() => {
+        history.pushState(null, '', '');
+
+        const handleClickBrowserBackBtn = () => {
+            navigate('/recommend');
+        };
+
+        window.addEventListener('popstate', handleClickBrowserBackBtn);
+
+        return () => {
+            window.removeEventListener('popstate', handleClickBrowserBackBtn);
+        };
+    }, [navigate]);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -204,7 +221,10 @@ const Results = () => {
                                                 </div>
                                                 <div className="img mt-[1.125rem] w-[165px] h-[165px] mx-auto overflow-hidden rounded-2xl">
                                                     <img
-                                                        src={item.thumbnailUrl}
+                                                        src={
+                                                            item?.thumbnailUrl ||
+                                                            logo
+                                                        }
                                                         alt={item.name}
                                                         className="w-full h-full object-cover"
                                                     />
@@ -240,30 +260,32 @@ const Results = () => {
                                                                     ?.resultType
                                                                     .title ||
                                                                 'ONE!T - 선물 추천 플랫폼',
-                                                            image: item.thumbnailUrl,
+                                                            image:
+                                                                item?.thumbnailUrl ||
+                                                                'https://www.oneit.gift/oneit.png',
                                                             url: `${import.meta.env.VITE_CURRENT_DOMAIN}/recommend/${chatID}/result`,
                                                         })
                                                     }
                                                 >
                                                     공유하기
                                                 </Button>
-                                                <a
-                                                    href={item.productUrl}
-                                                    target="_blank"
-                                                    className="flex-1 flex justify-center items-center"
+
+                                                <Button
+                                                    className="w-full flex-1 flex justify-center items-center"
+                                                    variant="border"
+                                                    onClick={() =>
+                                                        navigate(
+                                                            `/product/${item.idx}`,
+                                                        )
+                                                    }
                                                 >
-                                                    <Button
-                                                        className="w-full"
-                                                        variant="border"
-                                                    >
-                                                        <img
-                                                            src={giftIcon}
-                                                            alt="Gift icon"
-                                                            className="w-6 h-6 mr-1"
-                                                        />
-                                                        구매하러 가기
-                                                    </Button>
-                                                </a>
+                                                    <img
+                                                        src={giftIcon}
+                                                        alt="Gift icon"
+                                                        className="w-6 h-6 mr-1"
+                                                    />
+                                                    자세히 보기
+                                                </Button>
                                             </div>
                                         </CarouselItem>
                                     ),

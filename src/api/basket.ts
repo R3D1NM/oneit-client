@@ -284,3 +284,47 @@ export const deleteBasketProductComment = async (commentIdx: number) => {
             return Promise.reject(err);
         });
 };
+
+export const searchKewordProduct = async (
+    basketIdx: string,
+    keyword: string,
+) => {
+    return axios
+        .get(
+            `/v2/giftbox/${basketIdx}/products/search?searchKeyword=${keyword}`,
+        )
+        .then((res) => {
+            return Promise.resolve(res.data);
+        })
+        .catch((err) => {
+            return Promise.reject(err);
+        });
+};
+
+export const productPurchased = async (
+    basketIdx: string,
+    productIdx: string,
+) => {
+    return axios
+        .put(`v2/giftbox/${basketIdx}/products/${productIdx}/purchase`)
+        .then((res) => {
+            return Promise.resolve(res.data);
+        })
+        .catch((err) => {
+            return Promise.reject(err);
+        });
+};
+
+export const fetchBasketProductDetail = async (
+    basketIdx: string,
+    productIdx: string,
+) => {
+    return axios
+        .get(`v2/giftbox/${basketIdx}/products/${productIdx}`)
+        .then((res) => {
+            return Promise.resolve(res.data);
+        })
+        .catch((err) => {
+            return Promise.reject(err);
+        });
+};

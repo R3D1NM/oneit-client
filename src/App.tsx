@@ -17,6 +17,10 @@ import {
 import {ReactQueryDevtools} from '@tanstack/react-query-devtools';
 import '@/lib/firebase';
 import Landing from './Landing';
+import AfterBasketCreate from './pages/Basket/AfterBasketCreate';
+import ScrollToTop from './components/common/ScrollToTop';
+import Footer from './components/common/Footer';
+import GetLocation from './components/common/GetLocation';
 
 // Custom component to handle dynamic redirect
 const AuthRouterWithRedirect = ({
@@ -63,6 +67,7 @@ const SignUp = React.lazy(() => import('./pages/Login/SignUp'));
 const Mypage = React.lazy(() => import('./pages/Mypage/Mypage'));
 const EditInfo = React.lazy(() => import('./pages/Mypage/EditInfo'));
 const Friends = React.lazy(() => import('./pages/Mypage/Friends'));
+const User = React.lazy(() => import('./pages/Mypage/User'));
 
 const BasketList = React.lazy(() => import('./pages/Basket/BasketList'));
 const Basket = React.lazy(() => import('./pages/Basket/Basket'));
@@ -110,6 +115,8 @@ function App() {
                         <>
                             <Suspense fallback={<Spinner size="large" />}>
                                 <Router>
+                                    <GetLocation />
+                                    <ScrollToTop />
                                     <Routes>
                                         <Route
                                             path="/recommend"
@@ -123,19 +130,19 @@ function App() {
                                             path="/recommend/:chatID/result"
                                             element={<Results />}
                                         />
-                                        {/* <Route
+                                        <Route
                                             path="/product/:productID"
                                             element={<Product />}
                                         />
                                         <Route
                                             path="/curation"
                                             element={<Curation />}
-                                        /> */}
+                                        />
                                         {/* <Route
                                             path="/collection"
                                             element={<Discover />}
                                         /> */}
-                                        {/* <Route
+                                        <Route
                                             path="/collection/:collectionID"
                                             element={<Collection />}
                                         />
@@ -162,6 +169,17 @@ function App() {
                                             }
                                         />
                                         <Route
+                                            path="/basket/create/:basketID/after"
+                                            element={
+                                                <AuthRouter
+                                                    option={true}
+                                                    redirectTo="/login?redirect=/basket"
+                                                >
+                                                    <AfterBasketCreate />
+                                                </AuthRouter>
+                                            }
+                                        />
+                                        <Route
                                             path="/basket/:basketID"
                                             element={
                                                 <AuthRouterWithRedirect
@@ -183,6 +201,7 @@ function App() {
                                                 </AuthRouterWithRedirect>
                                             }
                                         />
+
                                         <Route
                                             path="/basket/:basketID/product/:productID"
                                             element={
@@ -217,7 +236,7 @@ function App() {
                                         <Route
                                             path="/inquiry/after"
                                             element={<AfterInquiry />}
-                                        /> */}
+                                        />
                                         {/* 
                                         <Route
                                             path="/basket/share/:basketID"
@@ -283,7 +302,7 @@ function App() {
                                                 </AuthRouter>
                                             }
                                         />
-                                        {/* <Route
+                                        <Route
                                             path="/friends"
                                             element={
                                                 <AuthRouter
@@ -293,7 +312,18 @@ function App() {
                                                     <Friends />
                                                 </AuthRouter>
                                             }
-                                        /> */}
+                                        />
+                                        <Route
+                                            path="/user/:userID"
+                                            element={
+                                                <AuthRouter
+                                                    option={true}
+                                                    redirectTo="/login?redirect=/user/:userID"
+                                                >
+                                                    <User />
+                                                </AuthRouter>
+                                            }
+                                        />
                                         {import.meta.env.DEV && (
                                             <Route
                                                 path="/fakeLogin"
@@ -304,6 +334,7 @@ function App() {
                                             path="/main"
                                             element={<Main />}
                                         />
+
                                         <Route path="/" element={<Landing />} />
                                         <Route
                                             path="/404"
@@ -323,27 +354,8 @@ function App() {
                         </>
                     </div>
                 </div>
-                <footer className="bg-gray-100 p-4">
-                    <div className="text-sm text-gray-500">
-                        {/* <button
-                            onClick={() => {
-                                throw new Error('에러 발생');
-                            }}
-                        >
-                            에러
-                        </button> */}
-                        <strong>워닛(ONEIT)</strong>
-                        <br />
-                        <strong>대표자</strong> 정세연 |{' '}
-                        <strong>사업자등록번호</strong>
-                        113-30-01641
-                        <br />
-                        <strong>대표전화</strong> 010-2175-3973 <br />
-                        경기도 성남시 분당구 정자일로 1 B동 3503호 <br />
-                        <strong>고객 문의</strong> clov3r.gift@gmail.com
-                    </div>
-                </footer>
-                <Toaster position="bottom-center" />
+                <Footer />
+                <Toaster position="bottom-center" className="z-50" />
                 {/* <ReactQueryDevtools initialIsOpen={false} /> */}
             </QueryClientProvider>
         </>

@@ -1,4 +1,4 @@
-import {Product} from '@/lib/types';
+import {CollctionProduct, Keyword, Product} from '@/lib/types';
 import {useNavigate, useParams} from 'react-router-dom';
 import ProductCard from '../Product/components/ProductCard';
 import {AspectRatio} from '@/components/ui/aspect-ratio';
@@ -9,79 +9,257 @@ import {useQuery} from '@tanstack/react-query';
 import {fetchCollectionDetail} from '@/api/collection';
 import {Spinner} from '@/components/ui/spinner';
 import NotFound from '../NotFound';
+import logo from '@/assets/images/oneit.png';
+import {useEffect, useState} from 'react';
+
+// const MAXPAGE = 5;
 
 const Collection = () => {
     const {collectionID} = useParams();
+    const [currentPage, setCurrentPage] = useState(0);
     const navigate = useNavigate();
-    const {data, isLoading, isError} = useQuery({
+    const fetchCollectionAPI = useQuery({
         queryKey: ['collection', collectionID],
         queryFn: () => fetchCollectionDetail(collectionID || ''),
     });
 
-    if (isLoading) return <Spinner />;
-    if (isError) return <NotFound />;
+    // console.log(fetchCollectionAPI?.data?.collectionProductDTOList);
+
+    // console.log(fetchCollectionAPI?.data);
+    useEffect(() => {
+        history.pushState(null, '', '');
+
+        const handleClickBrowserBackBtn = () => {
+            console.log('prevent going back');
+        };
+
+        window.addEventListener('popstate', handleClickBrowserBackBtn);
+
+        return () => {
+            window.removeEventListener('popstate', handleClickBrowserBackBtn);
+        };
+    }, [navigate]);
 
     const handleGoBack = () => {
-        navigate(-1);
+        navigate('/curation');
     };
+
+    useEffect(() => {
+        const spans = document.querySelectorAll('.progress_bar_wrap span');
+
+        const handleAnimationEnd = () => {
+            setCurrentPage((prevPage) => {
+                const newPage = prevPage + 1;
+                if (
+                    fetchCollectionAPI.data?.collectionProductDTOList &&
+                    newPage <
+                        fetchCollectionAPI.data.collectionProductDTOList.length
+                ) {
+                    return newPage;
+                } else if (
+                    fetchCollectionAPI.data?.collectionProductDTOList &&
+                    newPage ===
+                        fetchCollectionAPI.data.collectionProductDTOList.length
+                ) {
+                    setTimeout(() => {
+                        navigate('/curation');
+                    }, 3000);
+                    return newPage;
+                }
+                return prevPage;
+            });
+        };
+
+        spans.forEach((span) => {
+            span.addEventListener('animationend', handleAnimationEnd);
+        });
+
+        return () => {
+            spans.forEach((span) => {
+                span.removeEventListener('animationend', handleAnimationEnd);
+            });
+        };
+    }, [fetchCollectionAPI.data]);
+
+    const updateActiveSpan = (newPage: number) => {
+        const spans = document.querySelectorAll('.progress_bar_wrap span');
+        spans.forEach((span, index) => {
+            const htmlSpan = span as HTMLElement;
+            htmlSpan.classList.remove('active');
+            if (index === newPage) {
+                htmlSpan.classList.add('active');
+                htmlSpan.style.animation = 'none';
+                htmlSpan.offsetHeight; // Trigger reflow
+                htmlSpan.style.animation = '';
+            }
+        });
+    };
+
+    useEffect(() => {
+        updateActiveSpan(currentPage);
+    }, [currentPage]);
+
+    // useEffect(() => {
+    //     let touchStartX = 0;
+    //     let touchEndX = 0;
+
+    //     const handleTouchStart = (e: TouchEvent) => {
+    //         touchStartX = e.changedTouches[0].screenX;
+    //     };
+
+    //     const handleTouchEnd = (e: TouchEvent) => {
+    //         touchEndX = e.changedTouches[0].screenX;
+    //         handleSwipeGesture();
+    //     };
+
+    //     const handleSwipeGesture = () => {
+    //         if (touchEndX < touchStartX) {
+    //             // console.log('swiped left', currentPage);
+
+    //             // Swiped left
+    //             setCurrentPage((prevPage) => {
+    //                 const newPage = prevPage + 1;
+    //                 // console.log(newPage);
+
+    //                 return fetchCollectionAPI.data?.collectionProductDTOList &&
+    //                     newPage <=
+    //                         fetchCollectionAPI.data.collectionProductDTOList
+    //                             .length
+    //                     ? newPage
+    //                     : prevPage;
+    //             });
+    //         }
+    //         if (touchEndX > touchStartX) {
+    //             console.log('swiped right', currentPage);
+
+    //             // Swiped right
+    //             setCurrentPage((prevPage) => Math.max(prevPage - 1, 0));
+    //         }
+    //     };
+
+    //     document.addEventListener('touchstart', handleTouchStart);
+    //     document.addEventListener('touchend', handleTouchEnd);
+
+    //     return () => {
+    //         document.removeEventListener('touchstart', handleTouchStart);
+    //         document.removeEventListener('touchend', handleTouchEnd);
+    //     };
+    // }, []);
+
+    useEffect(() => {
+        const handleMouseDown = () => {
+            document
+                .querySelector('.progress_bar_wrap')
+                ?.classList.add('paused');
+        };
+
+        const handleMouseUp = () => {
+            document
+                .querySelector('.progress_bar_wrap')
+                ?.classList.remove('paused');
+        };
+
+        document.addEventListener('mousedown', handleMouseDown);
+        document.addEventListener('mouseup', handleMouseUp);
+        document.addEventListener('touchstart', handleMouseDown);
+        document.addEventListener('touchend', handleMouseUp);
+
+        return () => {
+            document.removeEventListener('mousedown', handleMouseDown);
+            document.removeEventListener('mouseup', handleMouseUp);
+            document.removeEventListener('touchstart', handleMouseDown);
+            document.removeEventListener('touchend', handleMouseUp);
+        };
+    }, []);
+
+    if (fetchCollectionAPI.isLoading) return <Spinner />;
+    if (fetchCollectionAPI.isError) return <NotFound />;
+
     return (
-        <div className="flex flex-col w-full">
-            <div className="flex py-3 flex-wrap items-center justify-between">
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className=""
-                    onClick={handleGoBack}
-                >
-                    <ChevronLeft className="" />
-                </Button>
-                <div className="flex flex-wrap items-center justify-end">
-                    <Button variant={null}>
-                        <Heart className="h-6 w-6 mr-2" />
-                    </Button>
-                    <KakaoShare
-                        title={'ONE!T 선물 컬렉션 - ' + data?.collectionName}
-                        description={data?.collectionDescription || 'ONE!T'}
-                        image={
-                            data.collectionThumbnailUrl ||
-                            'https://www.oneit.gift/oneit.png'
-                        }
-                        url={`/collection/${collectionID}`}
-                    />
+        <>
+            <div className="collection">
+                <div className="progress_bar_wrap">
+                    <span></span>
+                    {fetchCollectionAPI.data?.collectionProductDTOList.map(
+                        (product: CollctionProduct, idx: number) => (
+                            <span key={`span-${idx}`}></span>
+                        ),
+                    )}
+                    {/* <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span> */}
                 </div>
-            </div>
-            <div className="overflow-hidden w-full">
-                <div className="w-full items-center">
-                    <AspectRatio ratio={1 / 1} className="justify-center flex">
+                <div className="thum">
+                    <div className="image">
                         <img
                             src={
-                                data.collectionThumbnailUrl ||
-                                'https://via.placeholder.com/400'
+                                fetchCollectionAPI.data
+                                    ?.collectionThumbnailUrl || logo
                             }
-                            alt={data.collectionName}
-                            className="relative z-[-10] h-full object-cover hover:opacity-80 transition-opacity"
+                            alt="컬렉션 썸네일"
                         />
-                    </AspectRatio>
-                </div>
-
-                <div className="p-4 ">
-                    <div className="flex items-center justify-start">
-                        <span>{data?.collectionDescription}</span>
                     </div>
-                    <h3 className="max-w-full  text-xl font-semibold mb-2 overflow-hidden whitespace-nowrap  overflow-ellipsis">
-                        {data?.collectionName}
-                    </h3>
+                    <span className="text-overflow-one">
+                        {fetchCollectionAPI.data?.collectionName}
+                    </span>
+                    <button className="close" onClick={handleGoBack}></button>
                 </div>
+                {currentPage > 0 ? (
+                    <>
+                        <div className="visual">
+                            <img
+                                src={
+                                    fetchCollectionAPI.data
+                                        ?.collectionProductDTOList[
+                                        currentPage - 1
+                                    ]?.showcaseImageUrl || logo
+                                }
+                                alt="상품 이미지"
+                            />
+                        </div>
+
+                        <div className="tags">
+                            <ul>
+                                {fetchCollectionAPI.data?.collectionProductDTOList[
+                                    currentPage - 1
+                                ]?.keywords.map((tag: Keyword, idx: number) => (
+                                    <li key={idx}>{tag.name}</li>
+                                ))}
+                            </ul>
+                        </div>
+                        {fetchCollectionAPI?.data?.collectionProductDTOList[
+                            currentPage - 1
+                        ]?.productStatus === 'ACTIVE' && (
+                            <button
+                                className="btn_more"
+                                onClick={() =>
+                                    navigate(
+                                        `/product/${fetchCollectionAPI?.data?.collectionProductDTOList[currentPage - 1]?.productIdx}`,
+                                    )
+                                }
+                            >
+                                제품 더 알아보기
+                            </button>
+                        )}
+                    </>
+                ) : (
+                    <>
+                        <div className="visual">
+                            <img
+                                src={
+                                    fetchCollectionAPI.data
+                                        ?.collectionThumbnailUrl || logo
+                                }
+                                alt="컬렉션 대표 이미지"
+                            />
+                        </div>
+                    </>
+                )}
             </div>
-            <div className="p-1 w-full text-center justify-center bg-oneit-blue flex items-center rounded-md mb-3">
-                <h3 className="text-lg font-bold align-middle">상품 목록</h3>
-            </div>
-            <div className="grid grid-cols-2 gap-2 mb-5">
-                {data?.productList?.map((product: Product) => (
-                    <ProductCard key={product.idx} product={product} />
-                ))}
-            </div>
-        </div>
+        </>
     );
 };
 

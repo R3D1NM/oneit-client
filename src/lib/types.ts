@@ -5,8 +5,9 @@ export type Answer = {
 
 export type Keyword = {
     idx: number;
-    keyword: string;
+    name: string;
     description: string;
+    field?: string;
 };
 
 export type Product = {
@@ -19,12 +20,33 @@ export type Product = {
     thumbnailUrl: string;
     categoryName?: string;
     categoryDisplayName?: string;
-    keywords?: string[];
-    status?: string;
+    keywords?: Keyword[];
+    productStatus?: string;
+    detailImages?: string[];
     description: string;
     likeCount?: number;
     voteStatus?: 'LIKE' | 'DISLIKE' | 'NONE';
-    purchaseStatus?: 'PURCHASED' | 'NOT_PURCHASED';
+};
+
+export type BaksetProduct = {
+    idx: number;
+    name: string;
+    originalPrice: number;
+    thumbnailUrl: string;
+    keywords: Keyword[];
+    productStatus: string;
+    description: string;
+    likeCountInGiftbox: number;
+    voteStatus: 'LIKE' | 'DISLIKE' | 'NONE';
+    purchaseStatus: 'PURCHASED' | 'NOT_PURCHASED';
+    emojiIdx?: 'LOVE' | 'LIKE' | 'NEED' | 'SOSO' | 'BAD' | 'HAVE';
+};
+
+export type CollctionProduct = {
+    productIdx: number;
+    productName: string;
+    keywords: Keyword[];
+    showcaseImageUrl: string;
 };
 
 export type Question = {
@@ -34,21 +56,14 @@ export type Question = {
 };
 
 export type User = {
-    createdAt: string;
-    updatedAt: string;
-    deletedAt: string;
-    status: string;
     idx: number;
     name: string;
     nickname: string;
     email: string;
     phoneNumber: string;
-    nicknameFromKakao: string;
-    profileImgFromKakao: string;
     gender: 'FEMALE' | 'MALE';
-    age: string;
     birthDate: Date;
-    refreshToken: string;
+    profileImg: string;
 };
 
 export type Basket = {
@@ -60,6 +75,7 @@ export type Basket = {
     accessStatus?: string;
     imageUrl?: string;
     participants?: Participant[];
+    dday: number;
 };
 
 export interface Participant {
@@ -84,7 +100,7 @@ export type Emoji = {
 
 export type InquiryChoice = {
     productIdx: number;
-    emojiIdx: number;
+    emojiName: 'LOVE' | 'LIKE' | 'NEED' | 'SOSO' | 'BAD' | 'HAVE';
 };
 
 export type Friend = {
@@ -100,6 +116,7 @@ export type SignUpUser = {
     nickname: string;
     gender: 'FEMALE' | 'MALE';
     birthDate: string;
+    isAgreeMarketing: boolean;
 };
 
 export type Notif = {
@@ -117,6 +134,7 @@ export type Comment = {
     giftboxProductIdx: number;
     writerIdx: number;
     writerNickName: string;
+    writerProfileImg: string;
     content: string;
     createdAt: Date;
 };

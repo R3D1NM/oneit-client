@@ -29,7 +29,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
         <ErrorBoundary>
             <CookiesProvider>
-                <DevTools />
+                {/* <DevTools /> */}
                 <App />
             </CookiesProvider>
         </ErrorBoundary>

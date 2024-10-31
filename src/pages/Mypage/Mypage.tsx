@@ -1,21 +1,31 @@
-import {authAtom, logout} from '@/api/auth';
+import {authAtom, logout, userWithdrawal} from '@/api/auth';
 
 import {Button} from '@/components/common/Button';
 import {useAtomValue} from 'jotai';
 import {User2Icon, UserIcon} from 'lucide-react';
-import {useEffect} from 'react';
+import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import profileButtonSvg from '@/assets/images/profile_button.svg';
 import Header from '@/components/common/Header';
-import {useQuery} from '@tanstack/react-query';
+import {useMutation, useQuery} from '@tanstack/react-query';
 import {fetchBasketList} from '@/api/basket';
 import {Basket} from '@/lib/types';
 import logo from '@/assets/images/oneit.png';
 import {fetchFriendList} from '@/api/friend';
 import {toast} from 'sonner';
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTrigger,
+} from '@/components/ui/dialog';
 
 const Mypage = () => {
     const navigate = useNavigate();
+    const [open, setOpen] = useState(false);
     const user = useAtomValue(authAtom);
     const handleLogout = async () => {
         await logout();
@@ -31,6 +41,20 @@ const Mypage = () => {
         queryFn: () => fetchFriendList(),
     });
 
+    const withdrawAPI = useMutation({
+        mutationKey: ['withdraw'],
+        mutationFn: () => userWithdrawal(),
+        onSuccess: () => {
+            toast('회원 탈퇴가 완료되었습니다');
+            localStorage.removeItem('token');
+            navigate('/main');
+        },
+    });
+
+    const handleWithdraw = () => {
+        withdrawAPI.mutate();
+    };
+
     const handleNotyet = () => {
         toast('아직 준비 중인 기능이에요');
     };
@@ -42,7 +66,10 @@ const Mypage = () => {
                 <div className="rounding_grey">
                     <div className="nickname_area">
                         <div className="picture">
-                            <img src={user?.profileImgFromKakao} alt="" />
+                            <img
+                                src={user?.profileImg || logo}
+                                alt="사용자 대표 이미지"
+                            />
                         </div>
                         <div className="name">{user?.nickname}</div>
                         <button
@@ -69,7 +96,7 @@ const Mypage = () => {
                         </ul>
                     </div> */}
                 </div>
-                {/* <div className="rounding_grey ">
+                <div className="rounding_grey ">
                     <div className="basket_area ">
                         <div className="title">현재 참여중인 바구니</div>
                         <div className="wish_area scrollbar-hide">
@@ -86,6 +113,7 @@ const Mypage = () => {
                                             <img
                                                 src={basket.imageUrl || logo}
                                                 alt=""
+                                                className="h-20 w-20 rounded-xl"
                                             />
                                             <p className="text-overflow-one text-sm text-[#5d5d5d] text-center">
                                                 {basket.name}
@@ -96,9 +124,9 @@ const Mypage = () => {
                             </ul>
                         </div>
                     </div>
-                </div> */}
+                </div>
 
-                {/* <div className="nav">
+                <div className="nav">
                     <ul>
                         <li>
                             <button onClick={() => navigate('/friends')}>
@@ -106,26 +134,72 @@ const Mypage = () => {
                                 <em>{friendListAPI?.data?.length || 0}</em>
                             </button>
                         </li>
-                        <li>
+                        {/* <li>
                             <button onClick={handleNotyet}>
                                 받은 선물바구니
                             </button>
-                        </li>
+                        </li> */}
                         <li>
                             <button onClick={handleNotyet}>
                                 추천 받았던 상품
                             </button>
                         </li>
                         <li>
-                            <button onClick={handleNotyet}>
+                            <button onClick={() => navigate('/basket')}>
                                 참여 바구니 목록
                             </button>
                         </li>
                         <li>
                             <button onClick={handleNotyet}>타임어택</button>
                         </li>
+                        <li>
+                            <button
+                                onClick={() =>
+                                    window.open(
+                                        'https://pf.kakao.com/_VFnxhn',
+                                        '_blank',
+                                        'noopener',
+                                    )
+                                }
+                            >
+                                문의하기
+                            </button>
+                        </li>
                     </ul>
-                </div> */}
+                </div>
+                <Dialog onOpenChange={setOpen} open={open}>
+                    <DialogTrigger>
+                        <div className="flex justify-center text-center absolute bottom-1 right-1/2 translate-x-4 text-[#5d5d5d]">
+                            <Button variant="underline" className="text-xs">
+                                회원 탈퇴
+                            </Button>
+                        </div>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>회원 탈퇴</DialogHeader>
+                        <p className="text-center">
+                            ONE!T 회원을 탈퇴하시겠습니까? <br />
+                            언제든 다시 가입하실 수 있습니다.
+                        </p>
+                        <div className="w-full flex gap-2">
+                            <Button
+                                variant="border"
+                                className="w-full"
+                                onClick={() => setOpen(false)}
+                            >
+                                취소
+                            </Button>
+
+                            <Button
+                                variant="disabled"
+                                className="w-full"
+                                onClick={handleWithdraw}
+                            >
+                                탈퇴
+                            </Button>
+                        </div>
+                    </DialogContent>
+                </Dialog>
             </div>
         </>
     );

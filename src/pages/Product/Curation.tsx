@@ -26,7 +26,6 @@ const Curation = () => {
     const navigate = useNavigate();
     const nextFetchTargetRef = useRef<HTMLDivElement | null>(null); // ref 객체 생성
     const [keyword, setKeyword] = useState('');
-    const [searchedList, setsearchedList] = useState<Product[]>([]);
     const [searchOpen, setSearchOpen] = useState(false);
     // console.log(fetchNextPage,hasNextPage);
 
@@ -141,33 +140,34 @@ const Curation = () => {
                     </ul>
                 </div>
                 <div className="slide_btns_area">
-                    <div className="btns">
+                    {/* <div className="btns">
                         <button className="active">받고싶어한</button>
                         <button className="">많이 선물 한</button>
                     </div>
-                    <button className="btn_right_more"></button>
+                    <button className="btn_right_more"></button> */}
+                    {searchOpen && (
+                        <div className="flex gap-2 mt-2 h-10">
+                            <input
+                                className="h-4"
+                                type="text"
+                                placeholder="검색어를 2자 이상 입력해주세요"
+                                value={keyword}
+                                onChange={(e) => handleKeyword(e.target.value)}
+                            />
+                        </div>
+                    )}
                     <div className="btn_func">
-                        <button className="filter"></button>
+                        {/* <button className="filter"></button> */}
                         <button
                             className={cn(
                                 'search',
-                                searchOpen &&
-                                    'border-[#ff4341] border-[1px] rounded-lg',
+                                // searchOpen &&
+                                //     'border-[#ff4341] border-[1px] rounded-lg',
                             )}
                             onClick={() => setSearchOpen(!searchOpen)}
                         ></button>
                     </div>
                 </div>
-                {searchOpen && (
-                    <div className="flex gap-2 mt-2">
-                        <input
-                            type="text"
-                            placeholder="검색어를 2자 이상 입력해주세요"
-                            value={keyword}
-                            onChange={(e) => handleKeyword(e.target.value)}
-                        />
-                    </div>
-                )}
 
                 <div className="cart">
                     <div className="title">ONE!T 추천</div>

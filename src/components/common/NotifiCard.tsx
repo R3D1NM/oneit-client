@@ -24,7 +24,7 @@ const NotifiCard = (props: {notif: Notif}) => {
         // "GIFTBOX_ADD_PRODUCT": "/basket",
         // "GIFTBOX_COMMENT": "/basket",
         // "GIFTBOX_LIKE": "/basket",
-        // "GIFT_ASK_COMPLETE": "/basket",
+        GIFT_ASK_COMPLETE: '/basket',
         // "BIRTHDAY": "/friends",
         // "TIME_ATTACK_OPEN": "/timeAttack", //todo: sync with App.tsx
     };
@@ -40,7 +40,7 @@ const NotifiCard = (props: {notif: Notif}) => {
     };
     return (
         <DropdownMenuItem
-            className="flex flex-col w-full items-start"
+            className="flex flex-col w-64 items-start"
             onSelect={(e) => {
                 e.preventDefault();
                 handleRead();
@@ -48,7 +48,7 @@ const NotifiCard = (props: {notif: Notif}) => {
         >
             <h3
                 className={cn(
-                    'text-md font-bold text-start',
+                    'text-md font-bold text-start text-overflow-one',
                     !isRead && 'text-[#FF4BC1]',
                 )}
             >

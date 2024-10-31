@@ -10,6 +10,8 @@ import {cn} from '@/lib/utils';
 import {isLoginAtom} from '@/api/auth';
 import Header from '@/components/common/Header';
 import logo from '@/assets/images/oneit.png';
+import {Button} from '@/components/common/Button';
+import {ArrowUp} from 'lucide-react';
 
 const Product = () => {
     const {productID} = useParams();
@@ -34,6 +36,9 @@ const Product = () => {
     const handleGoBack = () => {
         navigate(-1);
     };
+    const scrollToTop = () => {
+        window.scrollTo({top: 0, behavior: 'smooth'});
+    };
 
     const handleAddToBasket = (basketID: string) => {
         if (productAPI.data) {
@@ -48,8 +53,14 @@ const Product = () => {
         <>
             <Header variant="back" btn_back={false} />
             <div className="giftRecommDetail scrollbar-hide">
-                <div className="prd_area">
-                    <div className="photo">
+                <div className="prd_area ">
+                    <div
+                        className={cn(
+                            'photo',
+                            productAPI?.data?.productStatus === 'INVALID' &&
+                                'sold',
+                        )}
+                    >
                         <img
                             src={productAPI.data?.thumbnailUrl}
                             alt="제품 대표 이미지"
@@ -68,86 +79,115 @@ const Product = () => {
                             {productAPI.data?.originalPrice?.toLocaleString() ||
                                 0}
                         </div>
-                        <div className="options">
+                        {/* <div className="options">
                             <p className="title">옵션</p>
                             <span>옵션내용</span>
                             <span>옵션내용</span>
                             <span>옵션내용</span>
                             <span>옵션내용</span>
-                        </div>
+                        </div> */}
                         <div className="essense">제품요약</div>
                         <div className="contents">
                             {productAPI.data?.description}
                         </div>
                         <div className="tags">
                             {productAPI.data?.keywords?.map((tag, idx) => (
-                                <span key={idx}>#{tag}</span>
+                                <span key={idx}>#{tag.name}</span>
                             ))}
                         </div>
                     </div>
 
-                    <div className="cart_prd scrollbar-hide">
-                        <ul className="scrollbar-hide">
-                            {basketAPI.data?.map((basket: Basket) => {
-                                const today = new Date();
-                                const dday = new Date(basket.deadline);
-                                const gap = dday.getTime() - today.getTime();
-                                const dDay = Math.ceil(
-                                    gap / (1000 * 60 * 60 * 24),
-                                );
-                                return (
-                                    <li>
-                                        <div
-                                            className="photo"
-                                            onClick={() =>
-                                                navigate(
-                                                    `/basket/${basket.idx}`,
-                                                )
-                                            }
-                                        >
-                                            <img
-                                                src={basket.imageUrl || logo}
-                                                alt=""
-                                            />
-                                            {dDay >= 0 ? (
-                                                <div className="capsule_pink">
-                                                    D-
-                                                    {dDay}
-                                                </div>
-                                            ) : (
-                                                <div className="capsule_pink">
-                                                    마감
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div className="name text-overflow">
-                                            {basket.name || '바구니 이름'}
-                                        </div>
-                                        <div className="btn_add_cart_area">
-                                            <button
-                                                className="btn_add_cart"
+                    {!loggedIn &&
+                        productAPI?.data?.productStatus !== 'INVALID' && (
+                            <div className="flex justify-center mb-[-20px]">
+                                <Button className="px-3 h-8" variant="primary">
+                                    로그인하고 바구니에 추가하기
+                                </Button>
+                            </div>
+                        )}
+
+                    {productAPI?.data?.productStatus !== 'INVALID' && (
+                        <div className="cart_prd scrollbar-hide">
+                            <ul className="scrollbar-hide">
+                                {basketAPI.data?.map((basket: Basket) => {
+                                    return (
+                                        <li key={basket.idx}>
+                                            <div
+                                                className="photo"
                                                 onClick={() =>
-                                                    handleAddToBasket(
-                                                        basket.idx.toString(),
+                                                    navigate(
+                                                        `/basket/${basket.idx}`,
                                                     )
                                                 }
                                             >
-                                                <i></i>바구니에 추가하기
-                                            </button>
-                                        </div>
-                                    </li>
-                                );
-                            })}
-                        </ul>
-                    </div>
+                                                <img
+                                                    src={
+                                                        basket.imageUrl || logo
+                                                    }
+                                                    alt=""
+                                                />
+                                                {basket.dday > 0 ? (
+                                                    <div className="capsule_pink">
+                                                        D-
+                                                        {basket.dday}
+                                                    </div>
+                                                ) : basket.dday === 0 ? (
+                                                    <div className="capsule_pink">
+                                                        D-Day
+                                                    </div>
+                                                ) : (
+                                                    <div className="capsule_pink">
+                                                        마감
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="name text-overflow-one h-8">
+                                                {basket.name || '바구니 이름'}
+                                            </div>
+                                            <div className="btn_add_cart_area">
+                                                <button
+                                                    className="btn_add_cart"
+                                                    onClick={() =>
+                                                        handleAddToBasket(
+                                                            basket.idx.toString(),
+                                                        )
+                                                    }
+                                                >
+                                                    <i></i>바구니에 추가하기
+                                                </button>
+                                            </div>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
+                        </div>
+                    )}
 
                     <div className="desc">
                         <div className="title">제품 설명</div>
                         {/* todo: product detail images */}
-                        <div className="texts"></div>
+                        {productAPI.data?.detailImages && (
+                            <div className="texts">
+                                {productAPI.data?.detailImages?.map(
+                                    (img, idx) => (
+                                        <img
+                                            key={idx}
+                                            src={img}
+                                            alt="상품 상세 이미지"
+                                        />
+                                    ),
+                                )}
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
+            {/* <Button
+                className="fixed bottom-0 right-0 z-[999] px-3 py-6 rounded-full shadow-lg m-1"
+                onClick={scrollToTop}
+            >
+                <ArrowUp />
+            </Button> */}
         </>
     );
 };
