@@ -115,21 +115,29 @@ const SignUp = () => {
                     replace: true,
                 });
             } else {
-                firebaseMessagingConfig().then((token) => {
-                    console.log(`[AUTH] Firebase token: ${token}`);
-                    sendFCMToken(token)
-                        .then((res) => {
-                            const redirect = localStorage.getItem('redirect');
-                            console.log(`[AUTH] Redirect to ${redirect}`);
+                firebaseMessagingConfig()
+                    .then((token) => {
+                        console.log(`[AUTH] Firebase token: ${token}`);
+                        sendFCMToken(token)
+                            .then((res) => {
+                                const redirect =
+                                    localStorage.getItem('redirect');
+                                console.log(`[AUTH] Redirect to ${redirect}`);
 
-                            navigate(redirect || '/main', {
-                                replace: true,
+                                navigate(redirect || '/main', {
+                                    replace: true,
+                                });
+                            })
+                            .catch((err) => {
+                                console.log(
+                                    '[AUTH] Error sending FCM token',
+                                    err,
+                                );
                             });
-                        })
-                        .catch((err) => {
-                            console.log('[AUTH] Error sending FCM token');
-                        });
-                });
+                    })
+                    .catch((err) => {
+                        console.log('[AUTH] Error fetching FCM token', err);
+                    });
             }
             // const redirect = localStorage.getItem('redirect');
             // navigate(redirect || '/');
@@ -350,7 +358,9 @@ const SignUp = () => {
                             />
                         )}
                     />
-                    <p className="text-xs">마케팅 정보 수신 동의 (선택)</p>
+                    <p className="text-xs">
+                        알림 및 마케팅 정보 수신 동의 (선택)
+                    </p>
                 </div>
 
                 {/* <p className="text-base mb-4 font-medium mt-6">전화번호</p>

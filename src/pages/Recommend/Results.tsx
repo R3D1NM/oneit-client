@@ -27,6 +27,7 @@ import {rateResult} from '@/api/chat';
 import {Gift} from 'lucide-react';
 import logo from '@/assets/images/oneit.png';
 import {authAtom} from '@/api/auth';
+import {toast} from 'sonner';
 
 const {Kakao} = window;
 

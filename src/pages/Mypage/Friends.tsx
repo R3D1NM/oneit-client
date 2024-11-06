@@ -23,6 +23,8 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from '@/components/ui/accordion';
+import loading from '@/assets/images/loading.svg';
+
 const {Kakao} = window;
 interface SelectedUser {
     uuid: string;
@@ -99,6 +101,15 @@ const Friends = () => {
                 <ul>
                     <h3 className=""></h3>
                 </ul>
+
+                {friendListAPI?.data?.length === 0 && (
+                    <div className="flex w-full h-full items-center flex-col justify-center -mt-12">
+                        <img src={loading} />
+                        <p className="text-center w-full text-gray-400">
+                            아직 친구가 없어요
+                        </p>
+                    </div>
+                )}
                 <ul className="scrollbar-hide">
                     {friendListAPI?.data?.map((friend: Friend, idx: number) => (
                         <li key={friend.idx}>

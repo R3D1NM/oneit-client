@@ -350,14 +350,16 @@ const BasketProduct = () => {
                                                     {/* todo: get profile of writer */}
                                                     <img
                                                         src={
-                                                            comment?.writerProfileImg
+                                                            comment?.writerProfileImg ||
+                                                            logo
                                                         }
                                                         className="rounded-full"
                                                     />
                                                 </div>
                                                 <div className="info">
                                                     <p className="name">
-                                                        {comment.writerNickName}
+                                                        {comment?.writerNickName ||
+                                                            '알 수 없음'}
                                                     </p>
                                                     <div className="ballon">
                                                         {comment.content}

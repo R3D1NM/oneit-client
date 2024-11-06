@@ -5,12 +5,13 @@ import {Friend, Participant} from '@/lib/types';
 import {useMutation, useQuery} from '@tanstack/react-query';
 import {useAtomValue} from 'jotai';
 import React, {useEffect} from 'react';
-import {useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import logo from '@/assets/images/oneit.png';
 import {Button} from '@/components/common/Button';
 import {basketInvite, fetchBasketInfo} from '@/api/basket';
 import {toast} from 'sonner';
 const {Kakao} = window;
+import loading from '@/assets/images/loading.svg';
 
 const FriendInviteCard = ({friend}: {friend: Friend}) => {
     const {basketID} = useParams();
@@ -111,6 +112,7 @@ const FriendInviteCard = ({friend}: {friend: Friend}) => {
 const BasketAddFriend = () => {
     const {basketId} = useParams();
     const user = useAtomValue(authAtom);
+    const navigate = useNavigate();
 
     const friendListAPI = useQuery({
         queryKey: ['friendList'],
@@ -128,6 +130,21 @@ const BasketAddFriend = () => {
                 <ul>
                     <h3 className=""></h3>
                 </ul>
+                {friendListAPI?.data?.length === 0 && (
+                    <div className="flex w-full h-full items-center flex-col justify-center">
+                        <img src={loading} />
+                        <p className="text-center w-full text-gray-400">
+                            아직 친구가 없어요
+                        </p>
+                        <Button
+                            className="w-80 p-3 mt-8 "
+                            variant="border"
+                            onClick={() => navigate(`/basket/${basketId}/info`)}
+                        >
+                            뒤로 가기
+                        </Button>
+                    </div>
+                )}
                 <ul className="scrollbar-hide">
                     {friendListAPI?.data?.map((friend: Friend, idx: number) => (
                         <li key={friend.idx}>
