@@ -38,6 +38,26 @@ export const createInquiry = atomWithMutation<unknown, CreateInquiryVariables>(
         },
         onSuccess: (data, variables, context) => {
             const url = `${import.meta.env.VITE_CURRENT_DOMAIN}/inquiry/${data}`;
+            //check if the browser is whale : contain both whale and mobile in userAgent
+            if (
+                /whale/i.test(navigator.userAgent) &&
+                /mobile/i.test(navigator.userAgent)
+            ) {
+                toast.error(
+                    '카카오톡 공유가 지원되지 않는 브라우저입니다. 다른 방법으로 친구를 추가해주세요.',
+                    {
+                        action: {
+                            label: '링크 복사',
+                            onClick: () => {
+                                navigator.clipboard.writeText(url).then(() => {
+                                    toast('클립보드에 복사되었습니다.');
+                                });
+                            },
+                        },
+                    },
+                );
+                return;
+            }
 
             Kakao.Share.sendDefault({
                 objectType: 'text',
