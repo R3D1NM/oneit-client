@@ -13,15 +13,6 @@ import {Basket} from '@/lib/types';
 import logo from '@/assets/images/oneit.png';
 import {fetchFriendList, fetchUserInfo, requestFriend} from '@/api/friend';
 import {toast} from 'sonner';
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTrigger,
-} from '@/components/ui/dialog';
 
 const User = () => {
     const navigate = useNavigate();
@@ -57,10 +48,12 @@ const User = () => {
                             />
                         </div>
                         <div className="name flex flex-col">
-                            {fetchUserInfoAPI?.data?.nickName}
+                            {fetchUserInfoAPI?.data?.nickName ||
+                                '알 수 없는 사용자'}
                             <span className="text-xs text-[#5d5d5d] flex">
                                 <CakeIcon className="w-4 h-4 mr-1" />
-                                {fetchUserInfoAPI?.data?.birthDate}
+                                {fetchUserInfoAPI?.data?.birthDate ||
+                                    '생일 정보를 불러올 수 없음'}
                             </span>
                         </div>
                         {!fetchUserInfoAPI?.data?.isFriend && (

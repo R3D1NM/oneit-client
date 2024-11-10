@@ -10,7 +10,7 @@ import {
 import Header from '@/components/common/Header';
 // import {isLoginAtom} from '@/api/auth';
 import {useQuery} from '@tanstack/react-query';
-import {Product} from '@/lib/types';
+import {Product, RecommendRecord} from '@/lib/types';
 import React, {useCallback, useEffect, useState} from 'react';
 import giftIcon from '@/assets/images/tabler_gift.svg';
 import {Button} from '@/components/common/Button';
@@ -70,6 +70,7 @@ const Results = () => {
     const [{mutate, mutateAsync}] = useAtom(rateResult);
     const [rating, setRating] = useState<number>(5);
     const [isOpen, setIsOpen] = useState(false);
+    const [isInvalid, setIsInvalid] = useState(false);
     const [api, setApi] = useState<any>();
     const [autoPlay, setAutoPlay] = useState(true);
     const user = useAtomValue(authAtom);
@@ -80,6 +81,7 @@ const Results = () => {
     const recommendedAPI = useQuery({
         queryKey: ['fetchRecommendedProducts', chatID],
         queryFn: () => fetchRecommendedProducts(chatID || ''),
+
         retry: 3,
     });
 
@@ -155,6 +157,35 @@ const Results = () => {
         setIsOpen(true);
     };
 
+    if (isInvalid) {
+        return (
+            <>
+                <Header variant="logo" />
+                <main className="pt-14 px-4 h-full" role="main">
+                    <div className="flex flex-col w-full items-center h-full justify-center">
+                        <p>만료되었거나 존재하지 않는 url입니다.</p>
+
+                        <div className="flex gap-2 w-full">
+                            <Button
+                                className="mt-4 w-full"
+                                onClick={() => navigate('/recommend')}
+                            >
+                                다시 추천 받기
+                            </Button>
+                            <Button
+                                className="mt-4 w-full"
+                                variant="border"
+                                onClick={() => navigate('/main')}
+                            >
+                                메인으로
+                            </Button>
+                        </div>
+                    </div>
+                </main>
+            </>
+        );
+    }
+
     if (recommendedAPI.isLoading) {
         return <Spinner />;
     }
@@ -186,7 +217,7 @@ const Results = () => {
                             onTouchEnd={handleInteractionEnd}
                         >
                             <CarouselContent className="w-full m-0">
-                                {recommendedAPI.data?.result.map(
+                                {recommendedAPI.data?.result?.map(
                                     (item: Product, index: number) => (
                                         <CarouselItem
                                             key={index}
@@ -196,7 +227,7 @@ const Results = () => {
                                                 <p className="font-bold text-[#3d3d3d]">
                                                     {
                                                         recommendedAPI.data
-                                                            ?.resultType.title
+                                                            ?.resultType?.title
                                                     }
                                                 </p>
                                                 <div className="tag mt-1.5 flex justify-center">

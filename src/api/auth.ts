@@ -3,7 +3,7 @@ import axios from '@/lib/axios';
 import {atom} from 'jotai';
 import {atomWithDefault} from 'jotai/utils';
 
-const getMe = async () => {
+const getMe = async (): Promise<User> => {
     //get user info
     //todo: get user info from server
     return axios
@@ -67,7 +67,7 @@ export const isLoginAtom = atom(async (get) => {
     }
 });
 
-export const login = async (token: string) => {
+export const login = async (token: string): Promise<boolean> => {
     return axios
         .post('/v2/kakao/login', {
             accessToken: token,
@@ -102,7 +102,13 @@ export const signUp = async (user: SignUpUser) => {
         });
 };
 
-export const nicknameCheck = async (nickname: string) => {
+interface nickNameCheckInterface {
+    exist: boolean;
+}
+
+export const nicknameCheck = async (
+    nickname: string,
+): Promise<nickNameCheckInterface> => {
     return axios
         .get(`/v2/nickname/check?nickname=${nickname}`)
         .then((res) => {
@@ -119,7 +125,7 @@ interface EditUserInfo {
     birthDate: string;
 }
 
-export const editUserInfo = async (user: EditUserInfo) => {
+export const editUserInfo = async (user: EditUserInfo): Promise<User> => {
     const data = {
         nickName: user.nickname,
         birthDate: user.birthDate,

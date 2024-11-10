@@ -57,14 +57,17 @@ const InquiryChoice = () => {
         setIsSelected(true);
         setSelectedEmoji(emoji);
         const choice: InquiryChoiceType = {
-            productIdx: inquiryAPI.data?.selectedProducts[currentIdx].idx,
+            productIdx: inquiryAPI.data?.selectedProducts[currentIdx].idx || 0,
             emojiName: emoji,
         };
         selectEmoji(choice);
     };
 
     const handleNext = () => {
-        if (currentIdx === inquiryAPI.data.selectedProducts.length - 1) {
+        if (
+            inquiryAPI.data?.selectedProducts &&
+            currentIdx === inquiryAPI.data.selectedProducts.length - 1
+        ) {
             // console.log(choiceList);
 
             navigate(`/inquiry/${inquiryID}/result`);
@@ -184,7 +187,7 @@ const InquiryChoice = () => {
                         disabled={!isSelected}
                     >
                         {currentIdx ===
-                        inquiryAPI.data?.selectedProducts.length - 1
+                        (inquiryAPI.data?.selectedProducts?.length ?? 0) - 1
                             ? '결과 확인하기'
                             : '다음 상품 보기'}
                     </Button>

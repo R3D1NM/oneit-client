@@ -1,6 +1,7 @@
 import axios from '@/lib/axios';
+import {Collection, CollectionDetail} from '@/lib/types';
 
-export const fetchCollectionList = async () => {
+export const fetchCollectionList = async (): Promise<Collection[]> => {
     return axios
         .get('/v2/collections')
         .then((res) => {
@@ -12,7 +13,9 @@ export const fetchCollectionList = async () => {
         });
 };
 
-export const fetchCollectionDetail = async (collectionID: string) => {
+export const fetchCollectionDetail = async (
+    collectionID: string,
+): Promise<CollectionDetail> => {
     return axios
         .get(`/v2/collections/${collectionID}`)
         .then((res) => {

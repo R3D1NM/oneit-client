@@ -1,11 +1,13 @@
 import {db} from '@/lib/firebase';
 import {ref, get as read, child} from 'firebase/database';
 import axios from '@/lib/axios';
-import {Product} from '@/lib/types';
+import {Product, RecommendRecord} from '@/lib/types';
 
-export const fetchRecommendedProducts = async (chatID: string) => {
+export const fetchRecommendedProducts = async (
+    chatID: string,
+): Promise<RecommendRecord> => {
     const dbRef = ref(db);
-    return read(child(dbRef, `/recommendRecord/${chatID}`))
+    return read(child(dbRef, `/recommend/${chatID}`))
         .then((snapshot) => {
             if (snapshot.exists() && snapshot.val().resultType) {
                 const data = snapshot.val();
@@ -59,6 +61,28 @@ export const fetchProduct = async (productID: string): Promise<Product> => {
 export const searchProduct = async (keyword: string): Promise<Product[]> => {
     return axios
         .get(`/v2/products/search?searchKeyword=${keyword}`)
+        .then((res) => {
+            return Promise.resolve(res.data);
+        })
+        .catch((err) => {
+            return Promise.reject(err);
+        });
+};
+
+export const productLike = async (productID: string): Promise<Product> => {
+    return axios
+        .post(`/v2/products/${productID}/like`)
+        .then((res) => {
+            return Promise.resolve(res.data);
+        })
+        .catch((err) => {
+            return Promise.reject(err);
+        });
+};
+
+export const fetchLikedProducts = async (): Promise<Product[]> => {
+    return axios
+        .get(`/v2/products/like`)
         .then((res) => {
             return Promise.resolve(res.data);
         })

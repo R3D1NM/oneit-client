@@ -1,8 +1,6 @@
 import {useNavigate, useParams} from 'react-router-dom';
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import Gift from '@/assets/images/giftbox.png';
-import {Button} from '@/components/ui/button';
-import KakaoShare from '@/components/common/KakaoShare';
+
 import {
     ArrowRightSquare,
     CalendarCheck,
@@ -18,10 +16,7 @@ import {
 } from 'lucide-react';
 import {Spinner} from '@/components/ui/spinner';
 import NotFound from '../NotFound';
-import {Separator} from '@/components/ui/separator';
-import {fetchProduct} from '@/api/product';
 import {useAtom, useAtomValue} from 'jotai';
-import {ScrollArea} from '@/components/ui/scroll-area';
 import {cn} from '@/lib/utils';
 import {authAtom, isLoginAtom} from '@/api/auth';
 import {useState} from 'react';
@@ -35,10 +30,9 @@ import {
     productPurchased,
 } from '@/api/basket';
 import {BaksetProduct, Comment, Keyword} from '@/lib/types';
-import {set} from 'date-fns';
 import Header from '@/components/common/Header';
-import mageHeart from '@/assets/images/mage_heart.svg';
-import mageHeartFill from '@/assets/images/mage_heart_fill.svg';
+import mageHeart from '@/assets/images/mage_heart_pink.svg';
+import mageHeartFill from '@/assets/images/mage_heart_fill_pink.svg';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -313,63 +307,62 @@ const BasketProduct = () => {
                                     첫 번째 댓글을 남겨보세요!
                                 </div>
                             )}
-                            {fetchCommentsAPI?.data?.map(
-                                (comment: Comment, idx: number) => {
-                                    if (comment.writerIdx == user?.idx) {
-                                        return (
-                                            <div
-                                                key={comment.idx}
-                                                className={cn('talking me')}
-                                            >
-                                                <div className="del">
-                                                    <button
-                                                        className="btn_del"
-                                                        onClick={() =>
-                                                            handleDeleteComment(
-                                                                comment.idx,
-                                                            )
-                                                        }
-                                                    >
-                                                        토크삭제
-                                                    </button>
-                                                </div>
-                                                <div className="info">
-                                                    <div className="ballon">
-                                                        {comment.content}
-                                                    </div>
+
+                            {fetchCommentsAPI?.data?.map((comment: Comment) => {
+                                if (comment.writerIdx == user?.idx) {
+                                    return (
+                                        <div
+                                            key={comment.idx}
+                                            className={cn('talking me')}
+                                        >
+                                            <div className="del">
+                                                <button
+                                                    className="btn_del"
+                                                    onClick={() =>
+                                                        handleDeleteComment(
+                                                            comment.idx,
+                                                        )
+                                                    }
+                                                >
+                                                    토크삭제
+                                                </button>
+                                            </div>
+                                            <div className="info">
+                                                <div className="ballon">
+                                                    {comment.content}
                                                 </div>
                                             </div>
-                                        );
-                                    } else {
-                                        return (
-                                            <div
-                                                className="talking you"
-                                                key={comment.idx}
-                                            >
-                                                <div className="thum">
-                                                    {/* todo: get profile of writer */}
-                                                    <img
-                                                        src={
-                                                            comment?.writerProfileImg ||
-                                                            logo
-                                                        }
-                                                        className="rounded-full"
-                                                    />
-                                                </div>
-                                                <div className="info">
-                                                    <p className="name">
-                                                        {comment?.writerNickName ||
-                                                            '알 수 없음'}
-                                                    </p>
-                                                    <div className="ballon">
-                                                        {comment.content}
-                                                    </div>
+                                        </div>
+                                    );
+                                } else {
+                                    return (
+                                        <div
+                                            className="talking you"
+                                            key={comment.idx}
+                                        >
+                                            <div className="thum">
+                                                {/* todo: get profile of writer */}
+                                                <img
+                                                    src={
+                                                        comment?.writerProfileImg ||
+                                                        logo
+                                                    }
+                                                    className="rounded-full"
+                                                />
+                                            </div>
+                                            <div className="info">
+                                                <p className="name">
+                                                    {comment?.writerNickName ||
+                                                        '알 수 없음'}
+                                                </p>
+                                                <div className="ballon">
+                                                    {comment.content}
                                                 </div>
                                             </div>
-                                        );
-                                    }
-                                },
-                            )}
+                                        </div>
+                                    );
+                                }
+                            })}
                         </div>
                         <form
                             className="talk_input_fixed px-1 "

@@ -419,33 +419,40 @@ const BasketInfo = () => {
 
             const url = `${import.meta.env.VITE_CURRENT_DOMAIN}/basket/${basketID}/invite/${invitationIdx}`;
 
-            Kakao.Share.sendDefault({
-                objectType: 'feed',
-                content: {
-                    title: user
-                        ? `${user?.nickname}님이 선물 바구니에 초대했습니다.`
-                        : 'ONE!T 선물 바구니에 초대되었습니다.',
-                    description: basketInfoAPI.data.name || 'ONE!T 선물 바구니',
-                    imageUrl:
-                        basketInfoAPI.data.imageUrl ||
-                        'https://www.oneit.gift/oneit.png',
-                    link: {
-                        mobileWebUrl: url,
-                        webUrl: url,
-                    },
-                },
-                buttons: [
-                    {
-                        title: 'ONE!T에서 확인하기',
+            try {
+                Kakao.Share.sendDefault({
+                    objectType: 'feed',
+                    content: {
+                        title: user
+                            ? `${user?.nickname}님이 선물 바구니에 초대했습니다.`
+                            : 'ONE!T 선물 바구니에 초대되었습니다.',
+                        description:
+                            basketInfoAPI.data?.name || 'ONE!T 선물 바구니',
+                        imageUrl:
+                            basketInfoAPI.data?.imageUrl ||
+                            'https://www.oneit.gift/oneit.png',
                         link: {
                             mobileWebUrl: url,
                             webUrl: url,
                         },
                     },
-                ],
-            }).then(() => {
-                toast.success('친구에게 초대장을 보냈습니다.');
-            });
+                    buttons: [
+                        {
+                            title: 'ONE!T에서 확인하기',
+                            link: {
+                                mobileWebUrl: url,
+                                webUrl: url,
+                            },
+                        },
+                    ],
+                });
+            } catch (error) {
+                console.log('error', error);
+
+                // toast.error('카카오톡 공유하기에 실패했습니다.');
+            } finally {
+                // toast.success('친구에게 초대장을 보냈습니다.');
+            }
         });
     };
 
@@ -485,7 +492,7 @@ const BasketInfo = () => {
                             />
                         </div>
                         <div>
-                            {basketInfoAPI?.data?.dday > 0 ? (
+                            {(basketInfoAPI?.data?.dday ?? 0) > 0 ? (
                                 <div className="dDay px-1">
                                     D-{basketInfoAPI?.data?.dday}
                                 </div>
@@ -493,13 +500,13 @@ const BasketInfo = () => {
                                 <div className="dDay px-1">D-Day</div>
                             ) : (
                                 <div className="dDay px-1">
-                                    {-basketInfoAPI?.data?.dday}일 지남
+                                    {-(basketInfoAPI?.data?.dday ?? 0)}일 지남
                                 </div>
                             )}
                             <div
                                 className={cn(
                                     'title text-overflow-one',
-                                    basketInfoAPI.data?.participants.some(
+                                    basketInfoAPI.data?.participants?.some(
                                         (parti: Participant) =>
                                             parti.userRole == 'MANAGER' &&
                                             parti.userIdx == user?.idx,
@@ -511,7 +518,7 @@ const BasketInfo = () => {
                                 {basketInfoAPI?.data?.name}
                             </div>
                         </div>
-                        {basketInfoAPI.data?.participants.some(
+                        {basketInfoAPI.data?.participants?.some(
                             (parti: Participant) =>
                                 parti.userRole == 'MANAGER' &&
                                 parti.userIdx == user?.idx,
@@ -574,6 +581,7 @@ const BasketInfo = () => {
                                 {basketInfoAPI?.data?.participants?.map(
                                     (participant: Participant, idx: number) => (
                                         <ParticipantThumbnail
+                                            key={`friend-${participant.userIdx}`}
                                             participant={participant}
                                         />
                                     ),
@@ -599,7 +607,7 @@ const BasketInfo = () => {
             {isOpen && (
                 <BasketEdit
                     closeModal={closeModal}
-                    basket={basketInfoAPI?.data}
+                    basket={basketInfoAPI?.data || ({} as Basket)}
                 />
             )}
             {isOpen2 && (

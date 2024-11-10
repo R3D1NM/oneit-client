@@ -128,7 +128,7 @@ const Basket = () => {
         }
 
         if (
-            !basketInfoAPI.data?.participants.some(
+            !basketInfoAPI.data?.participants?.some(
                 (parti: Participant) =>
                     parti.userRole == 'MANAGER' && parti.userIdx == user?.idx,
             )
@@ -139,7 +139,7 @@ const Basket = () => {
 
         mutateAsync({
             basketIdx: basketID || '',
-            selected: basketProductAPI.data,
+            selected: basketProductAPI.data || [],
             target,
         })
             .then((data) => {
@@ -167,7 +167,7 @@ const Basket = () => {
     const handleModeChange = () => {
         if (basketProductAPI.data?.length === 0) return;
         if (
-            !basketInfoAPI.data?.participants.some(
+            !basketInfoAPI.data?.participants?.some(
                 (parti: Participant) =>
                     parti.userRole == 'MANAGER' && parti.userIdx == user?.idx,
             )
@@ -216,22 +216,23 @@ const Basket = () => {
             <div className="p-4 cardList scrollbar-hide">
                 <div className="Dday_wrap">
                     <div className="graph">
-                        {basketInfoAPI?.data?.dday > 0 ? (
+                        {basketInfoAPI?.data?.dday !== undefined &&
+                        basketInfoAPI.data.dday > 0 ? (
                             <div className="count">D-{dDay}</div>
                         ) : basketInfoAPI?.data?.dday === 0 ? (
                             <div className="count">D-Day</div>
                         ) : (
                             <div className="count">
-                                {-basketInfoAPI?.data?.dday}일 지남
+                                {-(basketInfoAPI?.data?.dday ?? 0)}일 지남
                             </div>
                         )}
-                        {basketInfoAPI?.data?.dday < 3 &&
-                            basketInfoAPI?.data?.dday >= 0 && (
+                        {(basketInfoAPI?.data?.dday ?? 0) < 3 &&
+                            (basketInfoAPI?.data?.dday ?? 0) >= 0 && (
                                 <p>
                                     마감일이 얼마 남지 않았어요 빨리 골라주세요
                                 </p>
                             )}
-                        {basketInfoAPI?.data?.dday < 0 && (
+                        {(basketInfoAPI?.data?.dday ?? 0) < 0 && (
                             <p>이미 마감된 선물 바구니입니다.</p>
                         )}
 
@@ -243,7 +244,7 @@ const Basket = () => {
                                         width:
                                             dDay <= 0
                                                 ? '100%'
-                                                : `${calculateElapsedPercentage(basketInfoAPI!.data!.createdAt, basketInfoAPI!.data!.deadline)}%`,
+                                                : `${calculateElapsedPercentage(basketInfoAPI!.data!.createdAt.toString(), basketInfoAPI!.data!.deadline)}%`,
                                     }}
                                 ></div>
                             </div>

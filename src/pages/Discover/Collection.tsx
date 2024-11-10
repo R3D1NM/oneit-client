@@ -180,7 +180,7 @@ const Collection = () => {
             <div className="collection">
                 <div className="progress_bar_wrap">
                     <span></span>
-                    {fetchCollectionAPI.data?.collectionProductDTOList.map(
+                    {fetchCollectionAPI.data?.collectionProductDTOList?.map(
                         (product: CollctionProduct, idx: number) => (
                             <span key={`span-${idx}`}></span>
                         ),

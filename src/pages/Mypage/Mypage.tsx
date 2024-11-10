@@ -2,7 +2,7 @@ import {authAtom, logout, userWithdrawal} from '@/api/auth';
 
 import {Button} from '@/components/common/Button';
 import {useAtomValue} from 'jotai';
-import {User2Icon, UserIcon} from 'lucide-react';
+import {ChevronRight, User2Icon, UserIcon} from 'lucide-react';
 import {useEffect, useState} from 'react';
 import {useNavigate} from 'react-router-dom';
 import profileButtonSvg from '@/assets/images/profile_button.svg';
@@ -22,6 +22,7 @@ import {
     DialogHeader,
     DialogTrigger,
 } from '@/components/ui/dialog';
+import {fetchLikedProducts} from '@/api/product';
 
 const Mypage = () => {
     const navigate = useNavigate();
@@ -30,6 +31,11 @@ const Mypage = () => {
     const handleLogout = async () => {
         await logout();
     };
+
+    const likedProductAPI = useQuery({
+        queryKey: ['likedProduct'],
+        queryFn: () => fetchLikedProducts(),
+    });
 
     const basketListAPI = useQuery({
         queryKey: ['basket'],
@@ -62,7 +68,7 @@ const Mypage = () => {
     return (
         <>
             <Header variant="back" />
-            <div className="mypage1">
+            <div className="mypage1 scrollbar-hide">
                 <div className="rounding_grey">
                     <div className="nickname_area">
                         <div className="picture">
@@ -83,18 +89,38 @@ const Mypage = () => {
                             onClick={() => navigate('/mypage/edit')}
                         ></button>
                     </div>
-                    {/* <div className="wish_area">
-                        <div className="title">위시아이템</div>
-                        <ul>
-                            <li></li>
-                            <li></li>
-                            <li></li>
-                            <li></li>
-                            <li></li>
-                            <li></li>
-                            <li></li>
+                    <div className="wish_area">
+                        <div
+                            className="title"
+                            onClick={() => navigate('/mybasket')}
+                        >
+                            나의 위시리스트{' '}
+                            <span>{likedProductAPI.data?.length}</span>
+                            <ChevronRight />
+                        </div>
+                        <ul className="scrollbar-hide">
+                            {likedProductAPI.data?.map((product) => (
+                                <a
+                                    key={product.idx}
+                                    href={`/product/${product.idx}`}
+                                >
+                                    <li>
+                                        <img
+                                            src={product.thumbnailUrl || logo}
+                                            alt=""
+                                        />
+                                    </li>
+                                </a>
+                            ))}
+                            {likedProductAPI.data?.length === 0 && (
+                                <a className="w-full " href="/curation">
+                                    <p className="text-center text-sm underline">
+                                        ONE!T 추천 선물 보러가기
+                                    </p>
+                                </a>
+                            )}
                         </ul>
-                    </div> */}
+                    </div>
                 </div>
                 <div className="rounding_grey ">
                     <div className="basket_area ">
@@ -140,7 +166,10 @@ const Mypage = () => {
                             </button>
                         </li> */}
                         <li>
-                            <button onClick={handleNotyet}>
+                            <button
+                                // onClick={handleNotyet}
+                                onClick={() => navigate('/recommendRecord')}
+                            >
                                 추천 받았던 상품
                             </button>
                         </li>
@@ -167,14 +196,16 @@ const Mypage = () => {
                         </li>
                     </ul>
                 </div>
+                <div className="flex w-full justify-center text-center  text-[#5d5d5d]">
+                    <Button
+                        variant="underline"
+                        className="text-xs"
+                        onClick={() => setOpen(!open)}
+                    >
+                        회원 탈퇴
+                    </Button>
+                </div>
                 <Dialog onOpenChange={setOpen} open={open}>
-                    <DialogTrigger>
-                        <div className="flex justify-center text-center absolute bottom-1 right-1/2 translate-x-4 text-[#5d5d5d]">
-                            <Button variant="underline" className="text-xs">
-                                회원 탈퇴
-                            </Button>
-                        </div>
-                    </DialogTrigger>
                     <DialogContent>
                         <DialogHeader>회원 탈퇴</DialogHeader>
                         <p className="text-center">

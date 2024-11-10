@@ -1,6 +1,7 @@
 import axios from '@/lib/axios';
+import {Friend, FriendRequest, OtherUser} from '@/lib/types';
 
-export const fetchFriendList = async () => {
+export const fetchFriendList = async (): Promise<Friend[]> => {
     return axios
         .get('/v2/friends')
         .then((res) => {
@@ -22,7 +23,7 @@ export const deleteFriend = async (friendIdx: string) => {
         });
 };
 
-export const fetchFriendRequestsToMe = async () => {
+export const fetchFriendRequestsToMe = async (): Promise<FriendRequest[]> => {
     return axios
         .get('/v2/friends/requests-to-me')
         .then((res) => {
@@ -33,7 +34,7 @@ export const fetchFriendRequestsToMe = async () => {
         });
 };
 
-export const fetchFriendRequestsFromMe = async () => {
+export const fetchFriendRequestsFromMe = async (): Promise<FriendRequest[]> => {
     return axios
         .get('/v2/friends/requests-from-me')
         .then((res) => {
@@ -91,7 +92,7 @@ export const rejectFriend = async (friendIdx: string, requestIdx: string) => {
         });
 };
 
-export const fetchUserInfo = (userID: string) => {
+export const fetchUserInfo = (userID: string): Promise<OtherUser> => {
     return axios
         .get(`/v2/friends/${userID}`)
         .then((res) => {
