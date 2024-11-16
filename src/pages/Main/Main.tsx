@@ -119,6 +119,7 @@ const Main = () => {
     const fetchBirthdayFriendListAPI = useQuery({
         queryKey: ['BrithDayFriendList'],
         queryFn: () => fectchBirthdayList(),
+        enabled: isLogin,
     });
 
     return (
@@ -190,7 +191,8 @@ const Main = () => {
                         alt="Promotion Banner"
                         className="w-full object-contain"
                     />
-                    {fetchBirthdayFriendListAPI?.data?.length === 0 ? (
+                    {!isLogin ||
+                    fetchBirthdayFriendListAPI?.data?.length === 0 ? (
                         <div
                             className="absolute inset-0 flex flex-col justify-center items-start p-6 text-white"
                             onClick={() => {
