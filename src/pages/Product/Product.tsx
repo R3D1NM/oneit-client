@@ -127,16 +127,17 @@ const Product = () => {
                         <div className="options scrollbar-hide">
                             {Object.keys(productAPI.data?.options || {})?.map(
                                 (key: string, idx) => (
-                                    <>
-                                        <p className="title" key={key}>
-                                            {key}
-                                        </p>
+                                    <div
+                                        className="option-group scrollbar-hide"
+                                        key={key}
+                                    >
+                                        <p className="title">{key}</p>
                                         {productAPI.data?.options[key]?.map(
                                             (option, idx) => (
                                                 <span key={idx}>{option}</span>
                                             ),
                                         )}
-                                    </>
+                                    </div>
                                 ),
                             )}
                             {/* <p className="title">옵션</p>
