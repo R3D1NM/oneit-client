@@ -278,27 +278,44 @@ const BasketProduct = () => {
                         <span>₩</span>{' '}
                         {productAPI?.data?.originalPrice.toLocaleString()}
                     </div>
-                </div>
-                <div className="tag_area">
-                    <div className="title">Tag</div>
-                    <ul>
-                        {productAPI.data?.keywords?.map(
-                            (keyword: Keyword, idx: number) => (
-                                <li key={idx}>
-                                    <button disabled>{keyword.name}</button>
-                                </li>
+                    <div className="options scrollbar-hide">
+                        {Object.keys(productAPI.data?.options || {})?.map(
+                            (key: string, idx) => (
+                                <>
+                                    <p className="title" key={key}>
+                                        {key}
+                                    </p>
+                                    {productAPI.data?.options[key]?.map(
+                                        (option, idx) => (
+                                            <span key={idx}>{option}</span>
+                                        ),
+                                    )}
+                                </>
                             ),
                         )}
-                    </ul>
+                        {/* <p className="title">옵션</p>
+
+                            <span>옵션내용</span>
+                            <span>옵션내용</span>
+                            <span>옵션내용</span>
+                            <span>옵션내용</span> */}
+                    </div>
+                </div>
+                <div className="tags mx-4">
+                    {productAPI.data?.displayTags
+                        ?.slice(0, 10)
+                        .map((tag, idx) => <span key={idx}>{tag}</span>)}
                 </div>
                 <Tabs defaultValue="chat" className="p-1 w-full mt-2">
                     <TabsList className="w-full ">
                         <TabsTrigger value="chat" className="w-full">
                             선물 토크
                         </TabsTrigger>
-                        <TabsTrigger value="detail" className="w-full">
-                            상세 정보
-                        </TabsTrigger>
+                        {productAPI?.data?.detailImages && (
+                            <TabsTrigger value="detail" className="w-full">
+                                상세 정보
+                            </TabsTrigger>
+                        )}
                     </TabsList>
                     <TabsContent value="chat" className="talk_area">
                         <div className="chat_area min-h-32 shadow-sm shadow-[#ffcaf2] max-h-60  rounded-md  overflow-y-auto scrollbar-hide ">

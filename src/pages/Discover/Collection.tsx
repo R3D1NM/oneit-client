@@ -1,4 +1,4 @@
-import {CollctionProduct, Keyword, Product} from '@/lib/types';
+import {CollectionProduct, Keyword, Product} from '@/lib/types';
 import {useNavigate, useParams} from 'react-router-dom';
 import ProductCard from '../Product/components/ProductCard';
 import {AspectRatio} from '@/components/ui/aspect-ratio';
@@ -181,7 +181,7 @@ const Collection = () => {
                 <div className="progress_bar_wrap">
                     <span></span>
                     {fetchCollectionAPI.data?.collectionProductDTOList?.map(
-                        (product: CollctionProduct, idx: number) => (
+                        (product: CollectionProduct, idx: number) => (
                             <span key={`span-${idx}`}></span>
                         ),
                     )}
@@ -225,9 +225,11 @@ const Collection = () => {
                             <ul>
                                 {fetchCollectionAPI.data?.collectionProductDTOList[
                                     currentPage - 1
-                                ]?.keywords.map((tag: Keyword, idx: number) => (
-                                    <li key={idx}>{tag.name}</li>
-                                ))}
+                                ]?.displayTags
+                                    .slice(0, 6)
+                                    .map((tag: string, idx: number) => (
+                                        <li key={idx}>{tag}</li>
+                                    ))}
                             </ul>
                         </div>
                         {fetchCollectionAPI?.data?.collectionProductDTOList[

@@ -305,7 +305,7 @@ const Basket = () => {
                     </Dialog>
                 </div>
 
-                <div className="mt-5 rounding_border">
+                <div className="mt-5 mb-8 rounding_border">
                     <div className="giftBox_title">
                         <div className="title">
                             <p>바구니에 담긴 선물</p>

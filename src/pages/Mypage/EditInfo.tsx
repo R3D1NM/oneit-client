@@ -24,7 +24,7 @@ const EditInfo = () => {
             editUserInfo({
                 nickname: newNickname,
                 profileImage: image,
-                birthDate: newBirthDate.toString(),
+                // birthDate: newBirthDate.toString(),
             }),
         onSuccess: () => {
             // queryClient.invalidateQueries({queryKey:['user']});
@@ -35,13 +35,13 @@ const EditInfo = () => {
     });
 
     const handleSubmit = () => {
-        const birthDateRegex = /^\d{4}-\d{2}-\d{2}$/;
-        if (!birthDateRegex.test(newBirthDate.toString())) {
-            setBirthDateError('생년월일은 YYYY-MM-DD 형식이어야 합니다.');
-            return;
-        }
+        // const birthDateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        // if (!birthDateRegex.test(newBirthDate.toString())) {
+        //     setBirthDateError('생년월일은 YYYY-MM-DD 형식이어야 합니다.');
+        //     return;
+        // }
 
-        setBirthDateError('');
+        // setBirthDateError('');
         console.log(newNickname);
         console.log(image);
         EditInfoAPI.mutate();
@@ -148,7 +148,7 @@ const EditInfo = () => {
                         value={newNickname}
                         onChange={(e) => setNewNickname(e.target.value)}
                     />
-                    <small>생년월일</small>
+                    {/* <small>생년월일</small>
                     <input
                         type="text"
                         placeholder="YYYY-MM-DD"
@@ -157,7 +157,7 @@ const EditInfo = () => {
                     />
                     {birthDateError && (
                         <small style={{color: 'red'}}>{birthDateError}</small>
-                    )}
+                    )} */}
                 </div>
             </div>
             <div className="btn_area_fixed pl-4 pr-4">

@@ -11,7 +11,7 @@ import {isLoginAtom} from '@/api/auth';
 import Header from '@/components/common/Header';
 import logo from '@/assets/images/oneit.png';
 import {Button} from '@/components/common/Button';
-import {ArrowUp} from 'lucide-react';
+import {ArrowUp, Sparkles} from 'lucide-react';
 import mageHeart from '@/assets/images/mage_heart_pink.svg';
 import mageHeartFill from '@/assets/images/mage_heart_fill_pink.svg';
 import {useState} from 'react';
@@ -124,21 +124,42 @@ const Product = () => {
                             {productAPI.data?.originalPrice?.toLocaleString() ||
                                 0}
                         </div>
-                        {/* <div className="options">
-                            <p className="title">옵션</p>
+                        <div className="options scrollbar-hide">
+                            {Object.keys(productAPI.data?.options || {})?.map(
+                                (key: string, idx) => (
+                                    <>
+                                        <p className="title" key={key}>
+                                            {key}
+                                        </p>
+                                        {productAPI.data?.options[key]?.map(
+                                            (option, idx) => (
+                                                <span key={idx}>{option}</span>
+                                            ),
+                                        )}
+                                    </>
+                                ),
+                            )}
+                            {/* <p className="title">옵션</p>
+
                             <span>옵션내용</span>
                             <span>옵션내용</span>
                             <span>옵션내용</span>
-                            <span>옵션내용</span>
-                        </div> */}
-                        <div className="essense">제품요약</div>
+                            <span>옵션내용</span> */}
+                        </div>
+                        <div className="essense items-center  flex">
+                            <span className="text-[#ffabe6eb] mr-1">AI</span>{' '}
+                            제품요약
+                            <Sparkles className="inline-block h-3 -ml-1 text-[#ffabe6eb]" />
+                        </div>
                         <div className="contents">
                             {productAPI.data?.description}
                         </div>
                         <div className="tags">
-                            {productAPI.data?.keywords?.map((tag, idx) => (
-                                <span key={idx}>#{tag.name}</span>
-                            ))}
+                            {productAPI.data?.displayTags
+                                ?.slice(0, 10)
+                                .map((tag, idx) => (
+                                    <span key={idx}>{tag}</span>
+                                ))}
                         </div>
                     </div>
 

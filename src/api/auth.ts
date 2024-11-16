@@ -122,13 +122,13 @@ export const nicknameCheck = async (
 interface EditUserInfo {
     nickname: string;
     profileImage?: File | null;
-    birthDate: string;
+    // birthDate: string;
 }
 
 export const editUserInfo = async (user: EditUserInfo): Promise<User> => {
     const data = {
         nickName: user.nickname,
-        birthDate: user.birthDate,
+        // birthDate: user.birthDate,
     };
     let payload = new FormData();
     payload.append('updateUserRequest', JSON.stringify(data));

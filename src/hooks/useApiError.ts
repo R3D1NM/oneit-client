@@ -137,6 +137,9 @@ const handler404 = (code: string) => {
                 },
             });
             break;
+        case 'NO_MORE_PRODUCTS':
+            toast.error('더이상 다른 선물이 없어요');
+            break;
         default:
             toast.error('요청을 찾을 수 없습니다.', {
                 action: {

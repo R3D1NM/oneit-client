@@ -31,7 +31,7 @@ const InquiryResult = () => {
     return (
         <>
             <Header btn_back variant="back" profile />
-            <div className="question3">
+            <div className="question3 scrollbar-hide mb-4">
                 <div className="title">
                     {inquiryAPI.data?.target ? (
                         <>

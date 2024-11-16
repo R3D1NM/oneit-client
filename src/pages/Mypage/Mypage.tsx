@@ -179,7 +179,9 @@ const Mypage = () => {
                             </button>
                         </li>
                         <li>
-                            <button onClick={handleNotyet}>타임어택</button>
+                            <button onClick={() => navigate('/timeattack')}>
+                                타임어택
+                            </button>
                         </li>
                         <li>
                             <button

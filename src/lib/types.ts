@@ -26,6 +26,8 @@ export type Product = {
     description: string;
     likeCount: number;
     likeStatus: 'LIKE' | 'DISLIKE' | 'NONE';
+    displayTags: string[];
+    options: {[key: string]: string[]};
 };
 
 export type Category = {
@@ -43,6 +45,7 @@ export type BaksetProduct = {
     originalPrice: number;
     thumbnailUrl: string;
     keywords: Keyword[];
+    displayTags: string[];
     productStatus: string;
     description: string;
     likeCountInGiftbox: number;
@@ -72,14 +75,17 @@ export type BaskestProductDetail = {
     voteStatus: 'LIKE' | 'DISLIKE' | 'NONE';
     purchaseStatus: 'PURCHASED' | 'NOT_PURCHASED';
     emojiIdx: 'LOVE' | 'LIKE' | 'NEED' | 'SOSO' | 'BAD' | 'HAVE';
+    displayTags: string[];
+    options: {[key: string]: string[]};
 };
 
-export type CollctionProduct = {
-    productIdx: number;
-    productName: string;
-    keywords: Keyword[];
-    showcaseImageUrl: string;
-};
+// export type CollctionProduct = {
+//     productIdx: number;
+//     productName: string;
+//     keywords: Keyword[];
+//     showcaseImageUrl: string;
+//     displayTags: string[];
+// };
 
 export type Question = {
     question: string;
@@ -131,6 +137,7 @@ export type CollectionProduct = {
     keywords: Keyword[];
     showcaseImageUrl: string;
     productStatus: 'PENDING' | 'ACTIVE' | 'INVALID' | 'UNSUPPORTED' | 'DELETED';
+    displayTags: string[];
 };
 
 export type CollectionDetail = {
@@ -159,20 +166,14 @@ export type InquiryChoice = {
     emojiName: 'LOVE' | 'LIKE' | 'NEED' | 'SOSO' | 'BAD' | 'HAVE';
 };
 
-export type OtherUser = {
-    idx: number;
-    nickName: string;
-    profileImg: string;
-    birthDate: string;
-    isFriend: boolean;
-};
-
 export type Friend = {
     idx: number;
     name: string;
     nickName: string;
     profileImg: string;
-    birthDate: Date;
+    birthDate: string;
+    isFriend?: boolean;
+    timeAttackAlarm: boolean;
 };
 
 export type FriendRequest = {

@@ -7,9 +7,9 @@ import {useEffect} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import profileButtonSvg from '@/assets/images/profile_button.svg';
 import Header from '@/components/common/Header';
-import {useMutation, useQuery} from '@tanstack/react-query';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {fetchBasketList} from '@/api/basket';
-import {Basket} from '@/lib/types';
+import {Basket, Friend} from '@/lib/types';
 import logo from '@/assets/images/oneit.png';
 import {fetchFriendList, fetchUserInfo, requestFriend} from '@/api/friend';
 import {toast} from 'sonner';
@@ -17,6 +17,7 @@ import {toast} from 'sonner';
 const User = () => {
     const navigate = useNavigate();
     const {userID} = useParams();
+    const queryClient = useQueryClient();
     // const user = useAtomValue(authAtom);
     const requestFriendAPI = useMutation({
         mutationKey: ['requestFriend'],
@@ -33,6 +34,10 @@ const User = () => {
 
     const handleRequest = () => {
         requestFriendAPI.mutate();
+        queryClient.setQueryData(['user', userID], (prev: Friend) => ({
+            ...prev,
+            isFriend: true,
+        }));
     };
 
     return (
