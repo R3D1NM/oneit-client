@@ -135,9 +135,9 @@ const BasketProductCard = (props: ProductCardProps) => {
                 <p className="price">
                     ₩ {product.originalPrice.toLocaleString()}
                 </p>
-                <div className="tags">
+                <div className="tags max-h-11 overflow-y-hidden">
                     {product.displayTags
-                        ?.slice(0, 3)
+                        ?.slice(0, 4)
                         .map((tag, idx) => (
                             <span key={`${product.idx}-${idx}`}>{tag}</span>
                         ))}

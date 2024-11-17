@@ -70,10 +70,10 @@ const ProductCard = (props: ProductCardProps) => {
                 <p className="price">
                     ₩ {product?.originalPrice?.toLocaleString() || 0}
                 </p>
-                <div className="tags">
-                    {product?.keywords
-                        ?.slice(0, 3)
-                        .map((tag, idx) => <span key={idx}>#{tag.name}</span>)}
+                <div className="tags max-h-11 overflow-y-hidden">
+                    {product?.displayTags
+                        ?.slice(0, 4)
+                        .map((tag, idx) => <span key={idx}>{tag}</span>)}
                 </div>
             </a>
         </div>
