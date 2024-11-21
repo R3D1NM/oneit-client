@@ -227,4 +227,5 @@ export type RecommendRecord = {
         comment: string;
         title: string;
     };
+    related?: Product[];
 };

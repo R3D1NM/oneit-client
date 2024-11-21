@@ -11,7 +11,8 @@ const Footer = () => {
         if (
             path.includes('basket') ||
             path.includes('product') ||
-            path.includes('collection')
+            path.includes('collection') ||
+            path.includes('result')
         ) {
             setDisplay(false);
         } else {

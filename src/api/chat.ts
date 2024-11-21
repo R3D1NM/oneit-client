@@ -115,6 +115,11 @@ interface finishRecommendVariables {
     chatID: string;
 }
 
+interface RecommendResult {
+    products: Product[];
+    relatedProducts: Product[];
+}
+
 export const finishRecommend = atomWithMutation<
     unknown,
     finishRecommendVariables
@@ -139,9 +144,11 @@ export const finishRecommend = atomWithMutation<
             keywords: get(answers),
         };
         return axios
-            .post('/v2/product/result/category', payload)
+            .post('/v2/product/recommand/result', payload)
             .then((res) => {
                 if (res.status === 200) {
+                    console.log(res.data);
+
                     return Promise.resolve(res.data);
                 }
             })
@@ -149,7 +156,8 @@ export const finishRecommend = atomWithMutation<
                 return Promise.reject(err);
             });
     },
-    onSuccess: async (data, variables, context) => {
+    onSuccess: async (data: unknown, variables, context) => {
+        const recommendData = data as RecommendResult;
         const tags = Object.values(get(answers));
         const result = resultList.find((result) =>
             result.tags.every((tag) => tags.includes(tag)),
@@ -157,7 +165,8 @@ export const finishRecommend = atomWithMutation<
         update(ref(db, `recommend/${variables.chatID}`), {
             answers: get(answers),
             modifiedAt: serverTimestamp(),
-            result: data,
+            result: recommendData.products,
+            related: recommendData.relatedProducts,
             resultType: {
                 title: result?.title || '네가 주면 난 다 좋아! 🎁',
                 comment: result?.comment || '#까다롭지_않아요 #취향_안_타요',
@@ -171,6 +180,28 @@ export const finishRecommend = atomWithMutation<
             // toast.error('서버 에러가 발생했습니다. 잠시 후 다시 시도해주세요.');
         });
     },
+    // onSuccess: async (data, variables, context) => {
+    //     const tags = Object.values(get(answers));
+    //     const result = resultList.find((result) =>
+    //         result.tags.every((tag) => tags.includes(tag)),
+    //     );
+    //     update(ref(db, `recommend/${variables.chatID}`), {
+    //         answers: get(answers),
+    //         modifiedAt: serverTimestamp(),
+    //         result: data,
+    //         resultType: {
+    //             title: result?.title || '네가 주면 난 다 좋아! 🎁',
+    //             comment: result?.comment || '#까다롭지_않아요 #취향_안_타요',
+    //         },
+    //     }).catch((error) => {
+    //         console.log('[FIREBASE] Failed to update record', error);
+    //         sendErrorToSlack({
+    //             message: `[FIREBASE] Failed to update record ${error}`,
+    //             errorPoint: 'finishRecommend',
+    //         });
+    //         // toast.error('서버 에러가 발생했습니다. 잠시 후 다시 시도해주세요.');
+    //     });
+    // },
 }));
 interface rateResultVariables {
     chatID: string;

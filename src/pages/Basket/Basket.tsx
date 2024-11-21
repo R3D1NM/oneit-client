@@ -122,6 +122,20 @@ const Basket = () => {
         deleteAPI.mutate();
     };
 
+    const handleCopy = async () => {
+        mutateAsync({
+            basketIdx: basketID || '',
+            selected: basketProductAPI.data || [],
+            target,
+        }).then((data) => {
+            const url = `${import.meta.env.VITE_CURRENT_DOMAIN}/inquiry/${data}`;
+            setMode(false);
+            navigator.clipboard.writeText(url).then(() => {
+                toast('클립보드에 복사되었습니다.');
+            });
+        });
+    };
+
     const handleInquiry = () => {
         if (target === '' || basketProductAPI.data?.length === 0) {
             return;
@@ -143,7 +157,17 @@ const Basket = () => {
             target,
         })
             .then((data) => {
+                const url = `${import.meta.env.VITE_CURRENT_DOMAIN}/inquiry/${data}`;
+
                 // toast.success('물어보기 전송 완료');
+                Kakao.Share.sendDefault({
+                    objectType: 'text',
+                    text: `🎁친구들이 ${target}님을 위한 선물을 고르고 있어요!\n마음에 드는 선물을 고를 수 있도록 도와주세요🥺`,
+                    link: {
+                        mobileWebUrl: url,
+                        webUrl: url,
+                    },
+                });
                 setMode(false);
             })
             .catch((err) => {
@@ -269,7 +293,8 @@ const Basket = () => {
                                 <DialogTitle>선물 바구니 물어보기</DialogTitle>
 
                                 <DialogDescription>
-                                    선물 받는 사람에게 바구니에 담긴 선물이
+                                    선물 받는 사람에게 바구니에 담긴 선물이{' '}
+                                    <br />
                                     마음에 드는지 물어보세요!
                                 </DialogDescription>
                             </DialogHeader>
@@ -292,15 +317,21 @@ const Basket = () => {
                                     />
                                 </div>
                             </div>
-                            <DialogFooter className="w-full">
+                            <div className="flex w-full gap-2">
                                 <Button
-                                    type="submit"
-                                    onClick={handleInquiry}
                                     className="w-full"
+                                    onClick={handleInquiry}
                                 >
-                                    카카오톡으로 물어보기
+                                    카카오톡
                                 </Button>
-                            </DialogFooter>
+                                <Button
+                                    className="w-full"
+                                    onClick={handleCopy}
+                                    variant="border"
+                                >
+                                    링크복사
+                                </Button>
+                            </div>
                         </DialogContent>
                     </Dialog>
                 </div>

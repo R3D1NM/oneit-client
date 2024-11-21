@@ -24,7 +24,7 @@ import {
     DrawerTrigger,
 } from '@/components/ui/drawer';
 import {rateResult} from '@/api/chat';
-import {Gift} from 'lucide-react';
+import {ChevronsDownIcon, Gift} from 'lucide-react';
 import logo from '@/assets/images/oneit.png';
 import {authAtom} from '@/api/auth';
 import {toast} from 'sonner';
@@ -197,7 +197,7 @@ const Results = () => {
     return (
         <>
             <Header variant="logo" />
-            <main className="pt-14 px-4" role="main">
+            <main className="pt-14 px-4 flex-grow scrollbar-hide" role="main">
                 <div className="gift">
                     <div className="title">
                         <p className="stitle text-sm">선물 추천 분석 결과,</p>
@@ -325,6 +325,56 @@ const Results = () => {
                             </CarouselContent>
                         </Carousel>
                     </div>
+                    {recommendedAPI.data?.related && (
+                        <div className="flex justify-center -mt-1">
+                            <ChevronsDownIcon className="animate-bounce text-[#ff4bc1]" />
+                        </div>
+                    )}
+                    {recommendedAPI.data?.related && (
+                        <div className="flex flex-col w-full">
+                            <p className="text-sm font-semibold">
+                                위 제품과 비슷한 취향을 가진 사람들이 많이
+                                선택했어요 !
+                            </p>
+                            <div className="flex overflow-x-scroll scrollbar-hide gap-2 my-3">
+                                {recommendedAPI.data?.related?.map(
+                                    (item: Product, idx: number) => (
+                                        <div
+                                            className="flex items-start border border-gray-100 rounded-3xl shadow-sm gap-2 p-3 relative"
+                                            key={item.idx}
+                                            onClick={() =>
+                                                navigate(`/product/${item.idx}`)
+                                            }
+                                        >
+                                            <div className="flex items-start justify-center gap-2 relative w-[200px]">
+                                                <img
+                                                    className="h-[73px] object-cover relative w-[73px] rounded-2xl"
+                                                    alt="Rectangle"
+                                                    src={
+                                                        item.thumbnailUrl ||
+                                                        logo
+                                                    }
+                                                />
+                                                <div className="flex flex-col items-center flex-1 gap-1 relative">
+                                                    <p className="text-gray-900 font-semibold text-sm leading-normal h-10 overflow-hidden text-overflow">
+                                                        {item.name}
+                                                    </p>
+                                                    <div className="flex items-start w-full relative">
+                                                        <div className="text-gray-300 font-medium text-xs leading-[16.8px] whitespace-nowrap">
+                                                            ₩
+                                                        </div>
+                                                        <div className="text-gray-500 font-bold text-xs leading-[16.8px] whitespace-nowrap">
+                                                            {item.originalPrice.toLocaleString()}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ),
+                                )}
+                            </div>
+                        </div>
+                    )}
                 </div>
             </main>
             <Drawer open={isOpen} dismissible={true} onOpenChange={setIsOpen}>
