@@ -59,7 +59,7 @@ const Recommend = () => {
             recipient: recipientAtom,
             priceRange: priceRangeAtom.length
                 ? priceRangeAtom
-                : ['0', '300000'], // Set default values if priceRangeAtom is empty
+                : ['10000', '300000'], // Set default values if priceRangeAtom is empty
         },
     });
 
@@ -229,8 +229,11 @@ const Recommend = () => {
                 ) {
                     console.log('updateSlider', watchedPriceRange);
 
-                    const [minVal, maxVal] = watchedPriceRange || [0, 300000];
-                    const minPercent = (parseInt(minVal) / 300000) * 100;
+                    const [minVal, maxVal] = watchedPriceRange || [
+                        10000, 300000,
+                    ];
+                    const minPercent =
+                        ((parseInt(minVal) - 10000) / 300000) * 100;
                     const maxPercent = 100 - (parseInt(maxVal) / 300000) * 100;
                     priceSliderRef.current.style.left = `${minPercent}%`;
                     priceSliderRef.current.style.right = `${maxPercent}%`;
@@ -284,14 +287,20 @@ const Recommend = () => {
                     ]);
                 }
 
-                if (minPrice < 0) {
-                    minInputRef.current!.value = '0';
-                    minPrice = 0;
+                if (minPrice < 10000) {
+                    minInputRef.current!.value = '10000';
+                    minRangeRef.current!.value = '10000';
+                    minPrice = 10000;
                 }
                 if (maxPrice > 300000) {
                     maxInputRef.current!.value = '300000';
+                    maxRangeRef.current!.value = '300000';
                     maxPrice = 300000;
                 }
+                setValue('priceRange', [
+                    minPrice.toString(),
+                    maxPrice.toString(),
+                ]);
                 if (
                     maxPrice - minPrice >= priceGap &&
                     maxPrice <= parseInt(maxRangeRef.current!.max)
@@ -341,7 +350,7 @@ const Recommend = () => {
                     선물의 가격대를 입력해주세요.
                 </p>
                 <div className="flex justify-between text-xs text-[#5d5d5d]">
-                    <p>0원</p>
+                    <p>1만원</p>
                     <p>30만원</p>
                 </div>
                 <Controller
@@ -360,7 +369,7 @@ const Recommend = () => {
                                 <input
                                     type="range"
                                     className="min-range absolute w-full h-1.5 bg-transparent appearance-none pointer-events-none cursor-pointer top-[-22px]"
-                                    min="0"
+                                    min="10000"
                                     max="300000"
                                     value={field.value[0]}
                                     step="10000"
@@ -375,7 +384,7 @@ const Recommend = () => {
                                 <input
                                     type="range"
                                     className="absolute w-full h-1.5 bg-transparent appearance-none pointer-events-none cursor-pointer top-[-22px]"
-                                    min="0"
+                                    min="10000"
                                     max="300000"
                                     value={field.value[1]}
                                     step="10000"

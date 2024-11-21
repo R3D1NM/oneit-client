@@ -8,8 +8,8 @@ import {useAtomValue, useSetAtom} from 'jotai';
 import {Heart, MinusSquare} from 'lucide-react';
 import {useEffect, useState} from 'react';
 import likeit from '@/assets/images/icon_likeit.svg';
-import mageHeart from '@/assets/images/mage_heart.svg';
-import mageHeartFill from '@/assets/images/mage_heart_fill.svg';
+import mageHeart from '@/assets/images/mage_heart_pink.svg';
+import mageHeartFill from '@/assets/images/mage_heart_fill_pink.svg';
 import {useNavigate} from 'react-router-dom';
 import logo from '@/assets/images/oneit.png';
 
@@ -97,11 +97,7 @@ const BasketProductCard = (props: ProductCardProps) => {
                             alt="Heart"
                             className="w-full h-full object-contain"
                         />
-                        <span
-                            className={cn(vote === 'LIKE' && 'text-[#FF5757]')}
-                        >
-                            {count}
-                        </span>
+                        <span className="text-[#FF4BC1]">{count}</span>
                     </div>
                     {product?.emojiIdx && (
                         <div
@@ -139,13 +135,11 @@ const BasketProductCard = (props: ProductCardProps) => {
                 <p className="price">
                     ₩ {product.originalPrice.toLocaleString()}
                 </p>
-                <div className="tags">
-                    {product.keywords
-                        ?.slice(0, 3)
+                <div className="tags max-h-11 overflow-y-hidden">
+                    {product.displayTags
+                        ?.slice(0, 4)
                         .map((tag, idx) => (
-                            <span key={`${product.idx}-${idx}`}>
-                                #{tag.name}
-                            </span>
+                            <span key={`${product.idx}-${idx}`}>{tag}</span>
                         ))}
                 </div>
             </a>

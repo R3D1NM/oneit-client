@@ -3,6 +3,11 @@ import {Product} from '@/lib/types';
 import {Link, useNavigate} from 'react-router-dom';
 import logo from '@/assets/images/oneit.png';
 import {cn} from '@/lib/utils';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
+import {productLike} from '@/api/product';
+import mageHeart from '@/assets/images/mage_heart_pink.svg';
+import mageHeartFill from '@/assets/images/mage_heart_fill_pink.svg';
+import {useState} from 'react';
 
 interface ProductCardProps {
     product: Product;
@@ -10,7 +15,28 @@ interface ProductCardProps {
 
 const ProductCard = (props: ProductCardProps) => {
     const {product} = props;
+    const [like, setLike] = useState<'NONE' | 'LIKE' | 'DISLIKE'>(
+        product.likeStatus || 'NONE',
+    );
+    const [likeCount, setLikeCount] = useState(product.likeCount || 0);
     const navigate = useNavigate();
+    const queryClikent = useQueryClient();
+
+    const productLikeAPI = useMutation({
+        mutationKey: ['productLike', product.idx],
+        mutationFn: () => productLike(product.idx.toString() || ''),
+        onSuccess: (data) => {
+            setLike(data.likeStatus);
+            setLikeCount(data.likeCount);
+            // queryClikent.refetchQueries({ queryKey: ['likedProduct'] });
+        },
+    });
+
+    const handleLike = (event: React.MouseEvent) => {
+        event.stopPropagation();
+        productLikeAPI.mutate();
+    };
+
     return (
         <div
             className={cn('box', product.productStatus === 'INVALID' && 'sold')}
@@ -27,6 +53,14 @@ const ProductCard = (props: ProductCardProps) => {
                         src={product?.thumbnailUrl || logo}
                         alt="제품 이미지"
                     />
+                    <div className="heart" onClick={handleLike}>
+                        <img
+                            src={like === 'LIKE' ? mageHeartFill : mageHeart}
+                            alt="Heart"
+                            className="w-full h-full object-contain"
+                        />
+                        <span className="text-[#FF4BC1]">{likeCount || 0}</span>
+                    </div>
                 </div>
             </div>
             <a className="pr-4">
@@ -36,10 +70,10 @@ const ProductCard = (props: ProductCardProps) => {
                 <p className="price">
                     ₩ {product?.originalPrice?.toLocaleString() || 0}
                 </p>
-                <div className="tags">
-                    {product?.keywords
-                        ?.slice(0, 3)
-                        .map((tag, idx) => <span key={idx}>#{tag.name}</span>)}
+                <div className="tags max-h-11 overflow-y-hidden">
+                    {product?.displayTags
+                        ?.slice(0, 4)
+                        .map((tag, idx) => <span key={idx}>{tag}</span>)}
                 </div>
             </a>
         </div>

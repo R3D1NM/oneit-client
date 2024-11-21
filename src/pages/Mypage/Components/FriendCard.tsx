@@ -1,4 +1,4 @@
-import {deleteFriend} from '@/api/friend';
+import {deleteFriend, timeAttackToggle} from '@/api/friend';
 import {Avatar, AvatarFallback, AvatarImage} from '@/components/ui/avatar';
 import {Button} from '@/components/ui/button';
 import {
@@ -9,7 +9,7 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {Friend} from '@/lib/types';
-import {useMutation} from '@tanstack/react-query';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {CircleEllipsis, Trash2, User, UserCircle2} from 'lucide-react';
 import React, {useState} from 'react';
 import logo from '@/assets/images/oneit.png';
@@ -25,11 +25,19 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import {toast} from 'sonner';
+import {cn} from '@/lib/utils';
 
 const FriendCard = (props: {friend: Friend}) => {
     const {friend} = props;
     const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
+
+    const timeAttackToggleAPI = useMutation({
+        mutationKey: ['timeAttackToggle'],
+        mutationFn: () => timeAttackToggle(friend.idx.toString() || ''),
+    });
 
     const deleteFriendAPI = useMutation({
         mutationFn: () => deleteFriend(friend.idx.toString() || ''),
@@ -38,6 +46,31 @@ const FriendCard = (props: {friend: Friend}) => {
     const handleDeleteFriend = () => {
         deleteFriendAPI.mutate();
         window.location.reload();
+    };
+
+    const handleTimeAttackToggle = () => {
+        timeAttackToggleAPI
+            .mutateAsync()
+            .then(() => {
+                if (friend.timeAttackAlarm === false) {
+                    toast.success('이제 생일 알림을 받아볼 수 있어요');
+                } else {
+                    toast.success('더 이상 생일 알림을 받지 않습니다');
+                }
+            })
+            .finally(() => {
+                queryClient.setQueryData(['friendList'], (prev: Friend[]) => {
+                    return prev.map((item) => {
+                        if (item.idx === friend.idx) {
+                            return {
+                                ...item,
+                                timeAttackAlarm: !item.timeAttackAlarm,
+                            };
+                        }
+                        return item;
+                    });
+                });
+            });
     };
 
     return (
@@ -58,7 +91,13 @@ const FriendCard = (props: {friend: Friend}) => {
                 </div>
             </div>
             <div className="icons">
-                {/* <button className="btn_timer active"></button> */}
+                <button
+                    className={cn(
+                        'btn_timer',
+                        friend.timeAttackAlarm && 'active',
+                    )}
+                    onClick={handleTimeAttackToggle}
+                ></button>
                 <button
                     className="btn_more"
                     onClick={() => {

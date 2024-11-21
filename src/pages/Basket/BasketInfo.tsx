@@ -131,6 +131,7 @@ const BasketEdit = ({
     basket: Basket;
 }) => {
     const queryClient = useQueryClient();
+    const [isTransforming, setIsTransforming] = useState(false);
     const editBasketAPI = useMutation({
         mutationKey: ['editBasket'],
         mutationFn: async ({
@@ -151,6 +152,7 @@ const BasketEdit = ({
             });
             toast.success('바구니 정보가 수정되었습니다.');
             closeModal();
+            setIsTransforming(false);
         },
     });
 
@@ -181,8 +183,41 @@ const BasketEdit = ({
     const fileInputRef = useRef<HTMLInputElement>(null);
     const {reset} = form;
 
+    const transformFileIfNeeded = async (file: File): Promise<File> => {
+        if (file.type === 'image/heic') {
+            console.log('heic file detected');
+            try {
+                const blob = await heic2any({
+                    blob: file,
+                    toType: 'image/webp',
+                });
+                const newFile = new File([blob as Blob], file.name + '.webp', {
+                    type: 'image/webp',
+                });
+                console.log(newFile);
+                return newFile;
+            } catch (err) {
+                console.error(err);
+                throw new Error('File transformation failed');
+            }
+        }
+        return file;
+    };
+
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         console.log(values);
+
+        let transformedFile = values.image;
+        if (values.image) {
+            setIsTransforming(true);
+            try {
+                transformedFile = await transformFileIfNeeded(values.image);
+            } catch (error) {
+                toast.error('지원하지 않는 이미지 형식입니다.');
+                setIsTransforming(false);
+                return;
+            }
+        }
 
         const payload = {
             name: values.title,
@@ -193,8 +228,9 @@ const BasketEdit = ({
         editBasketAPI.mutate({
             basketID: basket.idx.toString() || '',
             basket: payload,
-            image: values.image || null,
+            image: transformedFile || null,
         });
+        // setIsTransforming(false);
     };
 
     useEffect(() => {
@@ -266,83 +302,96 @@ const BasketEdit = ({
                                         <Input
                                             {...fileRef}
                                             ref={fileInputRef}
-                                            onChange={(event) => {
+                                            onChange={async (event) => {
                                                 const file =
                                                     event.target.files?.[0];
                                                 if (file) {
-                                                    if (file.size > 1048489) {
+                                                    if (file.size > 999000000) {
                                                         toast.error(
                                                             '이미지 용량이 너무 커서 사용할 수 없습니다.',
                                                         );
                                                         field.onChange(null);
                                                         return;
                                                     }
+                                                    const displayUrl =
+                                                        URL.createObjectURL(
+                                                            file,
+                                                        );
+                                                    console.log(
+                                                        'Image URL:',
+                                                        displayUrl,
+                                                    );
+                                                    field.onChange(file);
+
                                                     // if file is in heic format, convert it to jpeg
-                                                    if (
-                                                        file &&
-                                                        file.type ===
-                                                            'image/heic'
-                                                    ) {
-                                                        console.log(
-                                                            'heic file detected',
-                                                        );
-
-                                                        heic2any({
-                                                            blob: file,
-                                                            toType: 'image/webp',
-                                                        }).then((blob) => {
-                                                            const newFile =
-                                                                new File(
-                                                                    [
-                                                                        blob as Blob,
-                                                                    ],
-                                                                    file?.name +
-                                                                        '.webp',
-                                                                    {
-                                                                        type: 'image/webp',
-                                                                    },
-                                                                );
-                                                            console.log(
-                                                                newFile,
-                                                            );
-                                                            const displayUrl =
-                                                                URL.createObjectURL(
-                                                                    newFile,
-                                                                );
-                                                            console.log(
-                                                                'Image URL:',
-                                                                displayUrl,
-                                                            );
-                                                            if (
-                                                                newFile.size >
-                                                                1048489
-                                                            ) {
-                                                                toast.error(
-                                                                    '이미지 용량이 너무 커서 사용할 수 없습니다.',
-                                                                );
-                                                                field.onChange(
-                                                                    null,
-                                                                );
-
-                                                                return;
-                                                            }
-
-                                                            field.onChange(
-                                                                newFile,
-                                                            );
-                                                        });
-                                                    } else {
-                                                        const displayUrl =
-                                                            URL.createObjectURL(
-                                                                file,
-                                                            );
-                                                        console.log(
-                                                            'Image URL:',
-                                                            displayUrl,
-                                                        );
-
-                                                        field.onChange(file);
-                                                    }
+                                                    // if (
+                                                    //     file &&
+                                                    //     file.type ===
+                                                    //         'image/heic'
+                                                    // ) {
+                                                    //     console.log(
+                                                    //         'heic file detected',
+                                                    //     );
+                                                    //     try {
+                                                    //         const blob =
+                                                    //             await heic2any({
+                                                    //                 blob: file,
+                                                    //                 toType: 'image/webp',
+                                                    //             });
+                                                    //         const newFile =
+                                                    //             new File(
+                                                    //                 [
+                                                    //                     blob as Blob,
+                                                    //                 ],
+                                                    //                 file?.name +
+                                                    //                     '.webp',
+                                                    //                 {
+                                                    //                     type: 'image/webp',
+                                                    //                 },
+                                                    //             );
+                                                    //         console.log(
+                                                    //             newFile,
+                                                    //         );
+                                                    //         const displayUrl =
+                                                    //             URL.createObjectURL(
+                                                    //                 newFile,
+                                                    //             );
+                                                    //         console.log(
+                                                    //             'Image URL:',
+                                                    //             displayUrl,
+                                                    //         );
+                                                    //         if (
+                                                    //             newFile.size >
+                                                    //             999000000
+                                                    //         ) {
+                                                    //             toast.error(
+                                                    //                 '이미지 용량이 너무 커서 사용할 수 없습니다.',
+                                                    //             );
+                                                    //             field.onChange(
+                                                    //                 null,
+                                                    //             );
+                                                    //             return;
+                                                    //         }
+                                                    //         field.onChange(
+                                                    //             newFile,
+                                                    //         );
+                                                    //     } catch (err) {
+                                                    //         console.error(err);
+                                                    //         field.onChange(
+                                                    //             null,
+                                                    //         );
+                                                    //     }
+                                                    // } else {
+                                                    //     const displayUrl =
+                                                    //         URL.createObjectURL(
+                                                    //             file,
+                                                    //         );
+                                                    //     console.log(
+                                                    //         'Image URL:',
+                                                    //         displayUrl,
+                                                    //     );
+                                                    //     field.onChange(file);
+                                                    // }
                                                 }
                                             }}
                                             type="file"
@@ -375,8 +424,10 @@ const BasketEdit = ({
                         </label>
                     </div>
                 </div> */}
-                    <button className="btn_public">
-                        바구니 정보 수정 완료
+                    <button className="btn_public" disabled={isTransforming}>
+                        {isTransforming
+                            ? '이미지 변환 중'
+                            : '바구니 정보 수정 완료'}
                     </button>
                 </form>
             </Form>
@@ -419,33 +470,40 @@ const BasketInfo = () => {
 
             const url = `${import.meta.env.VITE_CURRENT_DOMAIN}/basket/${basketID}/invite/${invitationIdx}`;
 
-            Kakao.Share.sendDefault({
-                objectType: 'feed',
-                content: {
-                    title: user
-                        ? `${user?.nickname}님이 선물 바구니에 초대했습니다.`
-                        : 'ONE!T 선물 바구니에 초대되었습니다.',
-                    description: basketInfoAPI.data.name || 'ONE!T 선물 바구니',
-                    imageUrl:
-                        basketInfoAPI.data.imageUrl ||
-                        'https://www.oneit.gift/oneit.png',
-                    link: {
-                        mobileWebUrl: url,
-                        webUrl: url,
-                    },
-                },
-                buttons: [
-                    {
-                        title: 'ONE!T에서 확인하기',
+            try {
+                Kakao.Share.sendDefault({
+                    objectType: 'feed',
+                    content: {
+                        title: user
+                            ? `${user?.nickname}님이 선물 바구니에 초대했습니다.`
+                            : 'ONE!T 선물 바구니에 초대되었습니다.',
+                        description:
+                            basketInfoAPI.data?.name || 'ONE!T 선물 바구니',
+                        imageUrl:
+                            basketInfoAPI.data?.imageUrl ||
+                            'https://www.oneit.gift/oneit.png',
                         link: {
                             mobileWebUrl: url,
                             webUrl: url,
                         },
                     },
-                ],
-            }).then(() => {
-                toast.success('친구에게 초대장을 보냈습니다.');
-            });
+                    buttons: [
+                        {
+                            title: 'ONE!T에서 확인하기',
+                            link: {
+                                mobileWebUrl: url,
+                                webUrl: url,
+                            },
+                        },
+                    ],
+                });
+            } catch (error) {
+                console.log('error', error);
+
+                // toast.error('카카오톡 공유하기에 실패했습니다.');
+            } finally {
+                // toast.success('친구에게 초대장을 보냈습니다.');
+            }
         });
     };
 
@@ -485,7 +543,7 @@ const BasketInfo = () => {
                             />
                         </div>
                         <div>
-                            {basketInfoAPI?.data?.dday > 0 ? (
+                            {(basketInfoAPI?.data?.dday ?? 0) > 0 ? (
                                 <div className="dDay px-1">
                                     D-{basketInfoAPI?.data?.dday}
                                 </div>
@@ -493,13 +551,13 @@ const BasketInfo = () => {
                                 <div className="dDay px-1">D-Day</div>
                             ) : (
                                 <div className="dDay px-1">
-                                    {-basketInfoAPI?.data?.dday}일 지남
+                                    {-(basketInfoAPI?.data?.dday ?? 0)}일 지남
                                 </div>
                             )}
                             <div
                                 className={cn(
                                     'title text-overflow-one',
-                                    basketInfoAPI.data?.participants.some(
+                                    basketInfoAPI.data?.participants?.some(
                                         (parti: Participant) =>
                                             parti.userRole == 'MANAGER' &&
                                             parti.userIdx == user?.idx,
@@ -511,7 +569,7 @@ const BasketInfo = () => {
                                 {basketInfoAPI?.data?.name}
                             </div>
                         </div>
-                        {basketInfoAPI.data?.participants.some(
+                        {basketInfoAPI.data?.participants?.some(
                             (parti: Participant) =>
                                 parti.userRole == 'MANAGER' &&
                                 parti.userIdx == user?.idx,
@@ -574,6 +632,7 @@ const BasketInfo = () => {
                                 {basketInfoAPI?.data?.participants?.map(
                                     (participant: Participant, idx: number) => (
                                         <ParticipantThumbnail
+                                            key={`friend-${participant.userIdx}`}
                                             participant={participant}
                                         />
                                     ),
@@ -599,7 +658,7 @@ const BasketInfo = () => {
             {isOpen && (
                 <BasketEdit
                     closeModal={closeModal}
-                    basket={basketInfoAPI?.data}
+                    basket={basketInfoAPI?.data || ({} as Basket)}
                 />
             )}
             {isOpen2 && (

@@ -7,25 +7,17 @@ import {useEffect} from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 import profileButtonSvg from '@/assets/images/profile_button.svg';
 import Header from '@/components/common/Header';
-import {useMutation, useQuery} from '@tanstack/react-query';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
 import {fetchBasketList} from '@/api/basket';
-import {Basket} from '@/lib/types';
+import {Basket, Friend} from '@/lib/types';
 import logo from '@/assets/images/oneit.png';
 import {fetchFriendList, fetchUserInfo, requestFriend} from '@/api/friend';
 import {toast} from 'sonner';
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTrigger,
-} from '@/components/ui/dialog';
 
 const User = () => {
     const navigate = useNavigate();
     const {userID} = useParams();
+    const queryClient = useQueryClient();
     // const user = useAtomValue(authAtom);
     const requestFriendAPI = useMutation({
         mutationKey: ['requestFriend'],
@@ -42,6 +34,10 @@ const User = () => {
 
     const handleRequest = () => {
         requestFriendAPI.mutate();
+        queryClient.setQueryData(['user', userID], (prev: Friend) => ({
+            ...prev,
+            isFriend: true,
+        }));
     };
 
     return (
@@ -57,10 +53,12 @@ const User = () => {
                             />
                         </div>
                         <div className="name flex flex-col">
-                            {fetchUserInfoAPI?.data?.nickName}
+                            {fetchUserInfoAPI?.data?.nickName ||
+                                '알 수 없는 사용자'}
                             <span className="text-xs text-[#5d5d5d] flex">
                                 <CakeIcon className="w-4 h-4 mr-1" />
-                                {fetchUserInfoAPI?.data?.birthDate}
+                                {fetchUserInfoAPI?.data?.birthDate ||
+                                    '생일 정보를 불러올 수 없음'}
                             </span>
                         </div>
                         {!fetchUserInfoAPI?.data?.isFriend && (

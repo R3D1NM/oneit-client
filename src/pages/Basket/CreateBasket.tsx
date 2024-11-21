@@ -36,6 +36,7 @@ import placeHolder from '@/assets/images/placeholder400.png';
 
 const CreateBasket = () => {
     const [currentStep, setCurrentStep] = useState('title');
+    const [isTransforming, setIsTransforming] = useState(false);
     const [title, setTitle] = useAtom(basketName);
     const [description, setDescription] = useAtom(basketDescription);
     const [imageURL, setImageURL] = useAtom(imageUrl);
@@ -48,6 +49,7 @@ const CreateBasket = () => {
     const submitAPI = useMutation({
         mutationFn: makeBasket,
         onSuccess: (data) => {
+            setIsTransforming(false);
             navigate(`/basket/create/${data}/after`, {replace: true});
         },
     });
@@ -82,16 +84,49 @@ const CreateBasket = () => {
     const fileRef = form.register('image');
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+    const transformFileIfNeeded = async (file: File): Promise<File> => {
+        if (file.type === 'image/heic') {
+            console.log('heic file detected');
+            try {
+                const blob = await heic2any({
+                    blob: file,
+                    toType: 'image/webp',
+                });
+                const newFile = new File([blob as Blob], file.name + '.webp', {
+                    type: 'image/webp',
+                });
+                console.log(newFile);
+                return newFile;
+            } catch (err) {
+                console.error(err);
+                throw new Error('File transformation failed');
+            }
+        }
+        return file;
+    };
+
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         console.log(values);
         console.log(imageURL);
+
+        let transformedFile = values.image;
+        if (values.image) {
+            setIsTransforming(true);
+            try {
+                transformedFile = await transformFileIfNeeded(values.image);
+            } catch (error) {
+                toast.error('지원하지 않는 이미지 형식입니다.');
+                setIsTransforming(false);
+                return;
+            }
+        }
 
         setTitle(values.title);
         setDescription(values.description || '');
         // values.description;
         setCurrentStep('deadline');
         setAccess(values.access);
-        setImage(values.image || null);
+        setImage(transformedFile || null);
         console.log(values);
         setDeadline(values.deadline);
         submitAPI.mutate();
@@ -231,7 +266,7 @@ const CreateBasket = () => {
                                                         if (file) {
                                                             if (
                                                                 file.size >
-                                                                1048489
+                                                                999000000
                                                             ) {
                                                                 toast.error(
                                                                     '이미지 용량이 너무 커서 사용할 수 없습니다.',
@@ -242,14 +277,25 @@ const CreateBasket = () => {
                                                                 setImageURL('');
                                                                 return;
                                                             }
-                                                            // if file is in heic format, convert it to jpeg
+                                                            const displayUrl =
+                                                                URL.createObjectURL(
+                                                                    file,
+                                                                );
+                                                            console.log(
+                                                                'Image URL:',
+                                                                displayUrl,
+                                                            );
+                                                            field.onChange(
+                                                                file,
+                                                            );
+
                                                             if (
                                                                 file &&
                                                                 file.type ===
                                                                     'image/heic'
                                                             ) {
-                                                                console.log(
-                                                                    'heic file detected',
+                                                                setImageURL(
+                                                                    'https://placehold.co/400?text=converting...',
                                                                 );
 
                                                                 heic2any({
@@ -279,21 +325,6 @@ const CreateBasket = () => {
                                                                             'Image URL:',
                                                                             displayUrl,
                                                                         );
-                                                                        if (
-                                                                            newFile.size >
-                                                                            1048489
-                                                                        ) {
-                                                                            toast.error(
-                                                                                '이미지 용량이 너무 커서 사용할 수 없습니다.',
-                                                                            );
-                                                                            field.onChange(
-                                                                                null,
-                                                                            );
-                                                                            setImageURL(
-                                                                                '',
-                                                                            );
-                                                                            return;
-                                                                        }
                                                                         setImageURL(
                                                                             displayUrl,
                                                                         );
@@ -303,22 +334,88 @@ const CreateBasket = () => {
                                                                     },
                                                                 );
                                                             } else {
-                                                                const displayUrl =
-                                                                    URL.createObjectURL(
-                                                                        file,
-                                                                    );
-                                                                console.log(
-                                                                    'Image URL:',
-                                                                    displayUrl,
-                                                                );
-
                                                                 setImageURL(
                                                                     displayUrl,
                                                                 );
-                                                                field.onChange(
-                                                                    file,
-                                                                );
                                                             }
+
+                                                            // if file is in heic format, convert it to jpeg
+                                                            // if (
+                                                            //     file &&
+                                                            //     file.type ===
+                                                            //         'image/heic'
+                                                            // ) {
+                                                            //     console.log(
+                                                            //         'heic file detected',
+                                                            //     );
+
+                                                            //     heic2any({
+                                                            //         blob: file,
+                                                            //         toType: 'image/webp',
+                                                            //     }).then(
+                                                            //         (blob) => {
+                                                            //             const newFile =
+                                                            //                 new File(
+                                                            //                     [
+                                                            //                         blob as Blob,
+                                                            //                     ],
+                                                            //                     file?.name +
+                                                            //                         '.webp',
+                                                            //                     {
+                                                            //                         type: 'image/webp',
+                                                            //                     },
+                                                            //                 );
+                                                            //             console.log(
+                                                            //                 newFile,
+                                                            //             );
+                                                            //             const displayUrl =
+                                                            //                 URL.createObjectURL(
+                                                            //                     newFile,
+                                                            //                 );
+                                                            //             console.log(
+                                                            //                 'Image URL:',
+                                                            //                 displayUrl,
+                                                            //             );
+                                                            //             if (
+                                                            //                 newFile.size >
+                                                            //                 1048489
+                                                            //             ) {
+                                                            //                 toast.error(
+                                                            //                     '이미지 용량이 너무 커서 사용할 수 없습니다.',
+                                                            //                 );
+                                                            //                 field.onChange(
+                                                            //                     null,
+                                                            //                 );
+                                                            //                 setImageURL(
+                                                            //                     '',
+                                                            //                 );
+                                                            //                 return;
+                                                            //             }
+                                                            //             setImageURL(
+                                                            //                 displayUrl,
+                                                            //             );
+                                                            //             field.onChange(
+                                                            //                 newFile,
+                                                            //             );
+                                                            //         },
+                                                            //     );
+                                                            // } else {
+                                                            //     const displayUrl =
+                                                            //         URL.createObjectURL(
+                                                            //             file,
+                                                            //         );
+                                                            //     console.log(
+                                                            //         'Image URL:',
+                                                            //         displayUrl,
+                                                            //     );
+
+                                                            //     setImageURL(
+                                                            //         displayUrl,
+                                                            //     );
+                                                            //     field.onChange(
+                                                            //         file,
+                                                            //     );
+                                                            // }
                                                         }
                                                     }}
                                                     type="file"
@@ -441,8 +538,10 @@ const CreateBasket = () => {
                                                 >
                                                     이전
                                                 </Button>
+
                                                 <Button
                                                     type="submit"
+                                                    disabled={isTransforming}
                                                     className="w-full"
                                                     variant={
                                                         field.value === null
@@ -450,7 +549,9 @@ const CreateBasket = () => {
                                                             : 'primary'
                                                     }
                                                 >
-                                                    다음
+                                                    {isTransforming
+                                                        ? '생성 중'
+                                                        : '다음'}
                                                 </Button>
                                             </div>
                                         </FormItem>

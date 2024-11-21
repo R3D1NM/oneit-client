@@ -76,19 +76,8 @@ const Auth = () => {
                                             );
                                             sendFCMToken(token)
                                                 .then((res) => {
-                                                    const redirect =
-                                                        localStorage.getItem(
-                                                            'redirect',
-                                                        );
                                                     console.log(
-                                                        `[AUTH] Redirect to ${redirect}`,
-                                                    );
-
-                                                    navigate(
-                                                        redirect || '/main',
-                                                        {
-                                                            replace: true,
-                                                        },
+                                                        '[AUTH] FCM token sent',
                                                     );
                                                 })
                                                 .catch((err) => {
@@ -103,6 +92,19 @@ const Auth = () => {
                                                 '[AUTH] Error fetching FCM token',
                                                 err,
                                             );
+                                        })
+                                        .finally(() => {
+                                            const redirect =
+                                                localStorage.getItem(
+                                                    'redirect',
+                                                );
+                                            console.log(
+                                                `[AUTH] Redirect to ${redirect}`,
+                                            );
+
+                                            navigate(redirect || '/main', {
+                                                replace: true,
+                                            });
                                         });
                                 }
                             } else {

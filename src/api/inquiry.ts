@@ -1,4 +1,4 @@
-import {BaksetProduct, Product} from '@/lib/types';
+import {BaksetProduct, Inquiry, Product} from '@/lib/types';
 import {atomWithMutation} from 'jotai-tanstack-query';
 import axios from '@/lib/axios';
 import {choices} from '@/atoms/inquiry';
@@ -37,28 +37,19 @@ export const createInquiry = atomWithMutation<unknown, CreateInquiryVariables>(
                 });
         },
         onSuccess: (data, variables, context) => {
-            const url = `${import.meta.env.VITE_CURRENT_DOMAIN}/inquiry/${data}`;
-
-            Kakao.Share.sendDefault({
-                objectType: 'text',
-                text: `🎁친구들이 ${variables.target}님을 위한 선물을 고르고 있어요!\n마음에 드는 선물을 고를 수 있도록 도와주세요🥺`,
-                link: {
-                    mobileWebUrl: url,
-                    webUrl: url,
-                },
-            })
-                .then(() => {
-                    toast.success('물어보기 전송 완료');
-                })
-                .catch((err: any) => {
-                    console.log(err);
-                    toast.error('물어보기 전송 실패');
-                });
+            // const url = `${import.meta.env.VITE_CURRENT_DOMAIN}/inquiry/${data}`;
+            // .then(() => {
+            //     toast.success('물어보기 전송 완료');
+            // })
+            // .catch((err: any) => {
+            //     console.log(err);
+            //     toast.error('물어보기 전송 실패');
+            // });
         },
     }),
 );
 
-export const getInquiry = async (inquiryIdx: string) => {
+export const getInquiry = async (inquiryIdx: string): Promise<Inquiry> => {
     return axios
         .get(`/v2/inquiry/${inquiryIdx}`)
         .then((res) => {

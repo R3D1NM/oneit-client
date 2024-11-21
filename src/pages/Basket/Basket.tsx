@@ -122,13 +122,27 @@ const Basket = () => {
         deleteAPI.mutate();
     };
 
+    const handleCopy = async () => {
+        mutateAsync({
+            basketIdx: basketID || '',
+            selected: basketProductAPI.data || [],
+            target,
+        }).then((data) => {
+            const url = `${import.meta.env.VITE_CURRENT_DOMAIN}/inquiry/${data}`;
+            setMode(false);
+            navigator.clipboard.writeText(url).then(() => {
+                toast('클립보드에 복사되었습니다.');
+            });
+        });
+    };
+
     const handleInquiry = () => {
         if (target === '' || basketProductAPI.data?.length === 0) {
             return;
         }
 
         if (
-            !basketInfoAPI.data?.participants.some(
+            !basketInfoAPI.data?.participants?.some(
                 (parti: Participant) =>
                     parti.userRole == 'MANAGER' && parti.userIdx == user?.idx,
             )
@@ -139,11 +153,21 @@ const Basket = () => {
 
         mutateAsync({
             basketIdx: basketID || '',
-            selected: basketProductAPI.data,
+            selected: basketProductAPI.data || [],
             target,
         })
             .then((data) => {
+                const url = `${import.meta.env.VITE_CURRENT_DOMAIN}/inquiry/${data}`;
+
                 // toast.success('물어보기 전송 완료');
+                Kakao.Share.sendDefault({
+                    objectType: 'text',
+                    text: `🎁친구들이 ${target}님을 위한 선물을 고르고 있어요!\n마음에 드는 선물을 고를 수 있도록 도와주세요🥺`,
+                    link: {
+                        mobileWebUrl: url,
+                        webUrl: url,
+                    },
+                });
                 setMode(false);
             })
             .catch((err) => {
@@ -167,7 +191,7 @@ const Basket = () => {
     const handleModeChange = () => {
         if (basketProductAPI.data?.length === 0) return;
         if (
-            !basketInfoAPI.data?.participants.some(
+            !basketInfoAPI.data?.participants?.some(
                 (parti: Participant) =>
                     parti.userRole == 'MANAGER' && parti.userIdx == user?.idx,
             )
@@ -216,22 +240,23 @@ const Basket = () => {
             <div className="p-4 cardList scrollbar-hide">
                 <div className="Dday_wrap">
                     <div className="graph">
-                        {basketInfoAPI?.data?.dday > 0 ? (
+                        {basketInfoAPI?.data?.dday !== undefined &&
+                        basketInfoAPI.data.dday > 0 ? (
                             <div className="count">D-{dDay}</div>
                         ) : basketInfoAPI?.data?.dday === 0 ? (
                             <div className="count">D-Day</div>
                         ) : (
                             <div className="count">
-                                {-basketInfoAPI?.data?.dday}일 지남
+                                {-(basketInfoAPI?.data?.dday ?? 0)}일 지남
                             </div>
                         )}
-                        {basketInfoAPI?.data?.dday < 3 &&
-                            basketInfoAPI?.data?.dday >= 0 && (
+                        {(basketInfoAPI?.data?.dday ?? 0) < 3 &&
+                            (basketInfoAPI?.data?.dday ?? 0) >= 0 && (
                                 <p>
                                     마감일이 얼마 남지 않았어요 빨리 골라주세요
                                 </p>
                             )}
-                        {basketInfoAPI?.data?.dday < 0 && (
+                        {(basketInfoAPI?.data?.dday ?? 0) < 0 && (
                             <p>이미 마감된 선물 바구니입니다.</p>
                         )}
 
@@ -243,7 +268,7 @@ const Basket = () => {
                                         width:
                                             dDay <= 0
                                                 ? '100%'
-                                                : `${calculateElapsedPercentage(basketInfoAPI!.data!.createdAt, basketInfoAPI!.data!.deadline)}%`,
+                                                : `${calculateElapsedPercentage(basketInfoAPI!.data!.createdAt.toString(), basketInfoAPI!.data!.deadline)}%`,
                                     }}
                                 ></div>
                             </div>
@@ -268,7 +293,8 @@ const Basket = () => {
                                 <DialogTitle>선물 바구니 물어보기</DialogTitle>
 
                                 <DialogDescription>
-                                    선물 받는 사람에게 바구니에 담긴 선물이
+                                    선물 받는 사람에게 바구니에 담긴 선물이{' '}
+                                    <br />
                                     마음에 드는지 물어보세요!
                                 </DialogDescription>
                             </DialogHeader>
@@ -291,20 +317,26 @@ const Basket = () => {
                                     />
                                 </div>
                             </div>
-                            <DialogFooter className="w-full">
+                            <div className="flex w-full gap-2">
                                 <Button
-                                    type="submit"
-                                    onClick={handleInquiry}
                                     className="w-full"
+                                    onClick={handleInquiry}
                                 >
-                                    카카오톡으로 물어보기
+                                    카카오톡
                                 </Button>
-                            </DialogFooter>
+                                <Button
+                                    className="w-full"
+                                    onClick={handleCopy}
+                                    variant="border"
+                                >
+                                    링크복사
+                                </Button>
+                            </div>
                         </DialogContent>
                     </Dialog>
                 </div>
 
-                <div className="mt-5 rounding_border">
+                <div className="mt-5 mb-8 rounding_border">
                     <div className="giftBox_title">
                         <div className="title">
                             <p>바구니에 담긴 선물</p>

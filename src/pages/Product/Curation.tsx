@@ -146,9 +146,9 @@ const Curation = () => {
                     </div>
                     <button className="btn_right_more"></button> */}
                     {searchOpen && (
-                        <div className="flex gap-2 mt-2 h-10">
+                        <div className="flex w-full h-8 items-center">
                             <input
-                                className="h-4"
+                                className="h-4 w-full m-0 p-0"
                                 type="text"
                                 placeholder="검색어를 2자 이상 입력해주세요"
                                 value={keyword}

@@ -37,8 +37,10 @@ if (!isIOS && !isInAppBrowser) {
     try {
         if (messaging) {
             onMessage(messaging, (payload) => {
-                console.log(payload.notification?.title);
-                console.log(payload.notification?.body);
+                console.log('[FCM] foreground message received: ', payload);
+
+                // console.log(payload.notification?.title);
+                // console.log(payload.notification?.body);
                 toast(payload.notification?.title, {
                     description: payload.notification?.body,
                     duration: 5000,

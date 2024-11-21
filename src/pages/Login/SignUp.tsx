@@ -120,13 +120,7 @@ const SignUp = () => {
                         console.log(`[AUTH] Firebase token: ${token}`);
                         sendFCMToken(token)
                             .then((res) => {
-                                const redirect =
-                                    localStorage.getItem('redirect');
-                                console.log(`[AUTH] Redirect to ${redirect}`);
-
-                                navigate(redirect || '/main', {
-                                    replace: true,
-                                });
+                                console.log('[AUTH] FCM token sent');
                             })
                             .catch((err) => {
                                 console.log(
@@ -137,6 +131,14 @@ const SignUp = () => {
                     })
                     .catch((err) => {
                         console.log('[AUTH] Error fetching FCM token', err);
+                    })
+                    .finally(() => {
+                        const redirect = localStorage.getItem('redirect');
+                        console.log(`[AUTH] Redirect to ${redirect}`);
+
+                        navigate(redirect || '/main', {
+                            replace: true,
+                        });
                     });
             }
             // const redirect = localStorage.getItem('redirect');
@@ -179,7 +181,12 @@ const SignUp = () => {
             <h2 className="font-medium text-xl">간단한 정보를 알려주세요</h2>
             <form onSubmit={handleSubmit(onSubmit)} className="mt-7.5">
                 <p className="text-base mb-4 font-medium">이름</p>
-                <div className="relative flex w-full h-10 mb-4">
+                {errors.name && (
+                    <p className="text-red-500 text-sm mt-1">
+                        {errors.name.message}
+                    </p>
+                )}
+                <div className="relative flex w-full h-10 mb-4 ">
                     <Controller
                         name="name"
                         control={control}
@@ -192,11 +199,6 @@ const SignUp = () => {
                             />
                         )}
                     />
-                    {errors.name && (
-                        <p className="text-red-500 text-sm mt-1">
-                            {errors.name.message}
-                        </p>
-                    )}
                 </div>
 
                 <p className="text-base mb-4 font-medium mt-2">닉네임</p>
@@ -225,7 +227,10 @@ const SignUp = () => {
                             checkNickname(control._getWatch('nickname'))
                         }
                     >
-                        {isNicknameChecked ? '검사완료' : '중복확인'}
+                        {isNicknameChecked ||
+                        user?.nickname === control._getWatch('nickname')
+                            ? '검사완료'
+                            : '중복확인'}
                     </Button>
                 </div>
 

@@ -21,6 +21,7 @@ import AfterBasketCreate from './pages/Basket/AfterBasketCreate';
 import ScrollToTop from './components/common/ScrollToTop';
 import Footer from './components/common/Footer';
 import GetLocation from './components/common/GetLocation';
+import TiemAttackReveal from './pages/TimeAttack/TimeAttackReveal';
 
 // Custom component to handle dynamic redirect
 const AuthRouterWithRedirect = ({
@@ -32,16 +33,21 @@ const AuthRouterWithRedirect = ({
     children: React.ReactNode;
     redirectTo: string;
 }) => {
-    const {basketID, productID} = useParams();
-    if (basketID === undefined) {
+    const {basketID, productID, timeAttackID} = useParams();
+    let redirect: string = redirectTo;
+    if (timeAttackID !== undefined) {
+        redirect = redirect.replace(':timeAttackID', timeAttackID);
         return (
-            <AuthRouter option={option} redirectTo={'/main'}>
+            <AuthRouter option={option} redirectTo={redirect}>
                 {children}
             </AuthRouter>
         );
     }
 
-    let redirect = redirectTo.replace(':basketID', basketID);
+    if (basketID !== undefined) {
+        redirect = redirect.replace(':basketID', basketID);
+    }
+
     if (productID !== undefined) {
         redirect.replace(':productID', productID);
     }
@@ -50,6 +56,11 @@ const AuthRouterWithRedirect = ({
             {children}
         </AuthRouter>
     );
+    // return (
+    //     <AuthRouter option={option} redirectTo={'/main'}>
+    //         {children}
+    //     </AuthRouter>
+    // );
 };
 
 const Main = React.lazy(() => import('./pages/Main/Main'));
@@ -65,6 +76,10 @@ const Login = React.lazy(() => import('./pages/Login/Login'));
 const Auth = React.lazy(() => import('./pages/Login/Auth'));
 const SignUp = React.lazy(() => import('./pages/Login/SignUp'));
 const Mypage = React.lazy(() => import('./pages/Mypage/Mypage'));
+const MyBasket = React.lazy(() => import('./pages/Mypage/MyBasket'));
+const RecommendRecord = React.lazy(
+    () => import('./pages/Mypage/RecommendRecord'),
+);
 const EditInfo = React.lazy(() => import('./pages/Mypage/EditInfo'));
 const Friends = React.lazy(() => import('./pages/Mypage/Friends'));
 const User = React.lazy(() => import('./pages/Mypage/User'));
@@ -88,6 +103,14 @@ const Inquiry = React.lazy(() => import('./pages/Inquiry/Inquiry'));
 const InquiryChoice = React.lazy(() => import('./pages/Inquiry/InquiryChoice'));
 const InquiryResult = React.lazy(() => import('./pages/Inquiry/InquiryResult'));
 const AfterInquiry = React.lazy(() => import('./pages/Inquiry/AfterInquiry'));
+
+const TimeAttackList = React.lazy(
+    () => import('./pages/TimeAttack/TimeAttackList'),
+);
+const TimeAttack = React.lazy(() => import('./pages/TimeAttack/TimeAttack'));
+const TimeAttackReveal = React.lazy(
+    () => import('./pages/TimeAttack/TimeAttackReveal'),
+);
 
 function App() {
     const {handleError} = useApiError();
@@ -237,6 +260,39 @@ function App() {
                                             path="/inquiry/after"
                                             element={<AfterInquiry />}
                                         />
+                                        <Route
+                                            path="/timeattack"
+                                            element={
+                                                <AuthRouterWithRedirect
+                                                    option={true}
+                                                    redirectTo="/login?redirect=/timeattack"
+                                                >
+                                                    <TimeAttackList />
+                                                </AuthRouterWithRedirect>
+                                            }
+                                        />
+                                        <Route
+                                            path="/timeattack/:timeAttackID"
+                                            element={
+                                                <AuthRouterWithRedirect
+                                                    option={true}
+                                                    redirectTo="/login?redirect=/timeattack/:timeAttackID"
+                                                >
+                                                    <TimeAttack />
+                                                </AuthRouterWithRedirect>
+                                            }
+                                        />
+                                        <Route
+                                            path="/timeattack/:timeAttackID/reveal"
+                                            element={
+                                                <AuthRouterWithRedirect
+                                                    option={true}
+                                                    redirectTo="/login?redirect=/timeattack/:timeAttackID"
+                                                >
+                                                    <TimeAttackReveal />
+                                                </AuthRouterWithRedirect>
+                                            }
+                                        />
                                         {/* 
                                         <Route
                                             path="/basket/share/:basketID"
@@ -288,6 +344,28 @@ function App() {
                                                     redirectTo="/login?redirect=/mypage"
                                                 >
                                                     <Mypage />
+                                                </AuthRouter>
+                                            }
+                                        />
+                                        <Route
+                                            path="/mybasket"
+                                            element={
+                                                <AuthRouter
+                                                    option={true}
+                                                    redirectTo="/login?redirect=/mybasket"
+                                                >
+                                                    <MyBasket />
+                                                </AuthRouter>
+                                            }
+                                        />
+                                        <Route
+                                            path="/recommendRecord"
+                                            element={
+                                                <AuthRouter
+                                                    option={true}
+                                                    redirectTo="/login?redirect=/recommendRecord"
+                                                >
+                                                    <RecommendRecord />
                                                 </AuthRouter>
                                             }
                                         />

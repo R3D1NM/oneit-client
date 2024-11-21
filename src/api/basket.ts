@@ -7,12 +7,19 @@ import {
     thumbnail,
 } from '@/atoms/basket';
 import axios from '@/lib/axios';
-import {Basket, Product} from '@/lib/types';
+import {
+    BaksetProduct,
+    BaskestProductDetail,
+    Basket,
+    Participant,
+    Product,
+    Comment,
+} from '@/lib/types';
 import {atom} from 'jotai';
 import {atomWithMutation} from 'jotai-tanstack-query';
 import {toast} from 'sonner';
 
-export const createBasket = atom(null, async (get, set) => {
+export const createBasket = atom(null, async (get, set): Promise<number> => {
     const data = {
         name: get(basketName),
         description: get(basketDescription),
@@ -44,7 +51,7 @@ export const createBasket = atom(null, async (get, set) => {
         });
 });
 
-export const fetchBasketInfo = async (basketID: string) => {
+export const fetchBasketInfo = async (basketID: string): Promise<Basket> => {
     return axios
         .get(`/v2/giftbox/${basketID}`)
         .then((res) => {
@@ -55,7 +62,7 @@ export const fetchBasketInfo = async (basketID: string) => {
         });
 };
 
-export const fetchBasketList = async () => {
+export const fetchBasketList = async (): Promise<Basket[]> => {
     return axios
         .get('/v2/giftbox')
         .then((res) => {
@@ -81,7 +88,7 @@ export const editBasket = async (
     basketID: string,
     basket: Basket,
     thumbnail: File | null,
-) => {
+): Promise<Basket> => {
     const data = {
         name: basket.name,
         description: basket.description,
@@ -155,7 +162,9 @@ export const addToBasket = atomWithMutation<unknown, AddToBasketVariables>(
 //         });
 // });
 
-export const fetchBasketProducts = async (basketIdx: string) => {
+export const fetchBasketProducts = async (
+    basketIdx: string,
+): Promise<BaksetProduct[]> => {
     return axios
         .get(`v2/giftbox/${basketIdx}/products`)
         .then((res) => {
@@ -187,7 +196,13 @@ export const deleteBasketProduct = async (
         });
 };
 
-export const basketInvite = async (basketIdx: string) => {
+interface basketInviteInterface {
+    invitationIdx: number;
+}
+
+export const basketInvite = async (
+    basketIdx: string,
+): Promise<basketInviteInterface> => {
     return axios
         .post(`v2/giftbox/${basketIdx}/invitation`)
         .then((res) => {
@@ -210,7 +225,9 @@ export const confirmInvitation = async (invitationIdx: string) => {
         });
 };
 
-export const fetcthBasketParticipants = async (basketIdx: string) => {
+export const fetcthBasketParticipants = async (
+    basketIdx: string,
+): Promise<Participant[]> => {
     return axios
         .get(`v2/giftbox/${basketIdx}/participants`)
         .then((res) => {
@@ -245,7 +262,7 @@ export const basketProductVote = async (
 export const fetchBasketProductComments = async (
     basketIdx: string,
     productIdx: string,
-) => {
+): Promise<Comment[]> => {
     return axios
         .get(`v2/giftbox/${basketIdx}/products/${productIdx}/comments`)
         .then((res) => {
@@ -260,7 +277,7 @@ export const addBasketProductComment = async (
     basketIdx: string,
     productIdx: string,
     comment: string,
-) => {
+): Promise<Comment> => {
     const data = {
         content: comment,
     };
@@ -288,7 +305,7 @@ export const deleteBasketProductComment = async (commentIdx: number) => {
 export const searchKewordProduct = async (
     basketIdx: string,
     keyword: string,
-) => {
+): Promise<BaksetProduct[]> => {
     return axios
         .get(
             `/v2/giftbox/${basketIdx}/products/search?searchKeyword=${keyword}`,
@@ -318,7 +335,7 @@ export const productPurchased = async (
 export const fetchBasketProductDetail = async (
     basketIdx: string,
     productIdx: string,
-) => {
+): Promise<BaskestProductDetail> => {
     return axios
         .get(`v2/giftbox/${basketIdx}/products/${productIdx}`)
         .then((res) => {

@@ -42,9 +42,10 @@ const FriendInviteCard = ({friend}: {friend: Friend}) => {
                     title: user
                         ? `${user?.nickname}님이 선물 바구니에 초대했습니다.`
                         : 'ONE!T 선물 바구니에 초대되었습니다.',
-                    description: basketInfoAPI.data.name || 'ONE!T 선물 바구니',
+                    description:
+                        basketInfoAPI?.data?.name || 'ONE!T 선물 바구니',
                     imageUrl:
-                        basketInfoAPI.data.imageUrl ||
+                        basketInfoAPI.data?.imageUrl ||
                         'https://www.oneit.gift/oneit.png',
                     link: {
                         mobileWebUrl: url,
@@ -61,7 +62,7 @@ const FriendInviteCard = ({friend}: {friend: Friend}) => {
                     },
                 ],
             });
-            toast.success('친구에게 초대장을 보냈습니다.');
+            // toast.success('친구에게 초대장을 보냈습니다.');
         },
     });
 
@@ -86,7 +87,7 @@ const FriendInviteCard = ({friend}: {friend: Friend}) => {
                     <span>{friend?.birthDate?.toString()}</span>
                 </div>
             </div>
-            {basketInfoAPI?.data?.participants.some(
+            {basketInfoAPI?.data?.participants?.some(
                 (parti: Participant) => parti.userIdx === friend.idx,
             ) ? (
                 <div className="ml-16 flex justify-end">

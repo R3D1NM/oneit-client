@@ -21,11 +21,22 @@ export type Product = {
     categoryName?: string;
     categoryDisplayName?: string;
     keywords?: Keyword[];
-    productStatus?: string;
+    productStatus: 'PENDING' | 'ACTIVE' | 'INVALID' | 'UNSUPPORTED' | 'DELETED';
     detailImages?: string[];
     description: string;
-    likeCount?: number;
-    voteStatus?: 'LIKE' | 'DISLIKE' | 'NONE';
+    likeCount: number;
+    likeStatus: 'LIKE' | 'DISLIKE' | 'NONE';
+    displayTags: string[];
+    options: {[key: string]: string[]};
+};
+
+export type Category = {
+    idx: number;
+    name: string;
+    level: number;
+    displayName: string;
+    parent: string;
+    parentCategoryName: string;
 };
 
 export type BaksetProduct = {
@@ -34,6 +45,7 @@ export type BaksetProduct = {
     originalPrice: number;
     thumbnailUrl: string;
     keywords: Keyword[];
+    displayTags: string[];
     productStatus: string;
     description: string;
     likeCountInGiftbox: number;
@@ -42,12 +54,38 @@ export type BaksetProduct = {
     emojiIdx?: 'LOVE' | 'LIKE' | 'NEED' | 'SOSO' | 'BAD' | 'HAVE';
 };
 
-export type CollctionProduct = {
-    productIdx: number;
-    productName: string;
+export type BaskestProductDetail = {
+    idx: number;
+    name: string;
+    description: string;
+    originalPrice: number;
+    thumbnailUrl: string;
+    productStatus: 'PENDING' | 'ACTIVE' | 'INVALID' | 'UNSUPPORTED' | 'DELETED';
     keywords: Keyword[];
-    showcaseImageUrl: string;
+    likeCount: number;
+    likeStatus: 'LIKE' | 'DISLIKE' | 'NONE';
+    brandName: string;
+    mallName: string;
+    productUrl: string;
+    categoryName: string;
+    categoryDisplayName: string;
+    category: Category;
+    detailImages: string[];
+    likeCountInGiftbox: number;
+    voteStatus: 'LIKE' | 'DISLIKE' | 'NONE';
+    purchaseStatus: 'PURCHASED' | 'NOT_PURCHASED';
+    emojiIdx: 'LOVE' | 'LIKE' | 'NEED' | 'SOSO' | 'BAD' | 'HAVE';
+    displayTags: string[];
+    options: {[key: string]: string[]};
 };
+
+// export type CollctionProduct = {
+//     productIdx: number;
+//     productName: string;
+//     keywords: Keyword[];
+//     showcaseImageUrl: string;
+//     displayTags: string[];
+// };
 
 export type Question = {
     question: string;
@@ -70,12 +108,13 @@ export type Basket = {
     idx: number;
     name: string;
     description?: string;
-    deadline: Date | string;
+    deadline: string;
     createdUserIdx?: number;
     accessStatus?: string;
     imageUrl?: string;
     participants?: Participant[];
     dday: number;
+    createdAt: Date;
 };
 
 export interface Participant {
@@ -92,10 +131,34 @@ export type Collection = {
     thumbnailUrl: string;
 };
 
+export type CollectionProduct = {
+    productIdx: number;
+    productName: string;
+    keywords: Keyword[];
+    showcaseImageUrl: string;
+    productStatus: 'PENDING' | 'ACTIVE' | 'INVALID' | 'UNSUPPORTED' | 'DELETED';
+    displayTags: string[];
+};
+
+export type CollectionDetail = {
+    collectionIdx: number;
+    collectionName: string;
+    collectionDescription: string;
+    collectionThumbnailUrl: string;
+    collectionProductDTOList: CollectionProduct[];
+};
+
 export type Emoji = {
     idx: number;
     name: string;
     content: string;
+};
+
+export type Inquiry = {
+    idx: 0;
+    giftboxIdx: 0;
+    target: string;
+    selectedProducts: Product[];
 };
 
 export type InquiryChoice = {
@@ -108,7 +171,15 @@ export type Friend = {
     name: string;
     nickName: string;
     profileImg: string;
-    birthDate: Date;
+    birthDate: string;
+    isFriend?: boolean;
+    timeAttackAlarm: boolean;
+};
+
+export type FriendRequest = {
+    requestIdx: number;
+    fromUser: Friend;
+    requestDate: Date;
 };
 
 export type SignUpUser = {
@@ -137,4 +208,24 @@ export type Comment = {
     writerProfileImg: string;
     content: string;
     createdAt: Date;
+};
+
+export type RecommendRecord = {
+    chatID: string;
+    name: string;
+    gender: 'MALE' | 'FEMALE';
+    recipient: string;
+    occasion: string;
+    priceRange: number[];
+    createdAt: number;
+    production: string;
+    userID: string;
+    answers: string[];
+    modifiedAt: number;
+    result: Product[];
+    resultType: {
+        comment: string;
+        title: string;
+    };
+    related?: Product[];
 };
